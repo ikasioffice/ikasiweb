@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { AvatarPlaceholder } from "./avatar-placeholder";
 import type { AlumniPublic } from "@/lib/data/alumni";
 
@@ -12,7 +13,19 @@ export function AlumniCard({ alumni, isVerified }: { alumni: AlumniPublic; isVer
         className="absolute -top-12 -right-12 w-32 h-32 rounded-full pointer-events-none"
         style={{ background: "radial-gradient(circle, rgba(212,167,44,0.12), transparent 70%)" }}
       />
-      <AvatarPlaceholder name={alumni.nama ?? "?"} />
+      {alumni.foto_url ? (
+        <Image
+          src={alumni.foto_url}
+          alt={alumni.nama ?? "foto"}
+          width={56}
+          height={56}
+          className="rounded-[14px] object-cover"
+          style={{ width: 56, height: 56 }}
+          unoptimized
+        />
+      ) : (
+        <AvatarPlaceholder name={alumni.nama ?? "?"} />
+      )}
       <div className="mt-3 text-base font-bold tracking-tight">{alumni.nama}</div>
       <div className="text-xs text-slate-400 mb-3">
         Angkatan <span className="text-[#d4a72c] font-semibold">{alumni.angkatan}</span>
