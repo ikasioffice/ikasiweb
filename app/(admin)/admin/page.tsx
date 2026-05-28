@@ -60,6 +60,8 @@ export default function AdminDashboard() {
       <div className="grid gap-4 sm:grid-cols-3">
         {[
           { href: "/admin/alumni", label: "Verifikasi Alumni", desc: "Approve atau reject permintaan verifikasi" },
+          { href: "/admin/alumni/duplicates", label: "Duplikat Alumni", desc: "Review dan hapus data alumni duplikat" },
+          { href: "/admin/alumni/deletions", label: "Riwayat Hapus", desc: "Lihat dan restore alumni yang dihapus" },
           { href: "/admin/news", label: "Kelola Berita", desc: "Tulis dan publish artikel" },
           { href: "/admin/events", label: "Kelola Acara", desc: "Buat dan manage event IKASI" },
         ].map((a) => (
