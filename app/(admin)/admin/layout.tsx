@@ -9,6 +9,8 @@ import type { ReactNode } from "react";
 const navItems = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/alumni", label: "Verifikasi Alumni" },
+  { href: "/admin/alumni/duplicates", label: "Duplikat Alumni" },
+  { href: "/admin/alumni/deletions", label: "Riwayat Hapus" },
   { href: "/admin/news", label: "Berita" },
   { href: "/admin/events", label: "Acara" },
 ];
