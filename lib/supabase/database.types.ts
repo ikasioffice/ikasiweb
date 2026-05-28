@@ -66,18 +66,28 @@ export type Database = {
           domisili?: string | null
           email?: string | null
           foto_url?: string | null
+          has_kta?: boolean | null
+          has_nomor_anggota?: boolean | null
           id?: string
           ikut_s2_polban?: string | null
           institusi?: string | null
+          is_form_filled?: boolean | null
           is_verified?: boolean | null
           jabatan?: string | null
           jenis_kelamin?: string | null
+          kta_kategori?: string | null
+          kta_nominal?: string | null
+          kta_pengambilan?: string | null
+          kta_status?: string | null
+          kta_tanggal?: string | null
           minat_hobi?: string[] | null
           nama: string
           no_hp?: string | null
+          nomor_anggota?: string | null
           pendidikan_terakhir?: string | null
           prodi?: string | null
           punya_ska?: boolean | null
+          source_layer?: string | null
           tahun_lulus?: number | null
           tanggal_lahir?: string | null
           tempat_kerja?: string | null
@@ -95,22 +105,62 @@ export type Database = {
           domisili?: string | null
           email?: string | null
           foto_url?: string | null
+          has_kta?: boolean | null
+          has_nomor_anggota?: boolean | null
           id?: string
           ikut_s2_polban?: string | null
           institusi?: string | null
+          is_form_filled?: boolean | null
           is_verified?: boolean | null
           jabatan?: string | null
           jenis_kelamin?: string | null
+          kta_kategori?: string | null
+          kta_nominal?: string | null
+          kta_pengambilan?: string | null
+          kta_status?: string | null
+          kta_tanggal?: string | null
           minat_hobi?: string[] | null
           nama?: string
           no_hp?: string | null
+          nomor_anggota?: string | null
           pendidikan_terakhir?: string | null
           prodi?: string | null
           punya_ska?: boolean | null
+          source_layer?: string | null
           tahun_lulus?: number | null
           tanggal_lahir?: string | null
           tempat_kerja?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      alumni_deletions: {
+        Row: {
+          alumni_id: string
+          alumni_snapshot: Json
+          bisnis_reassigned: Json | null
+          deleted_at: string
+          deleted_by: string
+          id: string
+          reason: string | null
+        }
+        Insert: {
+          alumni_id: string
+          alumni_snapshot: Json
+          bisnis_reassigned?: Json | null
+          deleted_at?: string
+          deleted_by: string
+          id?: string
+          reason?: string | null
+        }
+        Update: {
+          alumni_id?: string
+          alumni_snapshot?: Json
+          bisnis_reassigned?: Json | null
+          deleted_at?: string
+          deleted_by?: string
+          id?: string
+          reason?: string | null
         }
         Relationships: []
       }
@@ -283,17 +333,17 @@ export type Database = {
       }
       user_roles: {
         Row: {
-          created_at: string
+          created_at: string | null
           role: string
           user_id: string
         }
         Insert: {
-          created_at?: string
+          created_at?: string | null
           role: string
           user_id: string
         }
         Update: {
-          created_at?: string
+          created_at?: string | null
           role?: string
           user_id?: string
         }
@@ -342,17 +392,23 @@ export type Database = {
           created_at?: string | null
           domisili?: string | null
           foto_url?: string | null
+          has_kta?: boolean | null
+          has_nomor_anggota?: boolean | null
           id?: string | null
           institusi?: string | null
+          is_form_filled?: boolean | null
           is_verified?: boolean | null
           jabatan?: string | null
           jenis_kelamin?: string | null
+          kta_kategori?: string | null
           minat_hobi?: string[] | null
           nama?: string | null
+          nomor_anggota?: string | null
           pendidikan_terakhir?: string | null
           prodi?: string | null
           punya_ska?: boolean | null
           tahun_lulus?: number | null
+          tanggal_lahir?: string | null
           tempat_kerja?: string | null
           updated_at?: string | null
         }
@@ -366,32 +422,120 @@ export type Database = {
           created_at?: string | null
           domisili?: string | null
           foto_url?: string | null
+          has_kta?: boolean | null
+          has_nomor_anggota?: boolean | null
           id?: string | null
           institusi?: string | null
+          is_form_filled?: boolean | null
           is_verified?: boolean | null
           jabatan?: string | null
           jenis_kelamin?: string | null
+          kta_kategori?: string | null
           minat_hobi?: string[] | null
           nama?: string | null
+          nomor_anggota?: string | null
           pendidikan_terakhir?: string | null
           prodi?: string | null
           punya_ska?: boolean | null
           tahun_lulus?: number | null
+          tanggal_lahir?: string | null
           tempat_kerja?: string | null
           updated_at?: string | null
         }
         Relationships: []
       }
+      bisnis_public: {
+        Row: {
+          alumni_id: string | null
+          angkatan: number | null
+          bidang: string | null
+          created_at: string | null
+          detail: string | null
+          id: string | null
+          link_medsos: string | null
+          lokasi: string | null
+          nama_alumni: string | null
+          nama_brand: string | null
+          prodi: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bisnis_alumni_id_fkey"
+            columns: ["alumni_id"]
+            isOneToOne: false
+            referencedRelation: "alumni"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bisnis_alumni_id_fkey"
+            columns: ["alumni_id"]
+            isOneToOne: false
+            referencedRelation: "alumni_public"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
+      admin_delete_alumni: {
+        Args: { p_alumni_id: string; p_reason?: string; p_reassigned?: Json }
+        Returns: Json
       }
-      is_verified_alumni: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
+      admin_list_alumni: {
+        Args: never
+        Returns: {
+          angkatan: number
+          auth_user_id: string | null
+          bersedia_dosen_tamu: string | null
+          bersedia_kp: boolean | null
+          bersedia_pengurus: boolean | null
+          bidang_pekerjaan: string | null
+          bidang_ska: string | null
+          created_at: string | null
+          domisili: string | null
+          email: string | null
+          foto_url: string | null
+          has_kta: boolean | null
+          has_nomor_anggota: boolean | null
+          id: string
+          ikut_s2_polban: string | null
+          institusi: string | null
+          is_form_filled: boolean | null
+          is_verified: boolean | null
+          jabatan: string | null
+          jenis_kelamin: string | null
+          kta_kategori: string | null
+          kta_nominal: string | null
+          kta_pengambilan: string | null
+          kta_status: string | null
+          kta_tanggal: string | null
+          minat_hobi: string[] | null
+          nama: string
+          no_hp: string | null
+          nomor_anggota: string | null
+          pendidikan_terakhir: string | null
+          prodi: string | null
+          punya_ska: boolean | null
+          source_layer: string | null
+          tahun_lulus: number | null
+          tanggal_lahir: string | null
+          tempat_kerja: string | null
+          updated_at: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "alumni"
+          isOneToOne: false
+          isSetofReturn: true
+        }
       }
+      admin_reassign_bisnis: {
+        Args: { p_from: string; p_to: string }
+        Returns: Json
+      }
+      admin_restore_alumni: { Args: { p_deletion_id: string }; Returns: Json }
+      is_admin: { Args: never; Returns: boolean }
+      is_verified_alumni: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
