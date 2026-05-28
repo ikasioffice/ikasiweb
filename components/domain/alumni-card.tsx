@@ -2,7 +2,7 @@ import Link from "next/link";
 import { AvatarPlaceholder } from "./avatar-placeholder";
 import type { AlumniPublic } from "@/lib/data/alumni";
 
-export function AlumniCard({ alumni }: { alumni: AlumniPublic }) {
+export function AlumniCard({ alumni, isVerified }: { alumni: AlumniPublic; isVerified?: boolean }) {
   return (
     <Link
       href={`/alumni/${alumni.id}`}
@@ -28,7 +28,9 @@ export function AlumniCard({ alumni }: { alumni: AlumniPublic }) {
         {alumni.domisili && <Tag muted>📍 {alumni.domisili}</Tag>}
       </div>
       <div className="flex justify-between items-center pt-3 border-t border-white/[0.06]">
-        <span className="text-[11px] text-slate-500">🔒 Login untuk kontak</span>
+        <span className="text-[11px] text-slate-500">
+          {isVerified ? "✓ Lihat kontak di profil" : "🔒 Login untuk kontak"}
+        </span>
         <span className="bg-[#d4a72c]/10 text-[#d4a72c] px-3 py-1 rounded-lg text-xs font-semibold">
           Lihat Profil →
         </span>

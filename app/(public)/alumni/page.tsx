@@ -4,8 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { listAlumniPublic, matchesAlumniFilter, type AlumniPublic } from "@/lib/data/alumni";
 import { AlumniCard } from "@/components/domain/alumni-card";
 import { SearchFilterBar } from "@/components/domain/search-filter-bar";
+import { useAuth } from "@/lib/auth/use-auth";
 
 export default function AlumniDirectoryPage() {
+  const { isVerified } = useAuth();
   const [all, setAll] = useState<AlumniPublic[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
@@ -70,7 +72,7 @@ export default function AlumniDirectoryPage() {
           ? Array.from({ length: 6 }).map((_, i) => (
               <div key={i} className="glass-card rounded-2xl h-60 animate-pulse" />
             ))
-          : filtered.map((a) => <AlumniCard key={a.id} alumni={a} />)}
+          : filtered.map((a) => <AlumniCard key={a.id} alumni={a} isVerified={isVerified} />)}
       </div>
     </>
   );
