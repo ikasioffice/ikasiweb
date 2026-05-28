@@ -18,8 +18,11 @@ export function Nav() {
 
   return (
     <nav className="px-12 py-5 flex justify-between items-center border-b border-white/[0.06]">
-      <Link href="/" className="text-lg font-extrabold tracking-tight text-[#d4a72c]">
-        IKASI<span className="text-white">.</span>
+      <Link href="/" className="flex items-center gap-2">
+        <img src="/logo-ikasi.png" alt="IKASI" className="h-9 w-9" />
+        <span className="text-lg font-extrabold tracking-tight text-[#d4a72c]">
+          IKASI<span className="text-white">.</span>
+        </span>
       </Link>
       <div className="flex gap-7 text-sm text-slate-300">
         {links.map((l) => (
