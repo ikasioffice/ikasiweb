@@ -20,12 +20,23 @@ function AdminAlumniContent() {
   const supabase = createClient();
 
   useEffect(() => {
-    let q = supabase.from("alumni").select("*").order("angkatan", { ascending: false }).limit(500);
-    if (showUnverifiedOnly) q = q.eq("is_verified", false);
-    q.then(({ data }) => {
-      setAlumni(data ?? []);
+    async function fetchAll() {
+      const PAGE = 1000;
+      let all: Alumni[] = [];
+      let from = 0;
+      while (true) {
+        let q = supabase.from("alumni").select("*").order("angkatan", { ascending: false }).range(from, from + PAGE - 1);
+        if (showUnverifiedOnly) q = q.eq("is_verified", false);
+        const { data } = await q;
+        if (!data || data.length === 0) break;
+        all = [...all, ...data];
+        if (data.length < PAGE) break;
+        from += PAGE;
+      }
+      setAlumni(all);
       setLoading(false);
-    });
+    }
+    fetchAll();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showUnverifiedOnly]);
 
