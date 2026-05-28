@@ -29,13 +29,24 @@ export function matchesAlumniFilter(a: AlumniPublic, f: AlumniFilter): boolean {
 
 export async function listAlumniPublic(): Promise<AlumniPublic[]> {
   const supabase = createClient();
-  const { data, error } = await supabase
-    .from("alumni_public")
-    .select("*")
-    .order("angkatan", { ascending: false })
-    .limit(500);
-  if (error) throw error;
-  return data ?? [];
+  const PAGE = 1000;
+  const all: AlumniPublic[] = [];
+  let from = 0;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from("alumni_public")
+      .select("*")
+      .order("angkatan", { ascending: false })
+      .range(from, from + PAGE - 1);
+    if (error) throw error;
+    if (!data || data.length === 0) break;
+    all.push(...data);
+    if (data.length < PAGE) break;
+    from += PAGE;
+  }
+
+  return all;
 }
 
 export async function getAlumniById(id: string): Promise<AlumniPublic | null> {
