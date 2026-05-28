@@ -8,7 +8,8 @@ export async function generateStaticParams() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
   const { data } = await supabase.from("events").select("id").eq("is_published", true);
-  return (data ?? []).map((r) => ({ id: String(r.id) }));
+  const ids = (data ?? []).map((r) => ({ id: String(r.id) }));
+  return ids.length > 0 ? ids : [{ id: "_" }];
 }
 
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
