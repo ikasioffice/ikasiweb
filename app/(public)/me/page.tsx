@@ -89,8 +89,16 @@ function MeContent() {
     setUploadingPhoto(true);
     setSaveMsg(null);
     try {
+      // Konversi HEIC/HEIF ke JPEG dulu (browser tidak support decode HEIC native)
+      const name = file.name.toLowerCase();
+      let processedFile: File | Blob = file;
+      if (name.endsWith(".heic") || name.endsWith(".heif") || file.type === "image/heic" || file.type === "image/heif") {
+        const heic2any = (await import("heic2any")).default;
+        const converted = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.88 });
+        processedFile = Array.isArray(converted) ? converted[0] : converted;
+      }
       // Konversi ke JPEG via Canvas agar semua format bisa ditampilkan browser
-      const bitmap = await createImageBitmap(file);
+      const bitmap = await createImageBitmap(processedFile);
       const MAX = 800;
       const ratio = Math.min(MAX / bitmap.width, MAX / bitmap.height, 1);
       const canvas = document.createElement("canvas");
