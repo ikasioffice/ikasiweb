@@ -12,7 +12,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "IKASI Polban — Ikatan Alumni Teknik Sipil",
   description:
-    "Platform alumni Teknik Sipil Polban. 1.452 alumni, 242 bisnis, 44 tahun sejarah.",
+    "Platform resmi Ikatan Alumni Teknik Sipil Politeknik Negeri Bandung (IKASI). Berdiri 28 April 2001. Direktori alumni, bisnis, acara, dan berita.",
 };
 
 export default function RootLayout({

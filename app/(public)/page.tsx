@@ -40,8 +40,9 @@ export default function Home() {
           <span className="gradient-text">Ribuan Alumni</span>
         </h1>
         <p className="text-slate-400 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-          Terhubung dengan alumni Teknik Sipil Polban dari seluruh Indonesia.
-          Temukan kolega, kolaborasi bisnis, dan peluang karier.
+          Wadah resmi alumni Teknik Sipil Polban sejak 28 April 2001.
+          Terhubung dengan ribuan alumni dari angkatan 1982 hingga sekarang —
+          temukan kolega, kolaborasi bisnis, dan peluang karier.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <Link href="/alumni" className="btn-gold px-8 py-3 rounded-full font-semibold">
