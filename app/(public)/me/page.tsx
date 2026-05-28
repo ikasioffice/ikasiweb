@@ -164,7 +164,7 @@ function MeContent() {
               <span className="text-white text-xs">{uploadingPhoto ? "..." : "Ubah"}</span>
             </div>
           </button>
-          <input ref={fileRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={handlePhotoUpload} />
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
         </div>
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight">{displayName}</h1>
