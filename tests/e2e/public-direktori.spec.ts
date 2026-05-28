@@ -23,6 +23,8 @@ test("direktori alumni — list + search + filter", async ({ page }) => {
 test("alumni detail kontak masked saat anonymous", async ({ page }) => {
   await page.goto("/alumni");
   await page.waitForSelector("[href^='/alumni/']", { timeout: 15_000 });
-  await page.locator("[href^='/alumni/']").first().click();
-  await expect(page.getByText(/Login \+ verifikasi alumni/i)).toBeVisible();
+  // Alumni IDs are UUIDs (contain '-'), nav link is '/alumni/' with no UUID
+  await page.locator("a[href^='/alumni/'][href*='-']").first().click();
+  await page.waitForURL(/\/alumni\/.+/);
+  await expect(page.getByText(/Login \+ verifikasi alumni/i)).toBeVisible({ timeout: 15_000 });
 });
