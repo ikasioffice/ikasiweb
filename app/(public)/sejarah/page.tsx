@@ -8,50 +8,70 @@ export default function SejarahPage() {
 
       <Section label="Sejarah">
         <p className="text-slate-300 leading-relaxed">
-          IKASI Polban berdiri sebagai wadah bagi para alumni Teknik Sipil Politeknik Negeri Bandung
-          (dahulu Politeknik ITB) yang telah menghasilkan ribuan lulusan sejak angkatan pertama tahun 1982.
-          Organisasi ini resmi berbadan hukum dengan Surat Keputusan Kemenkumham pada tahun 2024,
-          menandai babak baru dalam penguatan komunitas alumni.
+          Jurusan Teknik Sipil Politeknik Institut Teknologi Bandung berdiri pada tahun 1982 dan telah
+          menghasilkan ribuan lulusan yang berkiprah di seluruh nusantara hingga luar negeri. Pada tahun
+          1985, alumni membentuk &ldquo;Ikatan Alumni Politeknik ITB&rdquo;. Seiring perubahan institusi
+          menjadi Politeknik Negeri Bandung, organisasi alumni menyesuaikan nama menjadi
+          <strong> Ikatan Alumni Teknik Sipil Politeknik ITB – Politeknik Negeri Bandung (IKASI)</strong>,
+          resmi berdiri pada <strong>28 April 2001</strong>. AD/ART terakhir disahkan pada 6 Desember 2020
+          di Bandung sebagai Yayasan Non Profit.
         </p>
       </Section>
 
-      <Section label="Visi">
-        <p className="text-slate-300 leading-relaxed">
-          Menjadi organisasi alumni teknik sipil yang profesional, solid, dan berdampak nyata bagi
-          pembangunan bangsa dan pengembangan almamater.
-        </p>
+      <Section label="Tujuan Organisasi">
+        <ol className="space-y-2 text-slate-300 text-sm list-decimal pl-5">
+          <li>Menjaga, membina, dan mempererat hubungan kekeluargaan serta kerjasama antara sesama alumni dan civitas academica Jurusan Teknik Sipil Polban.</li>
+          <li>Turut serta dalam membangun visi-misi Jurusan Teknik Sipil Polban.</li>
+          <li>Menumbuh-kembangkan rasa cinta dan kebanggaan pada almamater.</li>
+          <li>Mengabdikan diri kepada masyarakat.</li>
+          <li>Mengoptimalkan sumber daya alumni sebagai mitra pembangunan nasional.</li>
+        </ol>
       </Section>
 
-      <Section label="Misi">
+      <Section label="Usaha">
         <ul className="space-y-2 text-slate-300 text-sm">
-          <li>• Mempererat silaturahmi dan jaringan antar alumni Teknik Sipil Polban</li>
-          <li>• Mendukung perkembangan karier dan wirausaha alumni</li>
-          <li>• Berkontribusi pada pengembangan Prodi Teknik Sipil Polban</li>
-          <li>• Membangun ekosistem profesional di bidang teknik sipil Indonesia</li>
+          <li>• Menyelenggarakan kegiatan yang menumbuhkan rasa memiliki pada organisasi dan almamater.</li>
+          <li>• Memperjuangkan keberadaan, peran, dan kedudukan organisasi di tingkat nasional dan internasional.</li>
+          <li>• Meningkatkan mutu dan kemampuan alumni secara profesional.</li>
+          <li>• Menjalin kerjasama dengan lembaga terkait di dalam maupun luar negeri.</li>
+          <li>• Mengadakan usaha lain yang sah dan sesuai asas organisasi.</li>
         </ul>
       </Section>
 
       <Section label="Data Singkat">
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <div className="text-slate-400 text-xs mb-1">Tahun Berdiri</div>
-            <div className="text-[#d4a72c] font-semibold">2001</div>
+            <div className="text-slate-400 text-xs mb-1">Tanggal Pendirian</div>
+            <div className="text-[#d4a72c] font-semibold">28 April 2001</div>
           </div>
           <div>
-            <div className="text-slate-400 text-xs mb-1">Angkatan Pertama</div>
-            <div className="text-[#d4a72c] font-semibold">1982</div>
+            <div className="text-slate-400 text-xs mb-1">Jurusan Berdiri</div>
+            <div className="text-[#d4a72c] font-semibold">1982 (Politeknik ITB)</div>
           </div>
           <div>
-            <div className="text-slate-400 text-xs mb-1">Berbadan Hukum</div>
-            <div className="text-[#d4a72c] font-semibold">2024 (SK Kemenkumham)</div>
+            <div className="text-slate-400 text-xs mb-1">AD/ART Disahkan</div>
+            <div className="text-[#d4a72c] font-semibold">6 Desember 2020</div>
           </div>
           <div>
-            <div className="text-slate-400 text-xs mb-1">Kontak</div>
-            <div>
-              <a href="mailto:ikasioffice@gmail.com" className="text-[#d4a72c] hover:underline">
-                ikasioffice@gmail.com
-              </a>
+            <div className="text-slate-400 text-xs mb-1">Bentuk Hukum</div>
+            <div className="text-[#d4a72c] font-semibold">Yayasan Non Profit</div>
+          </div>
+          <div className="col-span-2">
+            <div className="text-slate-400 text-xs mb-1">Sekretariat</div>
+            <div className="text-slate-200 text-sm">
+              Kampus Polban Jurusan Teknik Sipil, Jl. Gegerkalong Hilir, Ds. Ciwaruga,
+              Kec. Parongpong, Kab. Bandung Barat 40559
             </div>
+          </div>
+          <div className="col-span-2">
+            <div className="text-slate-400 text-xs mb-1">Kontak</div>
+            <a href="mailto:ikasioffice@gmail.com" className="text-[#d4a72c] hover:underline">
+              ikasioffice@gmail.com
+            </a>
+            <span className="text-slate-500"> · </span>
+            <a href="mailto:ikasi.poliitb.polban@gmail.com" className="text-[#d4a72c] hover:underline">
+              ikasi.poliitb.polban@gmail.com
+            </a>
           </div>
         </div>
       </Section>
