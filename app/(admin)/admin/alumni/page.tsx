@@ -21,7 +21,7 @@ function AdminAlumniContent() {
 
   useEffect(() => {
     async function fetchAll() {
-      const PAGE = 1000;
+      const PAGE = 100;
       let all: Alumni[] = [];
       let from = 0;
       while (true) {
