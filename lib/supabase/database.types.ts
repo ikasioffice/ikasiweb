@@ -27,18 +27,28 @@ export type Database = {
           domisili: string | null
           email: string | null
           foto_url: string | null
+          has_kta: boolean | null
+          has_nomor_anggota: boolean | null
           id: string
           ikut_s2_polban: string | null
           institusi: string | null
+          is_form_filled: boolean | null
           is_verified: boolean | null
           jabatan: string | null
           jenis_kelamin: string | null
+          kta_kategori: string | null
+          kta_nominal: string | null
+          kta_pengambilan: string | null
+          kta_status: string | null
+          kta_tanggal: string | null
           minat_hobi: string[] | null
           nama: string
           no_hp: string | null
+          nomor_anggota: string | null
           pendidikan_terakhir: string | null
           prodi: string | null
           punya_ska: boolean | null
+          source_layer: string | null
           tahun_lulus: number | null
           tanggal_lahir: string | null
           tempat_kerja: string | null
@@ -302,17 +312,23 @@ export type Database = {
           created_at: string | null
           domisili: string | null
           foto_url: string | null
+          has_kta: boolean | null
+          has_nomor_anggota: boolean | null
           id: string | null
           institusi: string | null
+          is_form_filled: boolean | null
           is_verified: boolean | null
           jabatan: string | null
           jenis_kelamin: string | null
+          kta_kategori: string | null
           minat_hobi: string[] | null
           nama: string | null
+          nomor_anggota: string | null
           pendidikan_terakhir: string | null
           prodi: string | null
           punya_ska: boolean | null
           tahun_lulus: number | null
+          tanggal_lahir: string | null
           tempat_kerja: string | null
           updated_at: string | null
         }

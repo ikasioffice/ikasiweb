@@ -8,9 +8,11 @@ const sample = {
   domisili: "Jakarta", is_verified: true,
   bersedia_dosen_tamu: null, bersedia_kp: null, bersedia_pengurus: null,
   bidang_ska: null, created_at: null, foto_url: null,
-  institusi: null, jenis_kelamin: null, minat_hobi: null,
+  has_kta: null, has_nomor_anggota: null, institusi: null,
+  is_form_filled: null, jenis_kelamin: null, kta_kategori: null,
+  minat_hobi: null, nomor_anggota: null,
   pendidikan_terakhir: null, punya_ska: null, tahun_lulus: null,
-  updated_at: null,
+  tanggal_lahir: null, updated_at: null,
 };
 
 describe("matchesAlumniFilter", () => {
