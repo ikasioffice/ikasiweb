@@ -10,6 +10,7 @@ type AuthState = {
   isAdmin: boolean;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
+  signInWithMagicLink: (email: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 };
 
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthState>({
   isAdmin: false,
   loading: true,
   signInWithGoogle: async () => {},
+  signInWithMagicLink: async () => ({ error: null }),
   signOut: async () => {},
 });
 
@@ -36,6 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setIsAdmin(false);
       return;
     }
+
     // Check admin role
     const { data: roleRow } = await supabase
       .from("user_roles")
@@ -45,13 +48,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .maybeSingle();
     setIsAdmin(!!roleRow);
 
-    // Check alumni verified
+    // Check if already linked
     const { data: alumniRow } = await supabase
       .from("alumni")
       .select("is_verified")
       .eq("auth_user_id", u.id)
       .maybeSingle();
-    setIsVerified(alumniRow?.is_verified ?? false);
+
+    if (alumniRow) {
+      setIsVerified(alumniRow.is_verified ?? false);
+      return;
+    }
+
+    // Auto-link: cari alumni dengan email cocok yang belum punya auth_user_id
+    if (u.email) {
+      const { data: match } = await supabase
+        .from("alumni")
+        .select("id, is_verified")
+        .eq("email", u.email)
+        .is("auth_user_id", null)
+        .maybeSingle();
+
+      if (match) {
+        await supabase
+          .from("alumni")
+          .update({ auth_user_id: u.id, is_verified: true })
+          .eq("id", match.id);
+        setIsVerified(true);
+        return;
+      }
+    }
+
+    setIsVerified(false);
   }
 
   useEffect(() => {
@@ -78,6 +106,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }
 
+  async function signInWithMagicLink(email: string): Promise<{ error: string | null }> {
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (error) return { error: error.message };
+    return { error: null };
+  }
+
   async function signOut() {
     await supabase.auth.signOut();
     setUser(null);
@@ -86,7 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isVerified, isAdmin, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, isVerified, isAdmin, loading, signInWithGoogle, signInWithMagicLink, signOut }}>
       {children}
     </AuthContext.Provider>
   );
