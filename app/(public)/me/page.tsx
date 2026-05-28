@@ -87,18 +87,35 @@ function MeContent() {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     setUploadingPhoto(true);
-    const supabase = createClient();
-    const ext = file.name.split(".").pop();
-    const path = `${user.id}/avatar.${ext}`;
-    const { error } = await supabase.storage
-      .from("alumni-photos")
-      .upload(path, file, { upsert: true });
-    if (!error) {
-      const { data: { publicUrl } } = supabase.storage
+    setSaveMsg(null);
+    try {
+      // Konversi ke JPEG via Canvas agar semua format bisa ditampilkan browser
+      const bitmap = await createImageBitmap(file);
+      const MAX = 800;
+      const ratio = Math.min(MAX / bitmap.width, MAX / bitmap.height, 1);
+      const canvas = document.createElement("canvas");
+      canvas.width = Math.round(bitmap.width * ratio);
+      canvas.height = Math.round(bitmap.height * ratio);
+      canvas.getContext("2d")!.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise<Blob>((res) =>
+        canvas.toBlob((b) => res(b!), "image/jpeg", 0.88)
+      );
+      const supabase = createClient();
+      const path = `${user.id}/avatar.jpg`;
+      const { error } = await supabase.storage
         .from("alumni-photos")
-        .getPublicUrl(path);
-      await supabase.from("alumni").update({ foto_url: publicUrl }).eq("auth_user_id", user.id);
-      setPhotoUrl(publicUrl + "?t=" + Date.now());
+        .upload(path, blob, { upsert: true, contentType: "image/jpeg" });
+      if (!error) {
+        const { data: { publicUrl } } = supabase.storage
+          .from("alumni-photos")
+          .getPublicUrl(path);
+        await supabase.from("alumni").update({ foto_url: publicUrl }).eq("auth_user_id", user.id);
+        setPhotoUrl(publicUrl + "?t=" + Date.now());
+      } else {
+        setSaveMsg("Gagal upload foto. Coba lagi.");
+      }
+    } catch {
+      setSaveMsg("Format ini tidak didukung browser. Gunakan JPG atau PNG.");
     }
     setUploadingPhoto(false);
   }
@@ -154,7 +171,8 @@ function MeContent() {
             title="Ganti foto"
           >
             {photoUrl ? (
-              <img src={photoUrl} alt={displayName} className="w-full h-full object-cover" />
+              <img src={photoUrl} alt={displayName} className="w-full h-full object-cover"
+                onError={() => setPhotoUrl(null)} />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-[#d4a72c]">
                 {displayName.charAt(0).toUpperCase()}
