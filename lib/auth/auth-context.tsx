@@ -48,38 +48,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .maybeSingle();
     setIsAdmin(!!roleRow);
 
-    // Check if already linked
+    // Auto-link ditangani oleh Postgres trigger (on_auth_user_created / on_auth_email_confirmed)
+    // Di sini cukup baca hasilnya
     const { data: alumniRow } = await supabase
       .from("alumni")
       .select("is_verified")
       .eq("auth_user_id", u.id)
       .maybeSingle();
 
-    if (alumniRow) {
-      setIsVerified(alumniRow.is_verified ?? false);
-      return;
-    }
-
-    // Auto-link: cari alumni dengan email cocok yang belum punya auth_user_id
-    if (u.email) {
-      const { data: match } = await supabase
-        .from("alumni")
-        .select("id, is_verified")
-        .eq("email", u.email)
-        .is("auth_user_id", null)
-        .maybeSingle();
-
-      if (match) {
-        await supabase
-          .from("alumni")
-          .update({ auth_user_id: u.id, is_verified: true })
-          .eq("id", match.id);
-        setIsVerified(true);
-        return;
-      }
-    }
-
-    setIsVerified(false);
+    setIsVerified(alumniRow?.is_verified ?? false);
   }
 
   useEffect(() => {
