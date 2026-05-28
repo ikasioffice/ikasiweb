@@ -1,6 +1,8 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/lib/auth/use-auth";
+import { AvatarPlaceholder } from "@/components/domain/avatar-placeholder";
 
 const links = [
   { href: "/alumni", label: "Direktori" },
@@ -12,6 +14,7 @@ const links = [
 
 export function Nav() {
   const pathname = usePathname();
+  const { user, loading } = useAuth();
 
   return (
     <nav className="px-12 py-5 flex justify-between items-center border-b border-white/[0.06]">
@@ -29,12 +32,23 @@ export function Nav() {
           </Link>
         ))}
       </div>
-      <Link
-        href="/daftar"
-        className="btn-gold px-5 py-2 rounded-full text-xs"
-      >
-        Bergabung — Gratis
-      </Link>
+      {loading ? (
+        <div className="w-24 h-8 rounded-full bg-white/5 animate-pulse" />
+      ) : user ? (
+        <Link href="/me" className="flex items-center gap-2 text-sm text-slate-300 hover:text-white transition-colors">
+          <AvatarPlaceholder
+            name={user.user_metadata?.full_name ?? user.email ?? "?"}
+            size={32}
+          />
+          <span className="hidden sm:inline">
+            {user.user_metadata?.full_name?.split(" ")[0] ?? "Profil"}
+          </span>
+        </Link>
+      ) : (
+        <Link href="/login" className="btn-gold px-5 py-2 rounded-full text-xs">
+          Masuk / Daftar
+        </Link>
+      )}
     </nav>
   );
 }
