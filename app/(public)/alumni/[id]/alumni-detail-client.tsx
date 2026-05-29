@@ -62,10 +62,9 @@ export function AlumniDetailClient({ paramsPromise }: { paramsPromise: Promise<{
         </Section>
       )}
 
-      {/* Info Pribadi */}
+      {/* Info Pribadi — tanggal lahir TIDAK ditampilkan di publik (privasi) */}
       <Section label="Info Pribadi">
         <div className="grid grid-cols-2 gap-3 text-sm">
-          <Field label="Tanggal Lahir" value={alumni.tanggal_lahir} />
           <Field label="Domisili" value={alumni.domisili} />
         </div>
       </Section>
