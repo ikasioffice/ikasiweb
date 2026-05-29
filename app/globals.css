@@ -16,11 +16,18 @@
   --shadow-glow: 0 10px 30px rgba(212, 167, 44, 0.3);
 }
 
+html {
+  /* Safety net: never let stray fixed-width content cause horizontal scroll on mobile */
+  overflow-x: hidden;
+}
+
 body {
   background: linear-gradient(135deg, #0a1628 0%, #142340 100%);
   color: #fff;
   font-family: var(--font-sans);
   min-height: 100vh;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .gradient-text {

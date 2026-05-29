@@ -17,13 +17,13 @@ type Props = {
 
 export function SearchFilterBar(props: Props) {
   return (
-    <div className="mx-12 p-4 glass-card rounded-2xl grid grid-cols-[2fr_1fr_1fr_1fr_auto] gap-3 items-center">
+    <div className="mx-5 sm:mx-8 lg:mx-12 p-4 glass-card rounded-2xl flex flex-wrap gap-3 items-center lg:grid lg:grid-cols-[2fr_1fr_1fr_1fr_auto]">
       <input
         type="text"
         placeholder="Cari nama, profesi, atau perusahaan..."
         value={props.query}
         onChange={(e) => props.onQuery(e.target.value)}
-        className="bg-black/30 border border-white/[0.08] text-white px-4 py-3 rounded-xl text-sm"
+        className="w-full sm:flex-1 sm:min-w-[200px] min-w-0 bg-black/30 border border-white/[0.08] text-white px-4 py-3 rounded-xl text-sm"
       />
       <Select
         value={props.angkatan?.toString() ?? ""}
@@ -65,7 +65,7 @@ function Select({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="bg-black/30 border border-white/[0.08] text-slate-300 px-3 py-3 rounded-xl text-sm"
+      className="flex-1 lg:flex-none min-w-0 bg-black/30 border border-white/[0.08] text-slate-300 px-3 py-3 rounded-xl text-sm"
     >
       <option value="">{placeholder}</option>
       {options.map((o) => (

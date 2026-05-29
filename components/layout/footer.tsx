@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="px-12 py-12 border-t border-white/[0.06] text-sm text-slate-400">
+    <footer className="px-5 sm:px-8 lg:px-12 py-12 border-t border-white/[0.06] text-sm text-slate-400">
       <div className="flex flex-col md:flex-row justify-between gap-8">
         <div>
           <div className="text-[#d4a72c] font-extrabold mb-2">IKASI.</div>
@@ -11,7 +11,7 @@ export function Footer() {
             berbadan hukum sejak 2024.
           </p>
         </div>
-        <div className="flex gap-12 text-xs">
+        <div className="flex flex-wrap gap-8 sm:gap-12 text-xs">
           <div>
             <div className="text-white font-semibold mb-2">Platform</div>
             <Link href="/alumni" className="block py-1">Direktori</Link>
