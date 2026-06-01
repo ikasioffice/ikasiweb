@@ -6,6 +6,9 @@ import { AuthGuard } from "@/components/auth/auth-guard";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/lib/supabase/database.types";
 import Link from "next/link";
+import { InfoField } from "@/components/ui/info-field";
+import { LineIcon } from "@/components/ui/icons";
+import { formatName } from "@/lib/format";
 
 type AlumniRow = Database["public"]["Tables"]["alumni"]["Row"];
 
@@ -24,15 +27,6 @@ type EditForm = {
   tahun_lulus: string;
   minat_hobi: string;
 };
-
-function Field({ label, value }: { label: string; value?: string | number | null }) {
-  return (
-    <div>
-      <div className="text-xs text-slate-500 mb-0.5">{label}</div>
-      <div className="text-sm text-slate-200">{value || "—"}</div>
-    </div>
-  );
-}
 
 function MeContent() {
   const { user, isVerified, isAdmin, signOut } = useAuth();
@@ -165,7 +159,7 @@ function MeContent() {
 
   if (!user) return null;
   const a = alumni && alumni !== "not-linked" ? alumni : null;
-  const displayName = a?.nama || user.user_metadata?.full_name || user.email || "Alumni";
+  const displayName = formatName(a?.nama || user.user_metadata?.full_name || user.email || "Alumni");
 
   return (
     <main className="px-6 py-12 max-w-2xl mx-auto">
@@ -225,7 +219,7 @@ function MeContent() {
               <div className="text-xl font-mono font-bold text-[#d4a72c]">{a.nomor_anggota}</div>
             ) : (
               <div className="text-sm text-amber-400/80">
-                ⚠ Harap Registrasi ke Admin untuk mendapat Kartu Anggota
+                <span className="inline-flex items-center gap-1.5"><LineIcon name="warning" /> Harap Registrasi ke Admin untuk mendapat Kartu Anggota</span>
                 <a href="mailto:ikasioffice@gmail.com?subject=Permohonan Kartu Anggota IKASI" className="ml-2 underline text-[#d4a72c]">Hubungi Admin</a>
               </div>
             )}
@@ -287,18 +281,18 @@ function MeContent() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
-                <Field label="Nama Lengkap" value={a.nama} />
-                <Field label="Angkatan" value={a.angkatan} />
-                <Field label="Program Studi" value={a.prodi} />
-                <Field label="Tanggal Lahir" value={a.tanggal_lahir} />
-                <Field label="Domisili" value={a.domisili} />
-                <Field label="Bidang Pekerjaan" value={a.bidang_pekerjaan} />
-                <Field label="Tempat Kerja" value={a.tempat_kerja} />
-                <Field label="Jabatan" value={a.jabatan} />
-                <Field label="Pendidikan Terakhir" value={a.pendidikan_terakhir} />
-                <Field label="Institusi" value={a.institusi} />
-                <Field label="Tahun Lulus" value={a.tahun_lulus} />
-                <Field label="SKA/SKK" value={a.punya_ska ? (a.bidang_ska || "Ya") : "Tidak"} />
+                <InfoField label="Nama Lengkap" value={a.nama} />
+                <InfoField label="Angkatan" value={a.angkatan} />
+                <InfoField label="Program Studi" value={a.prodi} />
+                <InfoField label="Tanggal Lahir" value={a.tanggal_lahir} />
+                <InfoField label="Domisili" value={a.domisili} />
+                <InfoField label="Bidang Pekerjaan" value={a.bidang_pekerjaan} />
+                <InfoField label="Tempat Kerja" value={a.tempat_kerja} />
+                <InfoField label="Jabatan" value={a.jabatan} />
+                <InfoField label="Pendidikan Terakhir" value={a.pendidikan_terakhir} />
+                <InfoField label="Institusi" value={a.institusi} />
+                <InfoField label="Tahun Lulus" value={a.tahun_lulus} />
+                <InfoField label="SKA/SKK" value={a.punya_ska ? (a.bidang_ska || "Ya") : "Tidak"} />
                 {a.minat_hobi?.length ? (
                   <div className="col-span-2">
                     <div className="text-xs text-slate-500 mb-1">Minat / Hobi</div>
@@ -315,8 +309,8 @@ function MeContent() {
           <section className="glass-card rounded-2xl p-5 mb-4">
             <div className="text-xs text-slate-500 uppercase tracking-widest mb-3">Kontak <span className="normal-case">(hanya kamu yang lihat)</span></div>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Email" value={a.email} />
-              <Field label="No. HP" value={a.no_hp} />
+              <InfoField label="Email" value={a.email} />
+              <InfoField label="No. HP" value={a.no_hp} />
             </div>
           </section>
         </>
