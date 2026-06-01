@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { SectionShell } from "@/components/ui/section-shell";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
+import { StatBlock } from "@/components/ui/stat-block";
 
 describe("Button", () => {
   it("render sebagai <a> bila ada href", () => {
@@ -95,5 +96,17 @@ describe("EmptyState", () => {
       <EmptyState title="x" action={<a href="/daftar">Daftar</a>} />,
     );
     expect(container.querySelector('a[href="/daftar"]')).not.toBeNull();
+  });
+});
+
+describe("StatBlock", () => {
+  it("menampilkan placeholder saat value null", () => {
+    const { container } = render(<StatBlock value={null} label="Alumni" />);
+    expect(container.textContent).toContain("—");
+    expect(container.textContent).toContain("Alumni");
+  });
+  it("menampilkan label", () => {
+    const { container } = render(<StatBlock value={10} label="Angkatan" />);
+    expect(container.textContent).toContain("Angkatan");
   });
 });
