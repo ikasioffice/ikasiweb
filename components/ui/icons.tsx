@@ -21,3 +21,28 @@ export function FeatureIcon({ name, className = "" }: { name: IconName; classNam
     </svg>
   );
 }
+
+type LineIconName = "pin" | "lock" | "check" | "mail" | "warning" | "briefcase" | "cap";
+
+const LINE_PATHS: Record<LineIconName, string> = {
+  pin: "M12 21s-6-5.3-6-10a6 6 0 1112 0c0 4.7-6 10-6 10zM12 11a2 2 0 100-4 2 2 0 000 4z",
+  lock: "M6 10V8a6 6 0 0112 0v2M5 10h14v10H5zM12 14v3",
+  check: "M20 6L9 17l-5-5",
+  mail: "M3 6h18v12H3zM3 7l9 6 9-6",
+  warning: "M12 3l10 18H2zM12 10v5M12 18h.01",
+  briefcase: "M4 8h16v12H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2",
+  cap: "M12 4l10 5-10 5L2 9l10-5zM6 11v5l6 3 6-3v-5",
+};
+
+export function LineIcon({ name, className = "", size = 16 }: { name: LineIconName; className?: string; size?: number }) {
+  const d = LINE_PATHS[name] ?? LINE_PATHS.check;
+  return (
+    <svg
+      width={size} height={size} viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
+      className={className} aria-hidden="true"
+    >
+      <path d={d} />
+    </svg>
+  );
+}

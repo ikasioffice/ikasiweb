@@ -123,3 +123,17 @@ describe("FeatureIcon", () => {
     expect(container.querySelector("svg")).not.toBeNull();
   });
 });
+
+import { LineIcon } from "@/components/ui/icons";
+
+describe("LineIcon", () => {
+  it("render svg untuk nama dikenal", () => {
+    const { container } = render(<LineIcon name="pin" />);
+    expect(container.querySelector("svg")).not.toBeNull();
+  });
+  it("fallback render svg untuk nama tak dikenal", () => {
+    // @ts-expect-error sengaja
+    const { container } = render(<LineIcon name="zzz" />);
+    expect(container.querySelector("svg")).not.toBeNull();
+  });
+});
