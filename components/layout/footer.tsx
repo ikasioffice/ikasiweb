@@ -5,7 +5,7 @@ export function Footer() {
     <footer className="px-5 sm:px-8 lg:px-12 py-12 border-t border-white/[0.06] text-sm text-slate-400">
       <div className="flex flex-col md:flex-row justify-between gap-8">
         <div>
-          <div className="text-[#d4a72c] font-extrabold mb-2">IKASI.</div>
+          <div className="font-heading text-[#d4a72c] font-extrabold mb-2">IKASI.</div>
           <p className="text-xs max-w-xs">
             Ikatan Alumni Teknik Sipil Polban. Berdiri 2001, berakar dari angkatan 1982,
             berbadan hukum sejak 2024.
