@@ -8,6 +8,7 @@ import { SectionShell } from "@/components/ui/section-shell";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StatBlock } from "@/components/ui/stat-block";
+import { FeatureIcon } from "@/components/ui/icons";
 
 describe("Button", () => {
   it("render sebagai <a> bila ada href", () => {
@@ -108,5 +109,17 @@ describe("StatBlock", () => {
   it("menampilkan label", () => {
     const { container } = render(<StatBlock value={10} label="Angkatan" />);
     expect(container.textContent).toContain("Angkatan");
+  });
+});
+
+describe("FeatureIcon", () => {
+  it("render svg untuk nama ikon dikenal", () => {
+    const { container } = render(<FeatureIcon name="directory" />);
+    expect(container.querySelector("svg")).not.toBeNull();
+  });
+  it("fallback tetap render svg untuk nama tak dikenal", () => {
+    // @ts-expect-error sengaja nama tak dikenal
+    const { container } = render(<FeatureIcon name="zzz" />);
+    expect(container.querySelector("svg")).not.toBeNull();
   });
 });
