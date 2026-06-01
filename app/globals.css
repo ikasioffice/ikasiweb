@@ -10,6 +10,9 @@
   --color-text-muted: #94a3b8;
   --color-border-subtle: rgba(255, 255, 255, 0.08);
   --color-border-accent: rgba(212, 167, 44, 0.3);
+  --color-blueprint-line: rgba(120, 170, 220, 0.12);
+  --color-blueprint-line-strong: rgba(120, 170, 220, 0.22);
+  --font-heading: var(--font-heading-src), "Inter", system-ui, sans-serif;
   --font-sans: "Inter", system-ui, -apple-system, sans-serif;
   --radius-card: 16px;
   --radius-pill: 999px;
@@ -48,4 +51,21 @@ body {
   color: #0a1628;
   font-weight: 700;
   box-shadow: 0 10px 30px rgba(212, 167, 44, 0.3);
+}
+
+/* Blueprint grid texture — used by SectionShell via .bp-grid class */
+.bp-grid {
+  background-image:
+    linear-gradient(var(--color-blueprint-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-blueprint-line) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }
