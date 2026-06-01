@@ -3,6 +3,7 @@ import { render } from "@testing-library/react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 
 describe("Button", () => {
   it("render sebagai <a> bila ada href", () => {
@@ -43,5 +44,17 @@ describe("Badge", () => {
     const { container: g } = render(<Badge variant="gold">a</Badge>);
     const { container: n } = render(<Badge variant="neutral">a</Badge>);
     expect(g.firstElementChild?.className).not.toBe(n.firstElementChild?.className);
+  });
+});
+
+describe("Card", () => {
+  it("render sebagai <a> bila ada href", () => {
+    const { container } = render(<Card href="/y">isi</Card>);
+    expect(container.querySelector("a")?.getAttribute("href")).toBe("/y");
+  });
+  it("render sebagai <div> bila tanpa href", () => {
+    const { container } = render(<Card>isi</Card>);
+    expect(container.querySelector("a")).toBeNull();
+    expect(container.querySelector("div")).not.toBeNull();
   });
 });
