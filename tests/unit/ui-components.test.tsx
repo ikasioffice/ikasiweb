@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { SectionShell } from "@/components/ui/section-shell";
 
 describe("Button", () => {
   it("render sebagai <a> bila ada href", () => {
@@ -56,5 +57,16 @@ describe("Card", () => {
     const { container } = render(<Card>isi</Card>);
     expect(container.querySelector("a")).toBeNull();
     expect(container.querySelector("div")).not.toBeNull();
+  });
+});
+
+describe("SectionShell", () => {
+  it("menambahkan kelas bp-grid saat grid=true", () => {
+    const { container } = render(<SectionShell grid>x</SectionShell>);
+    expect(container.querySelector(".bp-grid")).not.toBeNull();
+  });
+  it("tanpa grid tidak ada bp-grid", () => {
+    const { container } = render(<SectionShell>x</SectionShell>);
+    expect(container.querySelector(".bp-grid")).toBeNull();
   });
 });
