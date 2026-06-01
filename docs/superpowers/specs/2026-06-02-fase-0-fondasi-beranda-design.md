@@ -132,3 +132,16 @@ Mempertahankan **semua konten & fungsi**: badge "IKATAN ALUMNI…", judul "Satu 
 - **Tekstur blueprint terlalu ramai** → terapkan hemat, opacity rendah, uji di mobile.
 - **Font heading baru menambah berat** → pilih satu font via `next/font` (subset latin), pantau ukuran.
 - **Static export membatasi animasi** → andalkan CSS; tidak ada runtime server.
+
+---
+
+## Appendix: Keputusan Visual Final (Task 1 — Stitch approval 2026-06-02)
+
+- **Font heading:** Space Grotesk (700–800, letter-spacing -0.02em) — dikunci
+- **Font label/badge kecil:** JetBrains Mono (nuansa "spec sheet") — disetujui user
+- **Font body:** Inter — tetap
+- **Blueprint grid:** 32px, opacity sangat tipis — ✅ sesuai spec
+- **Tombol CTA:** rounded-full sesuai implementation plan (bukan sharp-0 dari mockup Stitch)
+- **Warna primer gold:** #d4a72c — tetap
+- **Corner ticks kartu:** rgba(120,170,220,0.22) — dikunci
+- Mockup Stitch screen ID: `9354d338f356477db59eb073849400cd`, project: `12960562259975088295`
