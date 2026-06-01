@@ -137,3 +137,21 @@ describe("LineIcon", () => {
     expect(container.querySelector("svg")).not.toBeNull();
   });
 });
+
+import { InfoField } from "@/components/ui/info-field";
+
+describe("InfoField", () => {
+  it("menampilkan label & value bila ada isinya", () => {
+    const { container } = render(<InfoField label="Domisili" value="Bandung" />);
+    expect(container.textContent).toContain("Domisili");
+    expect(container.textContent).toContain("Bandung");
+  });
+  it("render null (tidak ada output) bila value kosong", () => {
+    const { container } = render(<InfoField label="Domisili" value="" />);
+    expect(container.firstChild).toBeNull();
+  });
+  it("render null bila value placeholder dash", () => {
+    const { container } = render(<InfoField label="X" value="—" />);
+    expect(container.firstChild).toBeNull();
+  });
+});
