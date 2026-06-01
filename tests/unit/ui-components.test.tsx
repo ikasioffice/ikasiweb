@@ -5,6 +5,7 @@ import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { SectionShell } from "@/components/ui/section-shell";
+import { PageHeader } from "@/components/ui/page-header";
 
 describe("Button", () => {
   it("render sebagai <a> bila ada href", () => {
@@ -68,5 +69,16 @@ describe("SectionShell", () => {
   it("tanpa grid tidak ada bp-grid", () => {
     const { container } = render(<SectionShell>x</SectionShell>);
     expect(container.querySelector(".bp-grid")).toBeNull();
+  });
+});
+
+describe("PageHeader", () => {
+  it("menampilkan title dalam <h1>", () => {
+    const { container } = render(<PageHeader title="Direktori" />);
+    expect(container.querySelector("h1")?.textContent).toContain("Direktori");
+  });
+  it("menampilkan subtitle bila ada", () => {
+    const { container } = render(<PageHeader title="A" subtitle="Sub" />);
+    expect(container.textContent).toContain("Sub");
   });
 });
