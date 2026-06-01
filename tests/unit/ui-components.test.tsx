@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 
 describe("Button", () => {
   it("render sebagai <a> bila ada href", () => {
@@ -30,5 +31,17 @@ describe("Avatar", () => {
   it("aman untuk nama satu kata", () => {
     const { container } = render(<Avatar name="budi" />);
     expect(container.textContent).toBe("B");
+  });
+});
+
+describe("Badge", () => {
+  it("menampilkan children", () => {
+    const { container } = render(<Badge>2023</Badge>);
+    expect(container.textContent).toContain("2023");
+  });
+  it("varian gold & neutral berbeda kelas", () => {
+    const { container: g } = render(<Badge variant="gold">a</Badge>);
+    const { container: n } = render(<Badge variant="neutral">a</Badge>);
+    expect(g.firstElementChild?.className).not.toBe(n.firstElementChild?.className);
   });
 });
