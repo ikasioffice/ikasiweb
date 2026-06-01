@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { SectionShell } from "@/components/ui/section-shell";
 import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 
 describe("Button", () => {
   it("render sebagai <a> bila ada href", () => {
@@ -80,5 +81,19 @@ describe("PageHeader", () => {
   it("menampilkan subtitle bila ada", () => {
     const { container } = render(<PageHeader title="A" subtitle="Sub" />);
     expect(container.textContent).toContain("Sub");
+  });
+});
+
+describe("EmptyState", () => {
+  it("menampilkan title & description", () => {
+    const { container } = render(<EmptyState title="Belum ada acara" description="Nantikan." />);
+    expect(container.textContent).toContain("Belum ada acara");
+    expect(container.textContent).toContain("Nantikan.");
+  });
+  it("menampilkan action bila diberikan", () => {
+    const { container } = render(
+      <EmptyState title="x" action={<a href="/daftar">Daftar</a>} />,
+    );
+    expect(container.querySelector('a[href="/daftar"]')).not.toBeNull();
   });
 });
