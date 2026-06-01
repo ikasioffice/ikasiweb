@@ -13,6 +13,7 @@ const navItems = [
   { href: "/admin/alumni/deletions", label: "Riwayat Hapus" },
   { href: "/admin/news", label: "Berita" },
   { href: "/admin/events", label: "Acara" },
+  { href: "/admin/wa-groups", label: "Grup WhatsApp" },
 ];
 
 function AdminNav() {

@@ -18,6 +18,7 @@ export function Footer() {
             <Link href="/bisnis" className="block py-1">Bisnis</Link>
             <Link href="/event" className="block py-1">Acara</Link>
             <Link href="/news" className="block py-1">Berita</Link>
+            <Link href="/grup-wa" className="block py-1">Grup WA</Link>
           </div>
           <div>
             <div className="text-white font-semibold mb-2">Organisasi</div>

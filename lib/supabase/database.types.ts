@@ -349,6 +349,39 @@ export type Database = {
         }
         Relationships: []
       }
+      wa_groups: {
+        Row: {
+          id: string
+          name: string
+          description: string | null
+          category: string
+          wa_link: string
+          member_count: number | null
+          is_active: boolean | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          name: string
+          description?: string | null
+          category: string
+          wa_link: string
+          member_count?: number | null
+          is_active?: boolean | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          name?: string
+          description?: string | null
+          category?: string
+          wa_link?: string
+          member_count?: number | null
+          is_active?: boolean | null
+          created_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       alumni_public: {

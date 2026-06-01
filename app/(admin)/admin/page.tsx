@@ -64,6 +64,7 @@ export default function AdminDashboard() {
           { href: "/admin/alumni/deletions", label: "Riwayat Hapus", desc: "Lihat dan restore alumni yang dihapus" },
           { href: "/admin/news", label: "Kelola Berita", desc: "Tulis dan publish artikel" },
           { href: "/admin/events", label: "Kelola Acara", desc: "Buat dan manage event IKASI" },
+          { href: "/admin/wa-groups", label: "Grup WhatsApp", desc: "Kelola link & daftar grup WhatsApp" },
         ].map((a) => (
           <Link
             key={a.href}

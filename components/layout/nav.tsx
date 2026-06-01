@@ -9,6 +9,7 @@ const links = [
   { href: "/alumni", label: "Direktori" },
   { href: "/bisnis", label: "Bisnis" },
   { href: "/event", label: "Acara" },
+  { href: "/grup-wa", label: "Grup WA" },
   { href: "/news", label: "Berita" },
   { href: "/sejarah", label: "Tentang" },
 ];
