@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
 
 const steps = [
   {
@@ -45,12 +47,11 @@ const benefits: Benefit[] = [
 export default function CaraBergabungPage() {
   return (
     <main className="px-6 py-16 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        Cara <span className="gradient-text">Bergabung</span>
-      </h1>
-      <p className="text-slate-400 mb-12">
-        Gratis. Hanya butuh akun Google dan status alumni Teknik Sipil Polban.
-      </p>
+      <PageHeader
+        title={<>Cara <span className="gradient-text">Bergabung</span></>}
+        subtitle="Gratis. Hanya butuh akun Google dan status alumni Teknik Sipil Polban."
+        className="mb-12"
+      />
 
       <div className="space-y-6 mb-16 max-w-3xl">
         {steps.map((step) => (
@@ -90,11 +91,11 @@ export default function CaraBergabungPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           {benefits.map((b) => (
-            <div key={b.brand} className="glass-card rounded-xl p-5">
+            <Card key={b.brand} className="p-5">
               <div className="font-semibold text-white mb-1">{b.brand}</div>
               <div className="text-xs text-slate-400 mb-3">{b.desc}</div>
               <div className="text-sm text-[#d4a72c] font-medium">{b.benefit}</div>
-            </div>
+            </Card>
           ))}
         </div>
       </section>

@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { listWaGroups, groupByCategory, type WaGroup } from "@/lib/data/wa-groups";
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
 
 function WaCard({ group }: { group: WaGroup }) {
   const [copied, setCopied] = useState(false);
@@ -17,7 +20,7 @@ function WaCard({ group }: { group: WaGroup }) {
   };
 
   return (
-    <div className="glass-card rounded-2xl p-5 flex flex-col gap-3 hover:border-[#d4a72c]/40 transition-colors">
+    <Card className="flex flex-col gap-3 p-5">
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-bold text-white text-sm leading-snug">{group.name}</h3>
         <span className="shrink-0 text-xs bg-[#25D366]/20 text-[#25D366] px-2 py-0.5 rounded-full font-medium">
@@ -62,7 +65,7 @@ function WaCard({ group }: { group: WaGroup }) {
           )}
         </button>
       </div>
-    </div>
+    </Card>
   );
 }
 
@@ -92,19 +95,18 @@ export default function GrupWaPage() {
 
   return (
     <main className="px-6 py-12 max-w-5xl mx-auto">
-      <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        Grup <span className="gradient-text">WhatsApp</span> IKASI
-      </h1>
-      <p className="text-slate-400 mb-8">
-        Kumpulan grup WhatsApp resmi IKASI — silaturahmi, info lowongan, diskusi bidang, dan lainnya
-      </p>
+      <PageHeader
+        title={<>Grup <span className="gradient-text">WhatsApp</span> IKASI</>}
+        subtitle="Kumpulan grup WhatsApp resmi IKASI — silaturahmi, info lowongan, diskusi bidang, dan lainnya"
+        className="mb-8"
+      />
 
       <input
         type="search"
         placeholder="Cari grup, kategori, atau deskripsi…"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full mb-10 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-[#d4a72c]/50"
+        className="w-full mb-10 min-h-11 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-[#d4a72c]/50"
       />
 
       {loading ? (
@@ -121,9 +123,10 @@ export default function GrupWaPage() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center text-slate-500 py-16">
-          Tidak ada grup WhatsApp yang ditemukan.
-        </div>
+        <EmptyState
+          title="Belum ada grup ditemukan"
+          description="Coba ubah kata kunci pencarian."
+        />
       ) : (
         <div className="space-y-10">
           {Array.from(grouped.entries()).map(([category, items]) => (
