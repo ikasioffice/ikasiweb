@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
+import { Card } from "@/components/ui/card";
 
 type Stats = {
   alumni: number | null;
@@ -33,7 +34,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      <h1 className="text-3xl font-extrabold tracking-tight mb-8">Dashboard</h1>
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight mb-8">Dashboard</h1>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-10">
         {[
@@ -42,18 +43,16 @@ export default function AdminDashboard() {
           { label: "Bisnis Terdaftar", value: stats.bisnis, href: "/bisnis" },
           { label: "Artikel Berita", value: stats.news, href: "/admin/news" },
         ].map((s) => (
-          <Link
+          <Card
             key={s.label}
             href={s.href}
-            className={`glass-card rounded-2xl p-5 hover:border-[#d4a72c]/40 transition-colors ${
-              s.urgent ? "border-orange-500/30" : ""
-            }`}
+            className={`p-5 ${s.urgent ? "border-orange-500/30" : ""}`}
           >
             <div className={`text-3xl font-extrabold ${s.urgent ? "text-orange-400" : "gradient-text"}`}>
               {s.value ?? "—"}
             </div>
             <div className="text-sm text-slate-400 mt-1">{s.label}</div>
-          </Link>
+          </Card>
         ))}
       </div>
 
@@ -66,14 +65,14 @@ export default function AdminDashboard() {
           { href: "/admin/events", label: "Kelola Acara", desc: "Buat dan manage event IKASI" },
           { href: "/admin/wa-groups", label: "Grup WhatsApp", desc: "Kelola link & daftar grup WhatsApp" },
         ].map((a) => (
-          <Link
+          <Card
             key={a.href}
             href={a.href}
-            className="glass-card rounded-2xl p-5 hover:border-[#d4a72c]/40 transition-colors"
+            className="p-5"
           >
             <div className="font-semibold text-white mb-1">{a.label}</div>
             <div className="text-xs text-slate-400">{a.desc}</div>
-          </Link>
+          </Card>
         ))}
       </div>
     </div>

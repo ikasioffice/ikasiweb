@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-import { StatsCounter } from "@/components/domain/stats-counter";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { SectionShell } from "@/components/ui/section-shell";
+import { StatBlock } from "@/components/ui/stat-block";
+import { Badge } from "@/components/ui/badge";
+import { FeatureIcon } from "@/components/ui/icons";
 
 type Stats = { alumni: number | null; bisnis: number | null; angkatan: number | null };
 
@@ -18,128 +22,81 @@ export default function Home() {
       supabase.from("alumni_public").select("angkatan"),
     ]).then(([alumniRes, bisnisRes, angkatanRes]) => {
       const tahunSet = new Set(
-        (angkatanRes.data ?? []).map((r) => r.angkatan).filter(Boolean)
+        (angkatanRes.data ?? []).map((r) => r.angkatan).filter(Boolean),
       );
-      setStats({
-        alumni: alumniRes.count,
-        bisnis: bisnisRes.count,
-        angkatan: tahunSet.size,
-      });
+      setStats({ alumni: alumniRes.count, bisnis: bisnisRes.count, angkatan: tahunSet.size });
     });
   }, []);
 
   return (
     <main>
       {/* Hero */}
-      <section className="px-6 py-24 text-center max-w-4xl mx-auto">
-        <div className="inline-block px-4 py-1.5 rounded-full border border-[#d4a72c]/30 bg-[#d4a72c]/10 text-[#d4a72c] text-xs font-semibold tracking-wider mb-6">
-          IKATAN ALUMNI TEKNIK SIPIL · POLBAN
+      <SectionShell grid className="py-24" innerClassName="max-w-4xl text-center">
+        <div className="mb-6 flex justify-center">
+          <Badge variant="gold">IKATAN ALUMNI TEKNIK SIPIL · POLBAN</Badge>
         </div>
-        <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight mb-6">
-          Satu Platform,{" "}
-          <span className="gradient-text">Ribuan Alumni</span>
+        <h1 className="font-heading mb-6 text-5xl font-extrabold leading-tight tracking-tight md:text-6xl">
+          Satu Platform, <span className="gradient-text">Ribuan Alumni</span>
         </h1>
-        <p className="text-slate-400 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
-          Wadah resmi alumni Teknik Sipil Polban sejak 28 April 2001.
-          Terhubung dengan ribuan alumni dari angkatan 1982 hingga sekarang —
-          temukan kolega, kolaborasi bisnis, dan peluang karier.
+        <p className="mx-auto mb-10 max-w-xl text-lg leading-relaxed text-slate-400">
+          Wadah resmi alumni Teknik Sipil Polban sejak 28 April 2001. Terhubung
+          dengan ribuan alumni dari angkatan 1982 hingga sekarang — temukan
+          kolega, kolaborasi bisnis, dan peluang karier.
         </p>
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Link href="/alumni" className="btn-gold px-8 py-3 rounded-full font-semibold">
-            Jelajahi Direktori
-          </Link>
-          <Link
-            href="/daftar"
-            className="px-8 py-3 rounded-full border border-white/20 text-white font-semibold hover:border-[#d4a72c]/50 transition-colors"
-          >
-            Bergabung Gratis
-          </Link>
+        <div className="flex flex-wrap justify-center gap-4">
+          <Button href="/alumni" size="lg">Jelajahi Direktori</Button>
+          <Button href="/daftar" variant="outline" size="lg">Bergabung Gratis</Button>
         </div>
-      </section>
+      </SectionShell>
 
       {/* Stats */}
-      <section className="px-6 py-16 border-y border-white/[0.06]">
-        <div className="max-w-3xl mx-auto grid grid-cols-3 gap-8">
-          <StatsCounter value={stats.alumni} label="Alumni Terdaftar" />
-          <StatsCounter value={stats.angkatan} label="Angkatan" />
-          <StatsCounter value={stats.bisnis} label="Bisnis Alumni" />
+      <SectionShell className="border-y border-white/[0.06] py-16" innerClassName="max-w-3xl">
+        <div className="grid grid-cols-3 gap-4 sm:gap-8">
+          <StatBlock value={stats.alumni} label="Alumni Terdaftar" />
+          <StatBlock value={stats.angkatan} label="Angkatan" />
+          <StatBlock value={stats.bisnis} label="Bisnis Alumni" />
         </div>
-      </section>
+      </SectionShell>
 
       {/* Feature grid */}
-      <section className="px-6 py-20 max-w-5xl mx-auto">
-        <h2 className="text-3xl font-extrabold tracking-tight text-center mb-12">
+      <SectionShell className="py-20">
+        <h2 className="font-heading mb-12 text-center text-3xl font-extrabold tracking-tight">
           Semua yang kamu butuhkan
         </h2>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
-            <Link
-              key={f.href}
-              href={f.href}
-              className="glass-card rounded-2xl p-6 hover:border-[#d4a72c]/40 transition-colors group"
-            >
-              <div className="text-3xl mb-4">{f.icon}</div>
-              <div className="font-semibold text-white mb-1">{f.title}</div>
+            <Card key={f.href} href={f.href}>
+              <div className="mb-4 text-[#d4a72c]">
+                <FeatureIcon name={f.icon} />
+              </div>
+              <div className="font-heading mb-1 font-semibold text-white">{f.title}</div>
               <div className="text-sm text-slate-400">{f.desc}</div>
-            </Link>
+            </Card>
           ))}
         </div>
-      </section>
+      </SectionShell>
 
       {/* CTA Banner */}
-      <section className="px-6 py-20">
-        <div className="max-w-3xl mx-auto glass-card rounded-3xl p-10 text-center border-[#d4a72c]/20">
-          <h2 className="text-3xl font-extrabold tracking-tight mb-4">
+      <SectionShell className="py-20" innerClassName="max-w-3xl">
+        <Card className="border-[#d4a72c]/20 p-10 text-center">
+          <h2 className="font-heading mb-4 text-3xl font-extrabold tracking-tight">
             Sudah lulus? <span className="gradient-text">Daftarkan dirimu.</span>
           </h2>
-          <p className="text-slate-400 mb-8">
+          <p className="mb-8 text-slate-400">
             Bergabung gratis. Verifikasi alumni untuk akses kontak dan fitur lengkap.
           </p>
-          <Link href="/daftar" className="btn-gold px-10 py-3 rounded-full font-semibold">
-            Mulai Sekarang
-          </Link>
-        </div>
-      </section>
-
+          <Button href="/daftar" size="lg">Mulai Sekarang</Button>
+        </Card>
+      </SectionShell>
     </main>
   );
 }
 
-const features = [
-  {
-    href: "/alumni",
-    icon: "👤",
-    title: "Direktori Alumni",
-    desc: "Cari alumni berdasarkan nama, angkatan, atau bidang pekerjaan.",
-  },
-  {
-    href: "/angkatan",
-    icon: "🎓",
-    title: "Per Angkatan",
-    desc: "Lihat semua alumni dari angkatan yang sama.",
-  },
-  {
-    href: "/bisnis",
-    icon: "🏪",
-    title: "Bisnis Alumni",
-    desc: "Temukan produk dan jasa dari sesama alumni.",
-  },
-  {
-    href: "/event",
-    icon: "📅",
-    title: "Acara",
-    desc: "Reuni, seminar, dan gathering alumni IKASI.",
-  },
-  {
-    href: "/news",
-    icon: "📰",
-    title: "Berita",
-    desc: "Informasi terkini dari keluarga besar IKASI.",
-  },
-  {
-    href: "/sejarah",
-    icon: "🏛️",
-    title: "Tentang IKASI",
-    desc: "Sejarah, visi misi, dan struktur pengurus.",
-  },
+const features: { href: string; icon: "directory" | "angkatan" | "bisnis" | "acara" | "berita" | "tentang"; title: string; desc: string }[] = [
+  { href: "/alumni", icon: "directory", title: "Direktori Alumni", desc: "Cari alumni berdasarkan nama, angkatan, atau bidang pekerjaan." },
+  { href: "/angkatan", icon: "angkatan", title: "Per Angkatan", desc: "Lihat semua alumni dari angkatan yang sama." },
+  { href: "/bisnis", icon: "bisnis", title: "Bisnis Alumni", desc: "Temukan produk dan jasa dari sesama alumni." },
+  { href: "/event", icon: "acara", title: "Acara", desc: "Reuni, seminar, dan gathering alumni IKASI." },
+  { href: "/news", icon: "berita", title: "Berita", desc: "Informasi terkini dari keluarga besar IKASI." },
+  { href: "/sejarah", icon: "tentang", title: "Tentang IKASI", desc: "Sejarah, visi misi, dan struktur pengurus." },
 ];

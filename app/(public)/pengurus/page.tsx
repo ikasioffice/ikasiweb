@@ -1,3 +1,6 @@
+import { PageHeader } from "@/components/ui/page-header";
+import { Card } from "@/components/ui/card";
+
 type Role = { jabatan: string; nama?: string; angkatan?: string };
 
 const pengurusPusat: Role[] = [
@@ -19,13 +22,11 @@ const dewanPenasihat: Role[] = [
 export default function PengurusPage() {
   return (
     <main className="px-6 py-16 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        Struktur <span className="gradient-text">Pengurus</span>
-      </h1>
-      <p className="text-slate-400 mb-10">
-        Berdasarkan AD/ART IKASI BAB IV–V, struktur organisasi terdiri dari Pengurus Pusat,
-        Komisariat (Angkatan & Daerah), dan Dewan Penasihat. Masa jabatan 4 tahun.
-      </p>
+      <PageHeader
+        title={<>Struktur <span className="gradient-text">Pengurus</span></>}
+        subtitle="Berdasarkan AD/ART IKASI BAB IV–V, struktur organisasi terdiri dari Pengurus Pusat, Komisariat (Angkatan & Daerah), dan Dewan Penasihat. Masa jabatan 4 tahun."
+        className="mb-10"
+      />
 
       <Section label="Pengurus Pusat">
         <div className="grid sm:grid-cols-2 gap-3">
@@ -74,7 +75,7 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 
 function RoleCard({ role }: { role: Role }) {
   return (
-    <div className="glass-card rounded-xl p-4">
+    <Card className="p-4">
       <div className="text-xs text-[#d4a72c] mb-1">{role.jabatan}</div>
       {role.nama ? (
         <div className="text-sm text-white font-medium">
@@ -84,6 +85,6 @@ function RoleCard({ role }: { role: Role }) {
       ) : (
         <div className="text-sm text-slate-500 italic">Akan diumumkan</div>
       )}
-    </div>
+    </Card>
   );
 }

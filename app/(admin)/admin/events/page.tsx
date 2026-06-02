@@ -59,7 +59,7 @@ export default function AdminEventsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-extrabold tracking-tight mb-6">Acara</h1>
+      <h1 className="font-heading text-2xl font-extrabold tracking-tight mb-6">Acara</h1>
 
       {/* Form */}
       <div className="glass-card rounded-2xl p-6 mb-8">

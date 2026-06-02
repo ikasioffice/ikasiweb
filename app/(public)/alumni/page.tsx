@@ -5,6 +5,7 @@ import { listAlumniPublic, matchesAlumniFilter, type AlumniPublic } from "@/lib/
 import { AlumniCard } from "@/components/domain/alumni-card";
 import { SearchFilterBar } from "@/components/domain/search-filter-bar";
 import { useAuth } from "@/lib/auth/use-auth";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default function AlumniDirectoryPage() {
   const { isVerified } = useAuth();
@@ -40,17 +41,13 @@ export default function AlumniDirectoryPage() {
 
   return (
     <>
-      <header className="px-5 sm:px-8 lg:px-12 py-8 sm:py-12 lg:py-14">
-        <div className="text-xs text-slate-400 mb-4 tracking-wide">
-          Beranda <span className="text-slate-600 mx-2">/</span> Direktori Alumni
-        </div>
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-3">
-          Direktori <span className="gradient-text">{all.length} Alumni</span>
-        </h1>
-        <p className="text-slate-300 max-w-xl">
-          Cari rekan kerja, mentor, atau partner bisnis dari alumni Teknik Sipil Polban — terverifikasi.
-        </p>
-      </header>
+      <div className="px-5 sm:px-8 lg:px-12 py-8 sm:py-12 lg:py-14">
+        <PageHeader
+          breadcrumb={<>Beranda <span className="text-slate-600 mx-2">/</span> Direktori Alumni</>}
+          title={<>Direktori <span className="gradient-text">{all.length} Alumni</span></>}
+          subtitle="Cari rekan kerja, mentor, atau partner bisnis dari alumni Teknik Sipil Polban — terverifikasi."
+        />
+      </div>
 
       <SearchFilterBar
         query={query} onQuery={setQuery}

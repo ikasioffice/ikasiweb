@@ -3,6 +3,8 @@
 import { useEffect, useState, use } from "react";
 import { listAlumniPublic, type AlumniPublic } from "@/lib/data/alumni";
 import { AlumniCard } from "@/components/domain/alumni-card";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export function AngkatanDetailClient({ paramsPromise }: { paramsPromise: Promise<{ tahun: string }> }) {
   const { tahun } = use(paramsPromise);
@@ -19,10 +21,11 @@ export function AngkatanDetailClient({ paramsPromise }: { paramsPromise: Promise
 
   return (
     <main className="px-6 py-12 max-w-5xl mx-auto">
-      <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        Angkatan <span className="gradient-text">{tahun}</span>
-      </h1>
-      <p className="text-slate-400 mb-8">{alumni.length} alumni terdaftar</p>
+      <PageHeader
+        title={<>Angkatan <span className="gradient-text">{tahun}</span></>}
+        subtitle={`${alumni.length} alumni terdaftar`}
+        className="mb-8"
+      />
 
       {loading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -31,7 +34,10 @@ export function AngkatanDetailClient({ paramsPromise }: { paramsPromise: Promise
           ))}
         </div>
       ) : alumni.length === 0 ? (
-        <div className="text-center text-slate-500 py-16">Tidak ada alumni ditemukan.</div>
+        <EmptyState
+          title="Belum ada alumni di angkatan ini"
+          description="Data alumni angkatan ini belum tersedia. Cek angkatan lain atau hubungi pengurus."
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {alumni.map((a) => (

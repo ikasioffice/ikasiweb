@@ -46,7 +46,7 @@ export function Nav() {
       <div className="flex items-center justify-between gap-3">
         <Link href="/" onClick={close} className="flex shrink-0 items-center gap-2">
           <img src="/logo-ikasi.png" alt="IKASI" className="h-9 w-9" />
-          <span className="text-lg font-extrabold tracking-tight text-[#d4a72c]">
+          <span className="font-heading text-lg font-extrabold tracking-tight text-[#d4a72c]">
             IKASI<span className="text-white">.</span>
           </span>
         </Link>

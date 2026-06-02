@@ -2,6 +2,8 @@
 
 import { useEffect, useState, use } from "react";
 import { getBisnisById, type Bisnis } from "@/lib/data/bisnis";
+import { PosterThumb } from "@/components/ui/poster-thumb";
+import { LineIcon } from "@/components/ui/icons";
 
 export function BisnisDetailClient({ paramsPromise }: { paramsPromise: Promise<{ id: string }> }) {
   const { id } = use(paramsPromise);
@@ -17,19 +19,9 @@ export function BisnisDetailClient({ paramsPromise }: { paramsPromise: Promise<{
   return (
     <main className="px-6 py-16 max-w-3xl mx-auto">
       <div className="flex gap-6 mb-8">
-        {bisnis.poster_url ? (
-          <img
-            src={bisnis.poster_url}
-            alt={bisnis.nama_brand ?? "Bisnis"}
-            className="w-24 h-24 rounded-2xl object-cover flex-shrink-0"
-          />
-        ) : (
-          <div className="w-24 h-24 rounded-2xl bg-[#142340] flex items-center justify-center flex-shrink-0 text-4xl">
-            🏪
-          </div>
-        )}
+        <PosterThumb src={bisnis.poster_url} alt={bisnis.nama_brand ?? "Bisnis"} size={96} icon="store" className="rounded-2xl" />
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight">{bisnis.nama_brand}</h1>
+          <h1 className="text-4xl font-heading font-extrabold tracking-tight">{bisnis.nama_brand}</h1>
           {bisnis.bidang && (
             <div className="text-[#d4a72c] mt-1 text-sm font-medium">{bisnis.bidang}</div>
           )}
@@ -48,7 +40,7 @@ export function BisnisDetailClient({ paramsPromise }: { paramsPromise: Promise<{
       {(bisnis.no_kontak || bisnis.link_medsos) && (
         <Section label="Kontak">
           <div className="space-y-2 text-sm">
-            {bisnis.no_kontak && <div className="text-slate-300">📱 {bisnis.no_kontak}</div>}
+            {bisnis.no_kontak && <div className="text-slate-300"><span className="inline-flex items-center gap-1.5 text-slate-300"><LineIcon name="phone" /> {bisnis.no_kontak}</span></div>}
             {bisnis.link_medsos && (
               <div>
                 <a
@@ -57,7 +49,7 @@ export function BisnisDetailClient({ paramsPromise }: { paramsPromise: Promise<{
                   rel="noopener noreferrer"
                   className="text-[#d4a72c] hover:underline"
                 >
-                  🔗 {bisnis.link_medsos}
+                  <span className="inline-flex items-center gap-1.5"><LineIcon name="link" /> {bisnis.link_medsos}</span>
                 </a>
               </div>
             )}

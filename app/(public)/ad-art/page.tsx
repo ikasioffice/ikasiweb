@@ -1,3 +1,5 @@
+import { PageHeader } from "@/components/ui/page-header";
+
 const PDF_DRIVE_ID = "182dv7VU6C_L0ZqzEcsjhM7-RSZHTIWib";
 
 const tableOfContents = [
@@ -19,12 +21,11 @@ const tableOfContents = [
 export default function AdArtPage() {
   return (
     <main className="px-6 py-16 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        <span className="gradient-text">AD/ART</span>
-      </h1>
-      <p className="text-slate-400 mb-10">
-        Anggaran Dasar dan Anggaran Rumah Tangga IKASI Polban — disahkan 6 Desember 2020
-      </p>
+      <PageHeader
+        title={<span className="gradient-text">AD/ART</span>}
+        subtitle="Anggaran Dasar dan Anggaran Rumah Tangga IKASI Polban — disahkan 6 Desember 2020"
+        className="mb-10"
+      />
 
       <div className="grid md:grid-cols-2 gap-8 mb-10">
         <div>

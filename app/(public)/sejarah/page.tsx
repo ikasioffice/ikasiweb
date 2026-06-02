@@ -1,10 +1,13 @@
+import { PageHeader } from "@/components/ui/page-header";
+
 export default function SejarahPage() {
   return (
     <main className="px-6 py-16 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        Tentang <span className="gradient-text">IKASI Polban</span>
-      </h1>
-      <p className="text-slate-400 mb-10">Ikatan Alumni Teknik Sipil Politeknik Negeri Bandung</p>
+      <PageHeader
+        title={<>Tentang <span className="gradient-text">IKASI Polban</span></>}
+        subtitle="Ikatan Alumni Teknik Sipil Politeknik Negeri Bandung"
+        className="mb-10"
+      />
 
       <Section label="Sejarah">
         <p className="text-slate-300 leading-relaxed">

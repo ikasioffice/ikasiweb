@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { listPublishedPosts, type Post } from "@/lib/data/news";
+import { PageHeader } from "@/components/ui/page-header";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Card } from "@/components/ui/card";
 
 function formatDate(iso: string | null) {
   if (!iso) return "";
@@ -22,10 +24,11 @@ export default function NewsPage() {
 
   return (
     <main className="px-6 py-12 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-extrabold tracking-tight mb-2">
-        <span className="gradient-text">Berita</span> IKASI
-      </h1>
-      <p className="text-slate-400 mb-10">Informasi terkini dari keluarga besar alumni</p>
+      <PageHeader
+        title={<><span className="gradient-text">Berita</span> IKASI</>}
+        subtitle="Informasi terkini dari keluarga besar alumni"
+        className="mb-10"
+      />
 
       {loading ? (
         <div className="space-y-4">
@@ -34,23 +37,26 @@ export default function NewsPage() {
           ))}
         </div>
       ) : posts.length === 0 ? (
-        <div className="text-center text-slate-500 py-16">Belum ada artikel yang dipublish.</div>
+        <EmptyState
+          title="Belum ada artikel"
+          description="Berita & informasi terbaru dari IKASI akan tampil di sini."
+        />
       ) : (
         <div className="space-y-4">
           {posts.map((post) => (
-            <Link
-              key={post.id}
-              href={`/news/${post.slug}`}
-              className="glass-card rounded-2xl p-6 block hover:border-[#d4a72c]/40 transition-colors"
-            >
-              <div className="text-xs text-slate-500 mb-2">
-                {formatDate(post.published_at)} {post.author && `· ${post.author}`}
-              </div>
-              <h2 className="font-extrabold text-lg text-white mb-2">{post.title}</h2>
-              {post.excerpt && (
-                <p className="text-sm text-slate-400 line-clamp-2">{post.excerpt}</p>
+            <Card key={post.id} href={`/news/${post.slug}`} className="flex gap-5 p-6">
+              {post.cover_image && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={post.cover_image} alt={post.title} className="hidden sm:block w-28 h-20 rounded-xl object-cover flex-shrink-0" />
               )}
-            </Link>
+              <div className="min-w-0">
+                <div className="text-xs text-slate-500 mb-2">
+                  {formatDate(post.published_at)} {post.author && `· ${post.author}`}
+                </div>
+                <h2 className="font-heading font-extrabold text-lg text-white mb-2">{post.title}</h2>
+                {post.excerpt && <p className="text-sm text-slate-400 line-clamp-2">{post.excerpt}</p>}
+              </div>
+            </Card>
           ))}
         </div>
       )}

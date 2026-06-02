@@ -22,7 +22,7 @@ function AdminNav() {
 
   return (
     <aside className="w-56 flex-shrink-0 border-r border-white/[0.06] min-h-screen p-6">
-      <Link href="/admin" className="text-[#d4a72c] font-extrabold text-lg block mb-8">
+      <Link href="/admin" className="font-heading text-[#d4a72c] font-extrabold text-lg block mb-8">
         IKASI Admin
       </Link>
       <nav className="space-y-1">

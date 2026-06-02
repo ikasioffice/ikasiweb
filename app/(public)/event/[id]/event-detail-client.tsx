@@ -4,6 +4,7 @@ import { useEffect, useState, use } from "react";
 import { getEventById, rsvpEvent, hasRsvped, type Event } from "@/lib/data/events";
 import { useAuth } from "@/lib/auth/use-auth";
 import Link from "next/link";
+import { LineIcon } from "@/components/ui/icons";
 
 function formatDate(iso: string | null) {
   if (!iso) return "";
@@ -57,9 +58,11 @@ export function EventDetailClient({ paramsPromise }: { paramsPromise: Promise<{ 
       )}
 
       <div className="text-[#d4a72c] text-sm font-semibold mb-2">{formatDate(event.date)}</div>
-      <h1 className="text-4xl font-extrabold tracking-tight mb-4">{event.title}</h1>
+      <h1 className="text-4xl font-heading font-extrabold tracking-tight mb-4">{event.title}</h1>
       {event.location && (
-        <div className="text-slate-400 text-sm mb-6">📍 {event.location}</div>
+        <div className="flex items-center gap-1.5 text-slate-400 text-sm mb-6">
+          <LineIcon name="pin" /> {event.location}
+        </div>
       )}
       {event.description && (
         <p className="text-slate-300 leading-relaxed mb-8">{event.description}</p>
@@ -69,7 +72,7 @@ export function EventDetailClient({ paramsPromise }: { paramsPromise: Promise<{ 
         {user ? (
           rsvped ? (
             <div className="px-6 py-3 rounded-full bg-green-900/30 border border-green-500/30 text-green-400 text-sm font-semibold">
-              Sudah RSVP ✓
+              <span className="inline-flex items-center gap-1.5">Sudah RSVP <LineIcon name="check" size={14} /></span>
             </div>
           ) : (
             <button

@@ -8,6 +8,7 @@ import {
   deleteWaGroup,
   type WaGroup,
 } from "@/lib/data/wa-groups";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function AdminWaGroupsPage() {
   const [groups, setGroups] = useState<WaGroup[]>([]);
@@ -45,7 +46,7 @@ export default function AdminWaGroupsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-extrabold tracking-tight">Grup WhatsApp</h1>
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight">Grup WhatsApp</h1>
         <Link
           href="/admin/wa-groups/new"
           className="btn-gold px-5 py-2 rounded-full text-sm"
@@ -61,7 +62,7 @@ export default function AdminWaGroupsPage() {
           ))}
         </div>
       ) : groups.length === 0 ? (
-        <div className="text-slate-500 text-center py-16">Belum ada grup WhatsApp.</div>
+        <EmptyState title="Belum ada grup WhatsApp" description="Tambahkan grup WhatsApp pertama untuk alumni IKASI" />
       ) : (
         <div className="space-y-3">
           {groups.map((group) => (

@@ -77,7 +77,7 @@ export function WaGroupEditorPage({ params }: { params: Promise<{ id: string }> 
         <Link href="/admin/wa-groups" className="text-slate-400 hover:text-white text-sm">
           ← Grup WhatsApp
         </Link>
-        <h1 className="text-xl font-extrabold tracking-tight">
+        <h1 className="font-heading text-xl font-extrabold tracking-tight">
           {isNew ? "Tambah Grup WhatsApp" : "Edit Grup WhatsApp"}
         </h1>
       </div>
