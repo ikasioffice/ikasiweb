@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { getPostBySlug, type Post } from "@/lib/data/news";
 import Link from "next/link";
+import { EmptyState } from "@/components/ui/empty-state";
 
 function formatDate(iso: string | null) {
   if (!iso) return "";
@@ -58,9 +59,12 @@ export function NewsDetailClient({ paramsPromise }: { paramsPromise: Promise<{ s
   if (!post) return <div className="p-12 text-slate-300 animate-pulse">Memuat…</div>;
   if (post === "not-found") {
     return (
-      <main className="p-12 text-center">
-        <div className="text-slate-400 mb-4">Artikel tidak ditemukan.</div>
-        <Link href="/news" className="text-[#d4a72c] hover:underline">← Kembali ke Berita</Link>
+      <main className="px-6 py-16 max-w-3xl mx-auto">
+        <EmptyState
+          title="Artikel tidak ditemukan"
+          description="Artikel yang kamu cari mungkin sudah dipindah atau dihapus."
+          action={<Link href="/news" className="btn-gold px-6 py-2.5 rounded-full text-sm font-semibold">Kembali ke Berita</Link>}
+        />
       </main>
     );
   }
@@ -73,7 +77,7 @@ export function NewsDetailClient({ paramsPromise }: { paramsPromise: Promise<{ s
       <div className="text-xs text-slate-500 mb-3">
         {formatDate(post.published_at)} {post.author && `· ${post.author}`}
       </div>
-      <h1 className="text-4xl font-extrabold tracking-tight mb-8 leading-tight">{post.title}</h1>
+      <h1 className="text-4xl font-heading font-extrabold tracking-tight mb-8 leading-tight">{post.title}</h1>
       {post.cover_image && (
         <img src={post.cover_image} alt={post.title} className="w-full rounded-2xl mb-8 object-cover max-h-96" />
       )}
