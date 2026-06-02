@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { listDeletions, restoreAlumni, type DeletionRow } from "@/lib/data/admin-duplicates";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type Snapshot = { nama?: string; angkatan?: number };
 
@@ -30,9 +31,9 @@ export default function DeletionsPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-extrabold tracking-tight mb-5">Riwayat Hapus Alumni</h1>
+      <h1 className="font-heading text-2xl font-extrabold tracking-tight mb-5">Riwayat Hapus Alumni</h1>
       {loading ? <div className="text-slate-500">Memuat…</div>
-        : rows.length === 0 ? <div className="text-slate-500 text-center py-12">Belum ada penghapusan.</div>
+        : rows.length === 0 ? <EmptyState title="Belum ada penghapusan" description="Riwayat penghapusan alumni akan muncul di sini" />
         : (
           <div className="space-y-2">
             {rows.map((d) => {

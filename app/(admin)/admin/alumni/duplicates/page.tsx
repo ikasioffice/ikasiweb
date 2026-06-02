@@ -4,6 +4,7 @@ import { findDuplicateGroups, type DedupKey, type AlumniRow, type DuplicateGroup
 import { fetchAllAlumni, deleteAlumni, reassignBisnis, type BisnisRef } from "@/lib/data/admin-duplicates";
 import { DuplicateGroupCard } from "@/components/admin/duplicate-group-card";
 import { ConfirmDialog } from "@/components/admin/confirm-dialog";
+import { EmptyState } from "@/components/ui/empty-state";
 
 const PAGE_SIZE = 20;
 
@@ -69,7 +70,7 @@ export default function DuplicatesPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-extrabold tracking-tight mb-4">Duplikat Alumni</h1>
+      <h1 className="font-heading text-2xl font-extrabold tracking-tight mb-4">Duplikat Alumni</h1>
       <div className="flex items-center gap-2 mb-5">
         {(["nama", "email", "no_hp"] as DedupKey[]).map((m) => (
           <button key={m} onClick={() => setMode(m)}
@@ -83,7 +84,7 @@ export default function DuplicatesPage() {
       {loading ? (
         <div className="text-slate-500">Memuat…</div>
       ) : groups.length === 0 ? (
-        <div className="text-slate-500 text-center py-12">Tidak ada duplikat untuk mode ini.</div>
+        <EmptyState title="Tidak ada duplikat untuk mode ini" description="Semua data alumni tampaknya unik pada mode ini" />
       ) : (
         <>
           {pageGroups.map((g) => (

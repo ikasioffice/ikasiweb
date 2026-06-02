@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/lib/supabase/database.types";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type Alumni = Database["public"]["Tables"]["alumni"]["Row"];
 
@@ -54,7 +55,7 @@ function AdminAlumniContent() {
 
   return (
     <div>
-      <h1 className="text-2xl font-extrabold tracking-tight mb-6">Verifikasi Alumni</h1>
+      <h1 className="font-heading text-2xl font-extrabold tracking-tight mb-6">Verifikasi Alumni</h1>
 
       <div className="flex gap-4 mb-6">
         <input
@@ -82,7 +83,7 @@ function AdminAlumniContent() {
           {[1, 2, 3, 4, 5].map((i) => <div key={i} className="glass-card rounded-xl h-14 animate-pulse" />)}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-slate-500 text-center py-12">Tidak ada alumni ditemukan.</div>
+        <EmptyState title="Tidak ada alumni ditemukan" description="Coba ubah filter atau kata kunci pencarian" />
       ) : (
         <div className="space-y-2">
           {filtered.map((a) => (

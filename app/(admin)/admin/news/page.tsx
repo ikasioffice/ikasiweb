@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/lib/supabase/database.types";
 import Link from "next/link";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type Post = Database["public"]["Tables"]["posts"]["Row"];
 
@@ -43,7 +44,7 @@ export default function AdminNewsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-2xl font-extrabold tracking-tight">Berita</h1>
+        <h1 className="font-heading text-2xl font-extrabold tracking-tight">Berita</h1>
         <Link href="/admin/news/new" className="btn-gold px-5 py-2 rounded-full text-sm">
           + Tulis Artikel
         </Link>
@@ -54,7 +55,7 @@ export default function AdminNewsPage() {
           {[1, 2, 3].map((i) => <div key={i} className="glass-card rounded-xl h-16 animate-pulse" />)}
         </div>
       ) : posts.length === 0 ? (
-        <div className="text-slate-500 text-center py-16">Belum ada artikel.</div>
+        <EmptyState title="Belum ada artikel" description="Mulai tulis artikel berita pertama untuk IKASI" />
       ) : (
         <div className="space-y-3">
           {posts.map((post) => (
