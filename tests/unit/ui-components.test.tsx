@@ -138,6 +138,20 @@ describe("LineIcon", () => {
   });
 });
 
+import { PosterThumb } from "@/components/ui/poster-thumb";
+
+describe("PosterThumb", () => {
+  it("render <img> bila src ada", () => {
+    const { container } = render(<PosterThumb src="/x.jpg" alt="Brand" />);
+    expect(container.querySelector("img")?.getAttribute("src")).toBe("/x.jpg");
+  });
+  it("render fallback svg bila src kosong", () => {
+    const { container } = render(<PosterThumb src={null} alt="Brand" />);
+    expect(container.querySelector("img")).toBeNull();
+    expect(container.querySelector("svg")).not.toBeNull();
+  });
+});
+
 import { InfoField } from "@/components/ui/info-field";
 
 describe("InfoField", () => {
