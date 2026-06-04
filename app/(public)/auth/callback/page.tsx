@@ -11,21 +11,42 @@ function CallbackContent() {
 
   useEffect(() => {
     const supabase = createClient();
-    // @supabase/ssr browser client handles PKCE code exchange automatically
-    // when detectSessionInUrl is enabled (default). We just need to wait for it.
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) {
-        const next = searchParams.get("next") ?? "/me";
-        router.replace(next);
-      } else {
-        // Give the session detection a moment to process the URL hash/code
-        setTimeout(() => {
-          supabase.auth.getSession().then(({ data: d2 }) => {
-            router.replace(d2.session ? (searchParams.get("next") ?? "/me") : "/login?error=oauth");
-          });
-        }, 1000);
-      }
+    let done = false;
+
+    const goNext = () => {
+      if (done) return;
+      done = true;
+      router.replace(searchParams.get("next") ?? "/me");
+    };
+
+    // Implicit flow: token ada di URL fragment (#access_token) dan diproses
+    // secara async oleh client (detectSessionInUrl). Sesi bisa muncul lewat
+    // event SIGNED_IN, jadi kita dengarkan event itu sekaligus poll getSession.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      if (session) goNext();
     });
+
+    let tries = 0;
+    const poll = setInterval(async () => {
+      tries += 1;
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        clearInterval(poll);
+        goNext();
+      } else if (tries >= 10) {
+        // ~5 detik tanpa sesi → anggap link tidak valid/kedaluwarsa
+        clearInterval(poll);
+        if (!done) {
+          done = true;
+          router.replace("/login?error=oauth");
+        }
+      }
+    }, 500);
+
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(poll);
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
