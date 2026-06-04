@@ -9,8 +9,9 @@ type Props = {
 
 export function SectionShell({ children, grid, className = "", innerClassName = "" }: Props) {
   return (
-    <section className={`relative px-6 ${grid ? "bp-grid" : ""} ${className}`}>
-      <div className={`mx-auto max-w-5xl ${innerClassName}`}>{children}</div>
+    <section className={`relative px-6 ${className}`}>
+      {grid && <div aria-hidden className="bp-grid bp-grid-fade pointer-events-none absolute inset-0" />}
+      <div className={`relative mx-auto max-w-5xl ${innerClassName}`}>{children}</div>
     </section>
   );
 }

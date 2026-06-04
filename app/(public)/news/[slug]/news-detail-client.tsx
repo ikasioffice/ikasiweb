@@ -23,7 +23,7 @@ function renderMarkdown(md: string) {
     elements.push(
       <p
         key={elements.length}
-        className="text-slate-300 leading-relaxed mb-4"
+        className="text-foreground leading-relaxed mb-4"
         dangerouslySetInnerHTML={{ __html: bold }}
       />
     );
@@ -33,10 +33,10 @@ function renderMarkdown(md: string) {
   for (const line of lines) {
     if (line.startsWith("# ")) {
       flushPara();
-      elements.push(<h2 key={elements.length} className="text-2xl font-extrabold mt-8 mb-3 text-white">{line.slice(2)}</h2>);
+      elements.push(<h2 key={elements.length} className="text-2xl font-extrabold mt-8 mb-3 text-foreground">{line.slice(2)}</h2>);
     } else if (line.startsWith("## ")) {
       flushPara();
-      elements.push(<h3 key={elements.length} className="text-xl font-bold mt-6 mb-2 text-white">{line.slice(3)}</h3>);
+      elements.push(<h3 key={elements.length} className="text-xl font-bold mt-6 mb-2 text-foreground">{line.slice(3)}</h3>);
     } else if (line.trim() === "") {
       flushPara();
     } else {
@@ -56,34 +56,63 @@ export function NewsDetailClient({ paramsPromise }: { paramsPromise: Promise<{ s
     getPostBySlug(slug).then((p) => setPost(p ?? "not-found"));
   }, [slug]);
 
-  if (!post) return <div className="p-12 text-slate-300 animate-pulse">Memuat…</div>;
+  if (!post) return <div className="mx-auto max-w-3xl px-4 py-16 text-muted-foreground sm:px-6">Memuat…</div>;
   if (post === "not-found") {
     return (
-      <main className="px-6 py-16 max-w-3xl mx-auto">
+      <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <EmptyState
           title="Artikel tidak ditemukan"
           description="Artikel yang kamu cari mungkin sudah dipindah atau dihapus."
-          action={<Link href="/news" className="btn-gold px-6 py-2.5 rounded-full text-sm font-semibold">Kembali ke Berita</Link>}
+          action={<Link href="/news" className="inline-flex h-10 items-center rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">Kembali ke Berita</Link>}
         />
       </main>
     );
   }
 
   return (
-    <main className="px-6 py-16 max-w-3xl mx-auto">
-      <Link href="/news" className="text-slate-400 hover:text-white text-sm block mb-8">
-        ← Berita IKASI
-      </Link>
-      <div className="text-xs text-slate-500 mb-3">
-        {formatDate(post.published_at)} {post.author && `· ${post.author}`}
-      </div>
-      <h1 className="text-4xl font-heading font-extrabold tracking-tight mb-8 leading-tight">{post.title}</h1>
-      {post.cover_image && (
-        <img src={post.cover_image} alt={post.title} className="w-full rounded-2xl mb-8 object-cover max-h-96" />
-      )}
-      <article className="prose-sm">
-        {post.body_md ? renderMarkdown(post.body_md) : <p className="text-slate-400">Konten belum tersedia.</p>}
+    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+      <nav className="mb-4 text-xs text-muted-foreground">
+        <Link href="/" className="hover:text-foreground">Beranda</Link>
+        <span className="mx-1.5">/</span>
+        <Link href="/news" className="hover:text-foreground">Berita</Link>
+        <span className="mx-1.5">/</span>
+        <span className="text-foreground line-clamp-1">{post.title}</span>
+      </nav>
+
+      <article>
+        <span className="inline-flex items-center rounded-full bg-primary/15 px-2.5 py-1 text-xs font-semibold text-primary">BERITA</span>
+        <h1 className="font-heading mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">{post.title}</h1>
+        <div className="mt-4 flex items-center gap-3 text-sm text-muted-foreground">
+          {post.author && (
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-xs font-bold text-primary">
+              {post.author.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase()}
+            </span>
+          )}
+          {post.author && <span>{post.author}</span>}
+          {post.author && <span>·</span>}
+          <span>{formatDate(post.published_at)}</span>
+        </div>
+
+        {post.cover_image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={post.cover_image} alt={post.title} className="mt-6 max-h-96 w-full rounded-2xl border border-border object-cover" />
+        ) : (
+          <div className="relative mt-6 h-56 overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-primary/25 to-primary/5 sm:h-72">
+            <div className="bp-grid absolute inset-0" />
+          </div>
+        )}
+
+        <div className="mt-8 leading-relaxed">
+          {post.body_md ? renderMarkdown(post.body_md) : <p className="text-muted-foreground">Konten belum tersedia.</p>}
+        </div>
       </article>
+
+      <div className="mt-10 border-t border-border pt-6">
+        <Link href="/news" className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+          Kembali ke Berita
+        </Link>
+      </div>
     </main>
   );
 }

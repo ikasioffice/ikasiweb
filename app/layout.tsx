@@ -1,20 +1,24 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth/auth-context";
+import { ThemeProvider } from "@/lib/theme/theme-context";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-sans-src",
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-heading-src",
-  weight: ["500", "600", "700"],
+  weight: ["600", "700", "800"],
 });
+
+// Set the theme class before paint to avoid a flash. Default: light.
+const themeInitScript = `(function(){try{var t=localStorage.getItem('ikasi-theme');if(t==='dark'){document.documentElement.classList.add('dark');}}catch(e){}})();`;
 
 export const metadata: Metadata = {
   title: "IKASI Polban — Ikatan Alumni Teknik Sipil",
@@ -36,8 +40,9 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="id" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="id" className={`${inter.variable} ${jakarta.variable}`} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-8FH1JMW1DD"
           strategy="afterInteractive"
@@ -51,7 +56,11 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body><AuthProvider>{children}</AuthProvider></body>
+      <body>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
+      </body>
     </html>
   );
 }

@@ -1,5 +1,4 @@
-import { PageHeader } from "@/components/ui/page-header";
-import { Card } from "@/components/ui/card";
+import Link from "next/link";
 
 type Role = { jabatan: string; nama?: string; angkatan?: string };
 
@@ -21,70 +20,71 @@ const dewanPenasihat: Role[] = [
 
 export default function PengurusPage() {
   return (
-    <main className="px-6 py-16 max-w-4xl mx-auto">
-      <PageHeader
-        title={<>Struktur <span className="gradient-text">Pengurus</span></>}
-        subtitle="Berdasarkan AD/ART IKASI BAB IV–V, struktur organisasi terdiri dari Pengurus Pusat, Komisariat (Angkatan & Daerah), dan Dewan Penasihat. Masa jabatan 4 tahun."
-        className="mb-10"
-      />
+    <main className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+      <nav className="mb-3 text-xs text-muted-foreground">
+        <Link href="/" className="hover:text-foreground">Beranda</Link>
+        <span className="mx-1.5">/</span>
+        <Link href="/sejarah" className="hover:text-foreground">Tentang</Link>
+        <span className="mx-1.5">/</span>
+        <span className="text-foreground">Pengurus</span>
+      </nav>
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Struktur <span className="text-primary">Pengurus</span>
+      </h1>
+      <p className="mt-2 max-w-2xl text-muted-foreground">
+        Berdasarkan AD/ART IKASI BAB IV–V: Pengurus Pusat, Komisariat (Angkatan &amp; Daerah), dan Dewan
+        Penasihat. Masa jabatan 4 tahun.
+      </p>
 
-      <Section label="Pengurus Pusat">
-        <div className="grid sm:grid-cols-2 gap-3">
-          {pengurusPusat.map((r) => (
-            <RoleCard key={r.jabatan} role={r} />
-          ))}
+      <section className="mt-10">
+        <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Pengurus Pusat</h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {pengurusPusat.map((r) => <RoleCard key={r.jabatan} role={r} />)}
         </div>
-      </Section>
+      </section>
 
-      <Section label="Komisariat">
-        <p className="text-slate-300 text-sm leading-relaxed mb-3">
-          IKASI memiliki Komisariat Angkatan dan Komisariat Daerah sebagai pelaksana kebijakan
-          organisasi. Setiap komisariat terdiri dari Ketua, Sekretaris, Bendahara, dan beberapa Ketua Bidang.
+      <section className="mt-10 rounded-xl border border-border bg-card p-6 shadow-sm">
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-widest text-muted-foreground">Komisariat</h2>
+        <p className="text-sm leading-relaxed text-muted-foreground">
+          IKASI memiliki Komisariat Angkatan dan Komisariat Daerah sebagai pelaksana kebijakan organisasi.
+          Setiap komisariat terdiri dari Ketua, Sekretaris, Bendahara, dan beberapa Ketua Bidang.
         </p>
-        <p className="text-slate-500 text-xs">
-          Daftar lengkap koordinator per angkatan & daerah sedang dikompilasi.
+        <p className="mt-2 text-xs text-muted-foreground">
+          Daftar lengkap koordinator per angkatan &amp; daerah sedang dikompilasi.
         </p>
-      </Section>
+      </section>
 
-      <Section label="Dewan Penasihat">
-        <div className="grid sm:grid-cols-3 gap-3">
-          {dewanPenasihat.map((r) => (
-            <RoleCard key={r.jabatan} role={r} />
-          ))}
+      <section className="mt-10">
+        <h2 className="mb-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">Dewan Penasihat</h2>
+        <div className="grid gap-3 sm:grid-cols-3">
+          {dewanPenasihat.map((r) => <RoleCard key={r.jabatan} role={r} />)}
         </div>
-      </Section>
+      </section>
 
-      <div className="text-center text-xs text-slate-500 mt-10">
+      <div className="mt-10 rounded-xl border border-dashed border-border bg-card p-5 text-center text-sm text-muted-foreground">
         Untuk informasi pengurus aktif, hubungi{" "}
-        <a href="mailto:ikasioffice@gmail.com" className="text-[#d4a72c] hover:underline">
-          ikasioffice@gmail.com
-        </a>
+        <a href="mailto:ikasioffice@gmail.com" className="font-medium text-primary hover:underline">ikasioffice@gmail.com</a>
       </div>
     </main>
   );
 }
 
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <section className="mb-10 pb-8 border-b border-white/[0.06]">
-      <div className="text-xs text-slate-500 uppercase tracking-widest mb-4">{label}</div>
-      {children}
-    </section>
-  );
-}
-
 function RoleCard({ role }: { role: Role }) {
+  const initials = role.nama
+    ? role.nama.split(" ").slice(0, 2).map((w) => w[0]).join("").toUpperCase()
+    : "?";
   return (
-    <Card className="p-4">
-      <div className="text-xs text-[#d4a72c] mb-1">{role.jabatan}</div>
-      {role.nama ? (
-        <div className="text-sm text-white font-medium">
-          {role.nama}
-          {role.angkatan && <span className="text-slate-500 ml-2 text-xs">&apos;{role.angkatan}</span>}
+    <div className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 shadow-sm">
+      <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg font-heading text-sm font-bold ${role.nama ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}>
+        {initials}
+      </div>
+      <div className="min-w-0">
+        <div className="text-xs text-muted-foreground">{role.jabatan}</div>
+        <div className={`font-semibold ${role.nama ? "text-foreground" : "text-muted-foreground"}`}>
+          {role.nama ?? "Segera diumumkan"}
+          {role.angkatan && <span className="ml-2 text-xs text-muted-foreground">&apos;{role.angkatan}</span>}
         </div>
-      ) : (
-        <div className="text-sm text-slate-500 italic">Akan diumumkan</div>
-      )}
-    </Card>
+      </div>
+    </div>
   );
 }

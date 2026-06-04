@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { listWaGroups, groupByCategory, type WaGroup } from "@/lib/data/wa-groups";
-import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 
@@ -22,13 +22,13 @@ function WaCard({ group }: { group: WaGroup }) {
   return (
     <Card className="flex flex-col gap-3 p-5">
       <div className="flex items-start justify-between gap-3">
-        <h3 className="font-bold text-white text-sm leading-snug">{group.name}</h3>
+        <h3 className="font-bold text-foreground text-sm leading-snug">{group.name}</h3>
         <span className="shrink-0 text-xs bg-[#25D366]/20 text-[#25D366] px-2 py-0.5 rounded-full font-medium">
           {group.member_count ?? 0} member
         </span>
       </div>
       {group.description && (
-        <p className="text-xs text-slate-400 leading-relaxed">{group.description}</p>
+        <p className="text-xs text-muted-foreground leading-relaxed">{group.description}</p>
       )}
       <div className="flex items-center gap-4 mt-1">
         <a
@@ -45,7 +45,7 @@ function WaCard({ group }: { group: WaGroup }) {
         <button
           type="button"
           onClick={handleCopy}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-white transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
         >
           {copied ? (
             <>
@@ -94,29 +94,38 @@ export default function GrupWaPage() {
   const grouped = groupByCategory(filtered);
 
   return (
-    <main className="px-6 py-12 max-w-5xl mx-auto">
-      <PageHeader
-        title={<>Grup <span className="gradient-text">WhatsApp</span> IKASI</>}
-        subtitle="Kumpulan grup WhatsApp resmi IKASI — silaturahmi, info lowongan, diskusi bidang, dan lainnya"
-        className="mb-8"
-      />
+    <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+      <nav className="mb-3 text-xs text-muted-foreground">
+        <Link href="/" className="hover:text-foreground">Beranda</Link>
+        <span className="mx-1.5">/</span>
+        <span className="text-foreground">Grup WA</span>
+      </nav>
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Grup <span className="text-primary">WhatsApp</span>
+      </h1>
+      <p className="mt-2 text-muted-foreground">
+        Gabung grup angkatan, wilayah, atau komunitas profesi alumni IKASI.
+      </p>
 
-      <input
-        type="search"
-        placeholder="Cari grup, kategori, atau deskripsi…"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full mb-10 min-h-11 px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-[#d4a72c]/50"
-      />
+      <div className="relative mb-10 mt-8">
+        <svg className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+        <input
+          type="search"
+          placeholder="Cari grup, kategori, atau deskripsi…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="h-11 w-full rounded-md border border-input bg-background pl-9 pr-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring"
+        />
+      </div>
 
       {loading ? (
         <div className="space-y-8">
           {[1, 2, 3].map((i) => (
             <div key={i}>
-              <div className="h-5 w-40 bg-white/5 rounded mb-4 animate-pulse" />
+              <div className="h-5 w-40 bg-card rounded mb-4 animate-pulse" />
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {[1, 2].map((j) => (
-                  <div key={j} className="glass-card rounded-2xl h-32 animate-pulse" />
+                  <div key={j} className="border border-border bg-card shadow-sm rounded-2xl h-32 animate-pulse" />
                 ))}
               </div>
             </div>
@@ -131,10 +140,10 @@ export default function GrupWaPage() {
         <div className="space-y-10">
           {Array.from(grouped.entries()).map(([category, items]) => (
             <section key={category}>
-              <h2 className="text-lg font-bold text-[#d4a72c] mb-4 flex items-center gap-2">
-                <span className="w-1 h-5 bg-[#d4a72c] rounded-full inline-block" />
+              <h2 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+                <span className="w-1 h-5 bg-primary rounded-full inline-block" />
                 {category}
-                <span className="text-xs text-slate-500 font-normal ml-1">
+                <span className="text-xs text-muted-foreground font-normal ml-1">
                   ({items.length} grup)
                 </span>
               </h2>

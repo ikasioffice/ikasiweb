@@ -1,18 +1,19 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-type Variant = "gold" | "outline";
+type Variant = "gold" | "outline" | "ghost";
 type Size = "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center rounded-full font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d4a72c]";
+  "inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50";
 const sizes: Record<Size, string> = {
-  md: "px-6 py-2.5 text-sm min-h-11",
-  lg: "px-8 py-3 text-base min-h-11",
+  md: "h-10 px-5 text-sm",
+  lg: "h-11 px-6 text-sm",
 };
 const variants: Record<Variant, string> = {
-  gold: "btn-gold",
-  outline: "border border-white/20 text-white hover:border-[#d4a72c]/60",
+  gold: "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+  outline: "border border-input bg-background text-foreground hover:bg-accent",
+  ghost: "text-foreground hover:bg-accent",
 };
 
 type Props = {

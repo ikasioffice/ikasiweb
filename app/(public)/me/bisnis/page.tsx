@@ -95,11 +95,11 @@ function MeBisnisContent() {
 
   if (!alumniId && !loading) {
     return (
-      <div className="glass-card rounded-2xl p-6 text-center">
-        <p className="text-slate-400 text-sm mb-4">
+      <div className="border border-border bg-card shadow-sm rounded-2xl p-6 text-center">
+        <p className="text-muted-foreground text-sm mb-4">
           Akun belum terhubung ke data alumni. Bisnis hanya bisa didaftarkan setelah verifikasi.
         </p>
-        <Link href="/me" className="btn-gold px-5 py-2 rounded-full text-xs">
+        <Link href="/me" className="bg-primary text-primary-foreground font-semibold transition-colors hover:bg-primary/90 px-5 py-2 rounded-full text-xs">
           Kembali ke Profil
         </Link>
       </div>
@@ -109,8 +109,8 @@ function MeBisnisContent() {
   return (
     <>
       {/* Form */}
-      <div className="glass-card rounded-2xl p-6 mb-8">
-        <h2 className="font-semibold text-white mb-4">
+      <div className="border border-border bg-card shadow-sm rounded-2xl p-6 mb-8">
+        <h2 className="font-semibold text-foreground mb-4">
           {editing ? "Edit Bisnis" : "Tambah Bisnis Baru"}
         </h2>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -126,7 +126,7 @@ function MeBisnisContent() {
               }[field]}
               value={(form[field] as string) ?? ""}
               onChange={(e) => setForm((p) => ({ ...p, [field]: e.target.value }))}
-              className="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#d4a72c]/50"
+              className="px-4 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:border-primary/50"
             />
           ))}
           <textarea
@@ -134,21 +134,21 @@ function MeBisnisContent() {
             value={(form.detail as string) ?? ""}
             onChange={(e) => setForm((p) => ({ ...p, detail: e.target.value }))}
             rows={3}
-            className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-[#d4a72c]/50 resize-none"
+            className="sm:col-span-2 px-4 py-2.5 rounded-xl bg-card border border-border text-foreground placeholder:text-muted-foreground text-sm focus:outline-none focus:border-primary/50 resize-none"
           />
         </div>
         <div className="flex gap-3 mt-4">
           <button
             onClick={handleSave}
             disabled={saving || !form.nama_brand}
-            className="btn-gold px-6 py-2 rounded-full text-sm disabled:opacity-50"
+            className="bg-primary text-primary-foreground font-semibold transition-colors hover:bg-primary/90 px-6 py-2 rounded-full text-sm disabled:opacity-50"
           >
             {saving ? "Menyimpan…" : editing ? "Simpan Perubahan" : "Tambahkan"}
           </button>
           {editing && (
             <button
               onClick={() => { setEditing(null); setForm(EMPTY); }}
-              className="px-6 py-2 rounded-full text-sm border border-white/20 text-slate-300 hover:border-white/40"
+              className="px-6 py-2 rounded-full text-sm border border-border text-foreground hover:border-border"
             >
               Batal
             </button>
@@ -159,23 +159,23 @@ function MeBisnisContent() {
       {/* List */}
       {loading ? (
         <div className="grid gap-3">
-          {[1, 2].map((i) => <div key={i} className="glass-card rounded-2xl h-20 animate-pulse" />)}
+          {[1, 2].map((i) => <div key={i} className="border border-border bg-card shadow-sm rounded-2xl h-20 animate-pulse" />)}
         </div>
       ) : list.length === 0 ? (
-        <div className="text-center text-slate-500 py-10">Belum ada bisnis yang didaftarkan.</div>
+        <div className="text-center text-muted-foreground py-10">Belum ada bisnis yang didaftarkan.</div>
       ) : (
         <div className="grid gap-3">
           {list.map((b) => (
-            <div key={b.id} className="glass-card rounded-2xl p-5 flex justify-between items-start gap-4">
+            <div key={b.id} className="border border-border bg-card shadow-sm rounded-2xl p-5 flex justify-between items-start gap-4">
               <div className="min-w-0">
-                <div className="font-semibold text-white truncate">{b.nama_brand}</div>
-                {b.bidang && <div className="text-xs text-[#d4a72c]">{b.bidang}</div>}
-                {b.lokasi && <div className="text-xs text-slate-400">{b.lokasi}</div>}
+                <div className="font-semibold text-foreground truncate">{b.nama_brand}</div>
+                {b.bidang && <div className="text-xs text-primary">{b.bidang}</div>}
+                {b.lokasi && <div className="text-xs text-muted-foreground">{b.lokasi}</div>}
               </div>
               <div className="flex gap-2 flex-shrink-0">
                 <button
                   onClick={() => startEdit(b)}
-                  className="text-xs px-3 py-1.5 rounded-lg border border-white/20 text-slate-300 hover:border-[#d4a72c]/50 transition-colors"
+                  className="text-xs px-3 py-1.5 rounded-lg border border-border text-foreground hover:border-primary/50 transition-colors"
                 >
                   Edit
                 </button>
@@ -199,7 +199,7 @@ export default function MeBisnisPage() {
     <AuthGuard>
       <main className="px-6 py-12 max-w-3xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
-          <Link href="/me" className="text-slate-400 hover:text-white text-sm">← Profil</Link>
+          <Link href="/me" className="text-muted-foreground hover:text-foreground text-sm">← Profil</Link>
           <h1 className="text-2xl font-extrabold tracking-tight">Bisnis Saya</h1>
         </div>
         <MeBisnisContent />

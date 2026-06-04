@@ -169,28 +169,28 @@ function MeContent() {
         <div className="relative flex-shrink-0">
           <button
             onClick={() => fileRef.current?.click()}
-            className="relative w-20 h-20 rounded-full overflow-hidden bg-white/10 hover:bg-white/20 transition-colors group"
+            className="relative w-20 h-20 rounded-full overflow-hidden bg-card hover:bg-card transition-colors group"
             title="Ganti foto"
           >
             {photoUrl ? (
               <img src={photoUrl} alt={displayName} className="w-full h-full object-cover"
                 onError={() => setPhotoUrl(null)} />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-[#d4a72c]">
+              <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-primary">
                 {displayName.charAt(0).toUpperCase()}
               </div>
             )}
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-              <span className="text-white text-xs">{uploadingPhoto ? "..." : "Ubah"}</span>
+            <div className="absolute inset-0 bg-background opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+              <span className="text-foreground text-xs">{uploadingPhoto ? "..." : "Ubah"}</span>
             </div>
           </button>
           <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handlePhotoUpload} />
         </div>
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight">{displayName}</h1>
-          <div className="text-sm text-slate-400 mt-0.5">{user.email}</div>
+          <div className="text-sm text-muted-foreground mt-0.5">{user.email}</div>
           <div className="flex gap-2 mt-2 flex-wrap">
-            {isVerified && <span className="px-2 py-0.5 rounded-full bg-[#d4a72c]/20 text-[#d4a72c] text-xs font-semibold">Alumni Terverifikasi</span>}
+            {isVerified && <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-xs font-semibold">Alumni Terverifikasi</span>}
             {isAdmin && <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold">Admin</span>}
           </div>
         </div>
@@ -203,37 +203,37 @@ function MeContent() {
       )}
 
       {loading ? (
-        <div className="glass-card rounded-2xl h-32 animate-pulse" />
+        <div className="border border-border bg-card shadow-sm rounded-2xl h-32 animate-pulse" />
       ) : alumni === "not-linked" ? (
-        <div className="glass-card rounded-2xl p-6 mb-6">
+        <div className="border border-border bg-card shadow-sm rounded-2xl p-6 mb-6">
           <div className="font-semibold mb-2">Akun belum terhubung ke data alumni</div>
-          <p className="text-sm text-slate-400 mb-4">Email kamu belum terdaftar di database IKASI.</p>
-          <a href="mailto:ikasioffice@gmail.com?subject=Verifikasi Alumni IKASI" className="btn-gold px-5 py-2 rounded-full text-xs inline-block">Hubungi Pengurus</a>
+          <p className="text-sm text-muted-foreground mb-4">Email kamu belum terdaftar di database IKASI.</p>
+          <a href="mailto:ikasioffice@gmail.com?subject=Verifikasi Alumni IKASI" className="bg-primary text-primary-foreground font-semibold transition-colors hover:bg-primary/90 px-5 py-2 rounded-full text-xs inline-block">Hubungi Pengurus</a>
         </div>
       ) : a ? (
         <>
           {/* Nomor Anggota */}
-          <section className="glass-card rounded-2xl p-5 mb-4">
-            <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">Nomor Anggota</div>
+          <section className="border border-border bg-card shadow-sm rounded-2xl p-5 mb-4">
+            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-2">Nomor Anggota</div>
             {a.nomor_anggota ? (
-              <div className="text-xl font-mono font-bold text-[#d4a72c]">{a.nomor_anggota}</div>
+              <div className="text-xl font-mono font-bold text-primary">{a.nomor_anggota}</div>
             ) : (
               <div className="text-sm text-amber-400/80">
                 <span className="inline-flex items-center gap-1.5"><LineIcon name="warning" /> Harap Registrasi ke Admin untuk mendapat Kartu Anggota</span>
-                <a href="mailto:ikasioffice@gmail.com?subject=Permohonan Kartu Anggota IKASI" className="ml-2 underline text-[#d4a72c]">Hubungi Admin</a>
+                <a href="mailto:ikasioffice@gmail.com?subject=Permohonan Kartu Anggota IKASI" className="ml-2 underline text-primary">Hubungi Admin</a>
               </div>
             )}
           </section>
 
           {/* Data Diri */}
-          <section className="glass-card rounded-2xl p-5 mb-4">
+          <section className="border border-border bg-card shadow-sm rounded-2xl p-5 mb-4">
             <div className="flex justify-between items-center mb-4">
-              <div className="text-xs text-slate-500 uppercase tracking-widest">Data Diri</div>
+              <div className="text-xs text-muted-foreground uppercase tracking-widest">Data Diri</div>
               {!editing
-                ? <button onClick={() => setEditing(true)} className="text-xs text-[#d4a72c] hover:underline">Edit Data</button>
+                ? <button onClick={() => setEditing(true)} className="text-xs text-primary hover:underline">Edit Data</button>
                 : <div className="flex gap-3">
-                    <button onClick={() => { setEditing(false); setSaveMsg(null); }} className="text-xs text-slate-400 hover:text-white">Batal</button>
-                    <button onClick={handleSave} disabled={saving} className="text-xs btn-gold px-4 py-1.5 rounded-full disabled:opacity-50">{saving ? "Menyimpan..." : "Simpan"}</button>
+                    <button onClick={() => { setEditing(false); setSaveMsg(null); }} className="text-xs text-muted-foreground hover:text-foreground">Batal</button>
+                    <button onClick={handleSave} disabled={saving} className="text-xs bg-primary text-primary-foreground font-semibold transition-colors hover:bg-primary/90 px-4 py-1.5 rounded-full disabled:opacity-50">{saving ? "Menyimpan..." : "Simpan"}</button>
                   </div>
               }
             </div>
@@ -254,30 +254,30 @@ function MeContent() {
                   ["minat_hobi", "Minat / Hobi (pisah koma)", "text", false],
                 ] as [keyof EditForm, string, string, boolean][]).map(([key, label, type, full]) => (
                   <div key={key} className={full ? "sm:col-span-2" : ""}>
-                    <label className="text-xs text-slate-400 mb-1 block">{label}</label>
+                    <label className="text-xs text-muted-foreground mb-1 block">{label}</label>
                     <input type={type} value={form[key] as string}
                       onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#d4a72c]/50"
+                      className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground text-sm focus:outline-none focus:border-primary/50"
                     />
                   </div>
                 ))}
                 <div className="sm:col-span-2 flex items-center gap-3">
-                  <label className="text-xs text-slate-400">Punya SKA/SKK</label>
+                  <label className="text-xs text-muted-foreground">Punya SKA/SKK</label>
                   <button type="button" onClick={() => setForm((f) => ({ ...f, punya_ska: !f.punya_ska }))}
-                    className={`w-10 h-5 rounded-full transition-colors ${form.punya_ska ? "bg-[#d4a72c]" : "bg-white/10"}`}>
-                    <div className={`w-4 h-4 rounded-full bg-white mx-0.5 transition-transform ${form.punya_ska ? "translate-x-5" : ""}`} />
+                    className={`w-10 h-5 rounded-full transition-colors ${form.punya_ska ? "bg-primary" : "bg-muted"}`}>
+                    <div className={`w-4 h-4 rounded-full bg-white shadow-sm mx-0.5 transition-transform ${form.punya_ska ? "translate-x-5" : ""}`} />
                   </button>
                 </div>
                 {form.punya_ska && (
                   <div className="sm:col-span-2">
-                    <label className="text-xs text-slate-400 mb-1 block">Bidang SKA</label>
+                    <label className="text-xs text-muted-foreground mb-1 block">Bidang SKA</label>
                     <input type="text" value={form.bidang_ska}
                       onChange={(e) => setForm((f) => ({ ...f, bidang_ska: e.target.value }))}
-                      className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-[#d4a72c]/50"
+                      className="w-full px-3 py-2 rounded-lg bg-card border border-border text-foreground text-sm focus:outline-none focus:border-primary/50"
                     />
                   </div>
                 )}
-                <div className="sm:col-span-2 text-xs text-slate-500">Angkatan, Prodi, dan Nomor Anggota tidak bisa diubah sendiri.</div>
+                <div className="sm:col-span-2 text-xs text-muted-foreground">Angkatan, Prodi, dan Nomor Anggota tidak bisa diubah sendiri.</div>
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-3">
@@ -295,9 +295,9 @@ function MeContent() {
                 <InfoField label="SKA/SKK" value={a.punya_ska ? (a.bidang_ska || "Ya") : "Tidak"} />
                 {a.minat_hobi?.length ? (
                   <div className="col-span-2">
-                    <div className="text-xs text-slate-500 mb-1">Minat / Hobi</div>
+                    <div className="text-xs text-muted-foreground mb-1">Minat / Hobi</div>
                     <div className="flex flex-wrap gap-1.5">
-                      {a.minat_hobi.map((h) => <span key={h} className="text-xs px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-slate-300">{h}</span>)}
+                      {a.minat_hobi.map((h) => <span key={h} className="text-xs px-2 py-0.5 rounded-full bg-card border border-border text-foreground">{h}</span>)}
                     </div>
                   </div>
                 ) : null}
@@ -306,8 +306,8 @@ function MeContent() {
           </section>
 
           {/* Kontak pribadi */}
-          <section className="glass-card rounded-2xl p-5 mb-4">
-            <div className="text-xs text-slate-500 uppercase tracking-widest mb-3">Kontak <span className="normal-case">(hanya kamu yang lihat)</span></div>
+          <section className="border border-border bg-card shadow-sm rounded-2xl p-5 mb-4">
+            <div className="text-xs text-muted-foreground uppercase tracking-widest mb-3">Kontak <span className="normal-case">(hanya kamu yang lihat)</span></div>
             <div className="grid grid-cols-2 gap-3">
               <InfoField label="Email" value={a.email} />
               <InfoField label="No. HP" value={a.no_hp} />
@@ -318,19 +318,19 @@ function MeContent() {
 
       {/* Quick actions */}
       <div className="grid gap-3 sm:grid-cols-2 mt-2">
-        <Link href="/me/bisnis" className="glass-card rounded-2xl p-5 hover:border-[#d4a72c]/40 transition-colors">
+        <Link href="/me/bisnis" className="border border-border bg-card shadow-sm rounded-2xl p-5 hover:border-primary/40 transition-colors">
           <div className="font-semibold mb-1">Bisnis Saya</div>
-          <div className="text-xs text-slate-400">Kelola bisnis atau usaha yang kamu daftarkan</div>
+          <div className="text-xs text-muted-foreground">Kelola bisnis atau usaha yang kamu daftarkan</div>
         </Link>
         {isAdmin && (
-          <Link href="/admin" className="glass-card rounded-2xl p-5 hover:border-blue-400/40 transition-colors">
+          <Link href="/admin" className="border border-border bg-card shadow-sm rounded-2xl p-5 hover:border-blue-400/40 transition-colors">
             <div className="font-semibold mb-1">Dashboard Admin</div>
-            <div className="text-xs text-slate-400">Kelola konten dan verifikasi alumni</div>
+            <div className="text-xs text-muted-foreground">Kelola konten dan verifikasi alumni</div>
           </Link>
         )}
       </div>
 
-      <button onClick={signOut} className="mt-8 text-sm text-slate-500 hover:text-red-400 transition-colors">
+      <button onClick={signOut} className="mt-8 text-sm text-muted-foreground hover:text-red-400 transition-colors">
         Keluar dari akun
       </button>
     </main>

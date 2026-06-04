@@ -11,9 +11,9 @@ type Props = {
 export function EmptyState({ title, description, action, icon, className = "" }: Props) {
   return (
     <div
-      className={`relative mx-auto flex max-w-md flex-col items-center rounded-2xl border border-dashed border-[var(--color-blueprint-line-strong)] bg-white/[0.02] px-8 py-14 text-center ${className}`}
+      className={`relative mx-auto flex max-w-md flex-col items-center rounded-xl border border-dashed border-border bg-card px-8 py-14 text-center shadow-sm ${className}`}
     >
-      <div className="mb-4 grid h-14 w-14 place-items-center rounded-xl border border-[var(--color-blueprint-line-strong)] text-[#d4a72c]">
+      <div className="mb-4 grid h-14 w-14 place-items-center rounded-xl bg-accent text-primary">
         {icon ?? (
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
             <rect x="3" y="4" width="18" height="16" rx="2" />
@@ -21,8 +21,8 @@ export function EmptyState({ title, description, action, icon, className = "" }:
           </svg>
         )}
       </div>
-      <p className="font-heading text-lg font-semibold text-white">{title}</p>
-      {description ? <p className="mt-2 text-sm text-slate-400">{description}</p> : null}
+      <p className="font-heading text-lg font-semibold text-foreground">{title}</p>
+      {description ? <p className="mt-2 text-sm text-muted-foreground">{description}</p> : null}
       {action ? <div className="mt-6">{action}</div> : null}
     </div>
   );

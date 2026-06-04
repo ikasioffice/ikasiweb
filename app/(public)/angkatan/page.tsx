@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { listAlumniPublic } from "@/lib/data/alumni";
-import { PageHeader } from "@/components/ui/page-header";
-import { Card } from "@/components/ui/card";
 
 type AngkatanGroup = { tahun: number; count: number; prodiSet: Set<string> };
 
@@ -27,31 +26,42 @@ export default function AngkatanPage() {
   }, []);
 
   return (
-    <main className="px-6 py-12 max-w-4xl mx-auto">
-      <PageHeader
-        title={<>Per <span className="gradient-text">Angkatan</span></>}
-        subtitle="Daftar alumni berdasarkan tahun masuk"
-        className="mb-10"
-      />
+    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+      <nav className="mb-3 text-xs text-muted-foreground">
+        <Link href="/" className="hover:text-foreground">Beranda</Link>
+        <span className="mx-1.5">/</span>
+        <span className="text-foreground">Per Angkatan</span>
+      </nav>
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight sm:text-4xl">
+        Per <span className="text-primary">Angkatan</span>
+      </h1>
+      <p className="mt-2 text-muted-foreground">Daftar alumni berdasarkan tahun masuk.</p>
 
       {loading ? (
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 md:grid-cols-3">
           {Array.from({ length: 9 }).map((_, i) => (
-            <div key={i} className="glass-card rounded-2xl h-20 animate-pulse" />
+            <div key={i} className="h-20 animate-pulse rounded-xl border border-border bg-muted" />
           ))}
         </div>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3">
+        <div className="mt-8 grid gap-3 pb-16 sm:grid-cols-2 md:grid-cols-3">
           {groups.map((g) => (
-            <Card key={g.tahun} href={`/angkatan/${g.tahun}`} className="p-5">
-              <div className="font-heading text-2xl font-extrabold text-[#d4a72c]">{g.tahun}</div>
-              <div className="text-sm text-slate-400 mt-1">{g.count} alumni</div>
+            <Link
+              key={g.tahun}
+              href={`/angkatan/${g.tahun}`}
+              className="group rounded-xl border border-border bg-card p-5 shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5"
+            >
+              <div className="flex items-center justify-between">
+                <div className="font-heading text-2xl font-extrabold text-primary">{g.tahun}</div>
+                <svg className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 7h10v10M7 17 17 7" /></svg>
+              </div>
+              <div className="mt-1 text-sm text-muted-foreground">{g.count} alumni</div>
               {g.prodiSet.size > 0 && (
-                <div className="text-xs text-slate-500 mt-1 truncate">
+                <div className="mt-1 truncate text-xs text-muted-foreground">
                   {Array.from(g.prodiSet).join(" · ")}
                 </div>
               )}
-            </Card>
+            </Link>
           ))}
         </div>
       )}

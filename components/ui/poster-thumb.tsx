@@ -18,7 +18,7 @@ export function PosterThumb({
   }
   return (
     <div
-      className={`rounded-xl bg-[#142340] border border-[var(--color-blueprint-line-strong)] flex items-center justify-center flex-shrink-0 text-[#d4a72c] ${className}`}
+      className={`rounded-xl bg-accent border border-border flex items-center justify-center flex-shrink-0 text-primary ${className}`}
       style={{ width: size, height: size }}
     >
       <LineIcon name={icon} size={Math.round(size * 0.4)} />

@@ -8,18 +8,15 @@ type Props = {
   className?: string;
 };
 
-const corner =
-  "before:absolute before:left-0 before:top-0 before:h-3 before:w-3 before:border-l before:border-t before:border-[var(--color-blueprint-line-strong)] " +
-  "after:absolute after:bottom-0 after:right-0 after:h-3 after:w-3 after:border-b after:border-r after:border-[var(--color-blueprint-line-strong)]";
-
 export function Card({ children, href, interactive, className = "" }: Props) {
+  const hasPadding = /(^|\s)p-/.test(className);
   const cls =
-    `relative glass-card rounded-2xl p-6 ${corner} ` +
-    (interactive || href ? "transition-colors hover:border-[#d4a72c]/40 " : "") +
+    `rounded-lg border border-border bg-card ${hasPadding ? "" : "p-6 "}shadow-sm ` +
+    (interactive || href ? "transition-all hover:shadow-md hover:-translate-y-0.5 " : "") +
     className;
   if (href) {
     return (
-      <Link href={href} className={`block group ${cls}`}>
+      <Link href={href} className={`group block ${cls}`}>
         {children}
       </Link>
     );

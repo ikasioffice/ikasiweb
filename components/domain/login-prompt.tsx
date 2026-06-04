@@ -3,12 +3,15 @@ import { LineIcon } from "@/components/ui/icons";
 
 export function LoginPrompt({ message }: { message: string }) {
   return (
-    <div className="p-4 rounded-2xl border border-[#d4a72c]/30 bg-[#d4a72c]/10 flex justify-between items-center gap-4">
-      <div className="flex items-center gap-2 text-sm text-[#f4ede0]">
-        <LineIcon name="briefcase" className="text-[#d4a72c]" />
-        <strong className="text-[#d4a72c]">{message}</strong>
+    <div className="flex items-center justify-between gap-4 rounded-xl border border-primary/30 bg-primary/5 p-4">
+      <div className="flex items-center gap-2 text-sm text-foreground">
+        <LineIcon name="briefcase" className="text-primary" />
+        <strong className="text-primary">{message}</strong>
       </div>
-      <Link href="/login" className="btn-gold px-5 py-2.5 rounded-full text-xs whitespace-nowrap">
+      <Link
+        href="/login"
+        className="inline-flex h-9 items-center whitespace-nowrap rounded-md bg-primary px-5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+      >
         Masuk dengan Google
       </Link>
     </div>

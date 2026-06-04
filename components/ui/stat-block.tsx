@@ -26,10 +26,10 @@ export function StatBlock({ value, label }: { value: number | null; label: strin
 
   return (
     <div className="relative text-center">
-      <div className="font-heading text-4xl font-extrabold gradient-text tabular-nums sm:text-5xl">
+      <div className="font-heading text-4xl font-extrabold text-primary tabular-nums sm:text-5xl">
         {value === null ? "—" : displayed.toLocaleString("id-ID")}
       </div>
-      <div className="mt-2 text-xs text-slate-400 sm:text-sm">{label}</div>
+      <div className="mt-2 text-xs text-muted-foreground sm:text-sm">{label}</div>
     </div>
   );
 }

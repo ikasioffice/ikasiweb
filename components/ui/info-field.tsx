@@ -7,8 +7,8 @@ export function InfoField({
   if (shown === null) return null;
   return (
     <div className={className}>
-      <div className="text-xs text-slate-500 mb-0.5">{label}</div>
-      <div className="text-sm text-slate-200">{shown}</div>
+      <div className="text-xs text-muted-foreground mb-0.5">{label}</div>
+      <div className="text-sm font-medium text-foreground">{shown}</div>
     </div>
   );
 }

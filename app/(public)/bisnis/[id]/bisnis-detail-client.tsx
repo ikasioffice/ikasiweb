@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
+import Link from "next/link";
 import { getBisnisById, type Bisnis } from "@/lib/data/bisnis";
-import { PosterThumb } from "@/components/ui/poster-thumb";
+import { Badge } from "@/components/ui/badge";
 import { LineIcon } from "@/components/ui/icons";
 
 export function BisnisDetailClient({ paramsPromise }: { paramsPromise: Promise<{ id: string }> }) {
@@ -14,57 +15,82 @@ export function BisnisDetailClient({ paramsPromise }: { paramsPromise: Promise<{
     getBisnisById(id).then(setBisnis);
   }, [id]);
 
-  if (!bisnis) return <div className="p-12 text-slate-300">Loading…</div>;
+  if (!bisnis) return <div className="mx-auto max-w-4xl px-4 py-16 text-muted-foreground sm:px-6">Memuat…</div>;
+
+  const nama = bisnis.nama_brand ?? "Bisnis";
 
   return (
-    <main className="px-6 py-16 max-w-3xl mx-auto">
-      <div className="flex gap-6 mb-8">
-        <PosterThumb src={bisnis.poster_url} alt={bisnis.nama_brand ?? "Bisnis"} size={96} icon="store" className="rounded-2xl" />
-        <div>
-          <h1 className="text-4xl font-heading font-extrabold tracking-tight">{bisnis.nama_brand}</h1>
-          {bisnis.bidang && (
-            <div className="text-[#d4a72c] mt-1 text-sm font-medium">{bisnis.bidang}</div>
-          )}
-          {bisnis.lokasi && (
-            <div className="text-slate-400 mt-1 text-sm">{bisnis.lokasi}</div>
-          )}
-        </div>
-      </div>
+    <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+      <nav className="mb-4 text-xs text-muted-foreground">
+        <Link href="/" className="hover:text-foreground">Beranda</Link>
+        <span className="mx-1.5">/</span>
+        <Link href="/bisnis" className="hover:text-foreground">Bisnis</Link>
+        <span className="mx-1.5">/</span>
+        <span className="text-foreground">{nama}</span>
+      </nav>
 
-      {bisnis.detail && (
-        <Section label="Deskripsi">
-          <p className="text-sm leading-relaxed text-slate-300">{bisnis.detail}</p>
-        </Section>
-      )}
-
-      {(bisnis.no_kontak || bisnis.link_medsos) && (
-        <Section label="Kontak">
-          <div className="space-y-2 text-sm">
-            {bisnis.no_kontak && <div className="text-slate-300"><span className="inline-flex items-center gap-1.5 text-slate-300"><LineIcon name="phone" /> {bisnis.no_kontak}</span></div>}
-            {bisnis.link_medsos && (
-              <div>
-                <a
-                  href={bisnis.link_medsos}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#d4a72c] hover:underline"
-                >
-                  <span className="inline-flex items-center gap-1.5"><LineIcon name="link" /> {bisnis.link_medsos}</span>
-                </a>
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Left */}
+        <div className="space-y-6 lg:col-span-2">
+          <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+            <div className="flex items-start gap-4">
+              {bisnis.poster_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={bisnis.poster_url} alt={nama} className="h-16 w-16 shrink-0 rounded-xl object-cover" style={{ width: 64, height: 64 }} />
+              ) : (
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-primary/15 text-primary">
+                  <LineIcon name="store" size={28} />
+                </div>
+              )}
+              <div className="min-w-0">
+                <h1 className="font-heading text-2xl font-extrabold tracking-tight">{nama}</h1>
+                {bisnis.bidang && <p className="text-muted-foreground">{bisnis.bidang}</p>}
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {bisnis.bidang && <Badge variant="neutral">{bisnis.bidang}</Badge>}
+                  {bisnis.lokasi && <Badge variant="neutral"><LineIcon name="pin" size={12} /> {bisnis.lokasi}</Badge>}
+                </div>
               </div>
+            </div>
+            {bisnis.detail && (
+              <p className="mt-5 leading-relaxed text-muted-foreground">{bisnis.detail}</p>
             )}
           </div>
-        </Section>
-      )}
-    </main>
-  );
-}
 
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <section className="mb-6 pb-6 border-b border-white/[0.06]">
-      <div className="text-xs text-slate-500 uppercase tracking-widest mb-2">{label}</div>
-      {children}
-    </section>
+          {bisnis.poster_url && (
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+              <h2 className="font-heading mb-4 text-sm font-bold uppercase tracking-wider text-muted-foreground">Galeri</h2>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={bisnis.poster_url} alt={nama} className="w-full rounded-lg object-cover" />
+            </div>
+          )}
+        </div>
+
+        {/* Right */}
+        <div className="space-y-4">
+          {(bisnis.no_kontak || bisnis.link_medsos) && (
+            <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+              <h2 className="font-heading mb-4 text-sm font-bold uppercase tracking-wider text-muted-foreground">Kontak &amp; Tautan</h2>
+              <div className="space-y-2">
+                {bisnis.no_kontak && (
+                  <a href={`tel:${bisnis.no_kontak}`} className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm font-medium transition-colors hover:bg-accent">
+                    <LineIcon name="phone" size={16} className="text-primary" /> {bisnis.no_kontak}
+                  </a>
+                )}
+                {bisnis.link_medsos && (
+                  <a href={bisnis.link_medsos} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-lg border border-border p-3 text-sm font-medium transition-colors hover:bg-accent">
+                    <LineIcon name="link" size={16} className="text-primary" /> <span className="truncate">{bisnis.link_medsos}</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          <Link href="/bisnis" className="flex items-center gap-2 rounded-xl border border-border bg-card p-4 text-sm font-medium shadow-sm transition-colors hover:bg-accent">
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+            Kembali ke daftar bisnis
+          </Link>
+        </div>
+      </div>
+    </main>
   );
 }
