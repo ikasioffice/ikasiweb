@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/lib/auth/use-auth";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 
@@ -98,6 +99,14 @@ function LoginForm() {
               </button>
             </form>
           )}
+
+          {/* Belum punya akun → daftar */}
+          <div className="mt-5 border-t border-border pt-4 text-center text-sm text-muted-foreground">
+            Belum terdaftar sebagai alumni?{" "}
+            <Link href="/daftar" className="font-semibold text-primary hover:underline">
+              Daftar di sini
+            </Link>
+          </div>
         </div>
 
         <p className="mt-4 text-center text-xs text-muted-foreground">
