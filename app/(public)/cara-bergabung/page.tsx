@@ -3,24 +3,32 @@ import Link from "next/link";
 const steps = [
   {
     num: "01",
-    title: "Daftar dengan Google",
-    desc: "Klik tombol Masuk / Daftar di navigasi dan login menggunakan akun Google kamu.",
+    title: "Isi formulir pendaftaran",
+    desc: "Klik “Daftar Sekarang”, lalu lengkapi data alumni kamu sesuai yang dibutuhkan database (lihat daftar di bawah).",
   },
   {
     num: "02",
-    title: "Profil terdeteksi otomatis",
-    desc: "Sistem akan mencocokkan email kamu dengan database alumni. Jika cocok, akun langsung terhubung.",
+    title: "Tunggu verifikasi pengurus",
+    desc: "Data kamu diperiksa dan dicocokkan dengan arsip alumni Teknik Sipil Polban. Biasanya 1–3 hari kerja.",
   },
   {
     num: "03",
-    title: "Verifikasi manual (jika perlu)",
-    desc: "Jika email tidak cocok, hubungi pengurus untuk verifikasi manual. Gratis, tanpa biaya.",
+    title: "Login dengan Magic Link",
+    desc: "Setelah disetujui, buka halaman Masuk → Magic Link, dan gunakan email yang kamu daftarkan. Link masuk dikirim ke email itu.",
   },
   {
     num: "04",
     title: "Akses penuh",
-    desc: "Setelah terverifikasi, kamu bisa lihat kontak sesama alumni, daftarkan bisnis, dan ikut acara.",
+    desc: "Lihat kontak sesama alumni, daftarkan bisnis, ikut acara, dan nikmati benefit khusus anggota.",
   },
+];
+
+const dataNeeded: { group: string; items: string }[] = [
+  { group: "Data diri", items: "Nama lengkap*, jenis kelamin, tanggal lahir, domisili, email*, no. HP/WhatsApp" },
+  { group: "Pendidikan di Polban", items: "Angkatan*, program studi, tahun lulus" },
+  { group: "Pekerjaan", items: "Bidang pekerjaan, jabatan, tempat kerja/perusahaan" },
+  { group: "Pendidikan terakhir", items: "Jenjang & institusi pendidikan terakhir" },
+  { group: "Kompetensi & partisipasi", items: "SKA/SKK, S2 Polban, kesediaan KP/dosen tamu/pengurus, minat & hobi" },
 ];
 
 type Benefit = { brand: string; desc: string; benefit: string };
@@ -54,7 +62,7 @@ export default function CaraBergabungPage() {
         Cara <span className="text-primary">Bergabung</span>
       </h1>
       <p className="mt-2 text-muted-foreground">
-        Gratis. Hanya butuh akun Google dan status alumni Teknik Sipil Polban.
+        Gratis. Cukup isi formulir data alumni, tunggu verifikasi pengurus, lalu masuk lewat magic link.
       </p>
 
       {/* Steps */}
@@ -73,7 +81,7 @@ export default function CaraBergabungPage() {
       </section>
 
       <div className="mt-8 flex flex-wrap gap-3">
-        <Link href="/login" className="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90">
+        <Link href="/daftar" className="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90">
           Daftar Sekarang
         </Link>
         <a href="https://wa.me/6281234681730?text=Halo%20IKASI%2C%20saya%20ingin%20verifikasi%20sebagai%20alumni." target="_blank" rel="noreferrer" className="inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-semibold transition-colors hover:bg-accent">
@@ -81,6 +89,30 @@ export default function CaraBergabungPage() {
           Hubungi Pengurus (WA)
         </a>
       </div>
+
+      {/* Data yang perlu disiapkan */}
+      <section className="mt-12">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-primary">
+          DATA YANG DIBUTUHKAN
+        </span>
+        <h2 className="font-heading mt-3 text-2xl font-extrabold tracking-tight">Siapkan data ini sebelum mengisi form</h2>
+        <p className="mt-2 max-w-2xl text-muted-foreground">
+          Formulir pendaftaran mengikuti data yang dibutuhkan database alumni. Field bertanda <span className="font-semibold text-primary">*</span> wajib diisi; sisanya bisa dilengkapi kapan saja lewat halaman profil setelah login.
+        </p>
+        <div className="mt-6 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+          {dataNeeded.map((d, i) => (
+            <div key={d.group} className={`flex flex-col gap-1 p-4 sm:flex-row sm:gap-6 ${i > 0 ? "border-t border-border" : ""}`}>
+              <div className="font-heading w-full shrink-0 font-bold text-foreground sm:w-56">{d.group}</div>
+              <div className="text-sm text-muted-foreground">{d.items}</div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-6">
+          <Link href="/daftar" className="inline-flex h-11 items-center gap-2 rounded-md bg-primary px-6 text-sm font-semibold text-primary-foreground shadow-sm transition-colors hover:bg-primary/90">
+            Isi Formulir Pendaftaran
+          </Link>
+        </div>
+      </section>
 
       {/* Benefits */}
       <section className="mt-16">
