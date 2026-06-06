@@ -48,33 +48,44 @@ function MeContent() {
 
   useEffect(() => {
     if (!user) return;
-    createClient()
-      .from("alumni")
-      .select("*")
-      .eq("auth_user_id", user.id)
-      .maybeSingle()
-      .then(({ data }) => {
-        setAlumni(data ?? "not-linked");
-        if (data) {
-          setPhotoUrl(data.foto_url);
-          setForm({
-            nama: data.nama ?? "",
-            tanggal_lahir: data.tanggal_lahir ?? "",
-            domisili: data.domisili ?? "",
-            bidang_pekerjaan: data.bidang_pekerjaan ?? "",
-            tempat_kerja: data.tempat_kerja ?? "",
-            jabatan: data.jabatan ?? "",
-            no_hp: data.no_hp ?? "",
-            punya_ska: data.punya_ska ?? false,
-            bidang_ska: data.bidang_ska ?? "",
-            pendidikan_terakhir: data.pendidikan_terakhir ?? "",
-            institusi: data.institusi ?? "",
-            tahun_lulus: data.tahun_lulus?.toString() ?? "",
-            minat_hobi: (data.minat_hobi ?? []).join(", "),
-          });
-        }
-        setLoading(false);
-      });
+    const supabase = createClient();
+    (async () => {
+      // Klaim row alumni yang email-nya cocok bila belum tertaut (lihat
+      // auth-context). Menangani user yang punya akun auth sebelum row
+      // alumni-nya ada/di-approve, agar /me tidak salah tampil "tidak terhubung".
+      if (user.email) {
+        await supabase
+          .from("alumni")
+          .update({ auth_user_id: user.id })
+          .is("auth_user_id", null)
+          .eq("email", user.email);
+      }
+      const { data } = await supabase
+        .from("alumni")
+        .select("*")
+        .eq("auth_user_id", user.id)
+        .maybeSingle();
+      setAlumni(data ?? "not-linked");
+      if (data) {
+        setPhotoUrl(data.foto_url);
+        setForm({
+          nama: data.nama ?? "",
+          tanggal_lahir: data.tanggal_lahir ?? "",
+          domisili: data.domisili ?? "",
+          bidang_pekerjaan: data.bidang_pekerjaan ?? "",
+          tempat_kerja: data.tempat_kerja ?? "",
+          jabatan: data.jabatan ?? "",
+          no_hp: data.no_hp ?? "",
+          punya_ska: data.punya_ska ?? false,
+          bidang_ska: data.bidang_ska ?? "",
+          pendidikan_terakhir: data.pendidikan_terakhir ?? "",
+          institusi: data.institusi ?? "",
+          tahun_lulus: data.tahun_lulus?.toString() ?? "",
+          minat_hobi: (data.minat_hobi ?? []).join(", "),
+        });
+      }
+      setLoading(false);
+    })();
   }, [user]);
 
   async function handlePhotoUpload(e: React.ChangeEvent<HTMLInputElement>) {

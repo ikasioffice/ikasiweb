@@ -48,8 +48,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .maybeSingle();
     setIsAdmin(!!roleRow);
 
-    // Auto-link ditangani oleh Postgres trigger (on_auth_user_created / on_auth_email_confirmed)
-    // Di sini cukup baca hasilnya
+    // Self-link: klaim row alumni yang email-nya cocok tapi belum tertaut akun ini.
+    // Trigger DB (on_auth_user_created / on_auth_email_confirmed) hanya jalan saat
+    // auth user dibuat / email dikonfirmasi. Pada alur pendaftaran mandiri, user
+    // bisa punya akun auth SEBELUM row alumni-nya ada/di-approve, sehingga trigger
+    // tidak menautkan apa pun. Klaim di sini berjalan setiap login dan menutup
+    // celah itu. Dibolehkan oleh RLS alumni_self_link_auth (auth_user_id IS NULL
+    // AND email = jwt email). Tidak mengubah is_verified (tetap kendali admin).
+    if (u.email) {
+      await supabase
+        .from("alumni")
+        .update({ auth_user_id: u.id })
+        .is("auth_user_id", null)
+        .eq("email", u.email);
+    }
+
     const { data: alumniRow } = await supabase
       .from("alumni")
       .select("is_verified")
