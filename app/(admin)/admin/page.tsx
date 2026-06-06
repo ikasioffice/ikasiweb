@@ -1,80 +1,65 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
-import { Card } from "@/components/ui/card";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { OverviewTab } from "./_dashboard/overview-tab";
+import { AlumniDatabaseTab } from "./_dashboard/alumni-database-tab";
 
-type Stats = {
-  alumni: number | null;
-  unverified: number | null;
-  bisnis: number | null;
-  news: number | null;
-};
+type TabKey = "overview" | "database";
 
-export default function AdminDashboard() {
-  const [stats, setStats] = useState<Stats>({
-    alumni: null,
-    unverified: null,
-    bisnis: null,
-    news: null,
-  });
+const TABS: { key: TabKey; label: string }[] = [
+  { key: "overview", label: "Overview" },
+  { key: "database", label: "Database Alumni" },
+];
 
-  useEffect(() => {
-    const supabase = createClient();
-    Promise.all([
-      supabase.from("alumni").select("*", { count: "exact", head: true }),
-      supabase.from("alumni").select("*", { count: "exact", head: true }).eq("is_verified", false),
-      supabase.from("bisnis").select("*", { count: "exact", head: true }),
-      supabase.from("posts").select("*", { count: "exact", head: true }),
-    ]).then(([a, u, b, n]) => {
-      setStats({ alumni: a.count, unverified: u.count, bisnis: b.count, news: n.count });
-    });
-  }, []);
+function DashboardContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const initial = (searchParams.get("tab") as TabKey) || "overview";
+  const [tab, setTab] = useState<TabKey>(initial === "database" ? "database" : "overview");
+
+  function select(key: TabKey) {
+    setTab(key);
+    const params = new URLSearchParams(searchParams.toString());
+    if (key === "overview") params.delete("tab");
+    else params.set("tab", key);
+    const qs = params.toString();
+    router.replace(qs ? `/admin?${qs}` : "/admin", { scroll: false });
+  }
 
   return (
     <div>
-      <h1 className="font-heading text-3xl font-extrabold tracking-tight mb-8">Dashboard</h1>
+      <h1 className="font-heading text-3xl font-extrabold tracking-tight mb-6">Dashboard</h1>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-10">
-        {[
-          { label: "Total Alumni", value: stats.alumni, href: "/admin/alumni" },
-          { label: "Belum Terverifikasi", value: stats.unverified, href: "/admin/alumni?filter=unverified", urgent: (stats.unverified ?? 0) > 0 },
-          { label: "Bisnis Terdaftar", value: stats.bisnis, href: "/bisnis" },
-          { label: "Artikel Berita", value: stats.news, href: "/admin/news" },
-        ].map((s) => (
-          <Card
-            key={s.label}
-            href={s.href}
-            className={`p-5 ${s.urgent ? "border-orange-500/30" : ""}`}
+      {/* Tabs */}
+      <div className="flex gap-1 border-b border-border mb-8">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            onClick={() => select(t.key)}
+            className={`relative px-4 py-2.5 text-sm font-medium transition-colors ${
+              tab === t.key
+                ? "text-[#d4a72c]"
+                : "text-slate-400 hover:text-white"
+            }`}
           >
-            <div className={`text-3xl font-extrabold ${s.urgent ? "text-orange-400" : "gradient-text"}`}>
-              {s.value ?? "—"}
-            </div>
-            <div className="text-sm text-slate-400 mt-1">{s.label}</div>
-          </Card>
+            {t.label}
+            {tab === t.key && (
+              <span className="absolute inset-x-0 -bottom-px h-0.5 bg-[#d4a72c]" />
+            )}
+          </button>
         ))}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {[
-          { href: "/admin/alumni", label: "Verifikasi Alumni", desc: "Approve atau reject permintaan verifikasi" },
-          { href: "/admin/alumni/duplicates", label: "Duplikat Alumni", desc: "Review dan hapus data alumni duplikat" },
-          { href: "/admin/alumni/deletions", label: "Riwayat Hapus", desc: "Lihat dan restore alumni yang dihapus" },
-          { href: "/admin/news", label: "Kelola Berita", desc: "Tulis dan publish artikel" },
-          { href: "/admin/events", label: "Kelola Acara", desc: "Buat dan manage event IKASI" },
-          { href: "/admin/wa-groups", label: "Grup WhatsApp", desc: "Kelola link & daftar grup WhatsApp" },
-        ].map((a) => (
-          <Card
-            key={a.href}
-            href={a.href}
-            className="p-5"
-          >
-            <div className="font-semibold text-white mb-1">{a.label}</div>
-            <div className="text-xs text-slate-400">{a.desc}</div>
-          </Card>
-        ))}
-      </div>
+      {tab === "overview" ? <OverviewTab /> : <AlumniDatabaseTab />}
     </div>
+  );
+}
+
+export default function AdminDashboard() {
+  return (
+    <Suspense>
+      <DashboardContent />
+    </Suspense>
   );
 }
