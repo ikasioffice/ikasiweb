@@ -1,17 +1,27 @@
-name: Build & Deploy to Hostinger
+name: Build check
+
+# Auto-deploy lewat FTP dimatikan: server FTP Hostinger memakai sertifikat
+# shared yang CN-nya tidak cocok dengan hostname, sehingga FTPS dengan
+# verifikasi selalu gagal, dan plain FTP sering "Timeout (control socket)".
+#
+# Deploy ke produksi dilakukan via Hostinger API (hosting_deployStaticWebsite)
+# yang lebih andal & aman. Workflow ini hanya memverifikasi bahwa build sukses
+# pada tiap push, agar tidak ada kode rusak yang masuk ke main.
+#
+# Untuk mengaktifkan kembali auto-deploy yang aman: tambahkan secret
+# HOSTINGER_API_TOKEN lalu panggil endpoint deploy API di step terpisah.
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
-# Cancel an in-progress deploy if a newer commit is pushed.
 concurrency:
-  group: deploy-main
+  group: build-main
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,31 +44,9 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm build
 
-      - name: Install lftp
-        run: sudo apt-get update -qq && sudo apt-get install -y lftp
-
-      # lftp is far more resilient than the JS FTP action (which kept failing
-      # with "Timeout (control socket)"): passive mode, generous timeouts,
-      # built-in reconnects, plus an outer retry for flaky Hostinger FTP.
-      - name: Deploy to Hostinger via FTP (lftp)
-        uses: nick-fields/retry@v3
-        env:
-          FTP_HOST: ${{ secrets.FTP_HOST }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-          FTP_TARGET: ${{ secrets.FTP_TARGET }}
+      - name: Upload static output
+        uses: actions/upload-artifact@v4
         with:
-          timeout_minutes: 15
-          max_attempts: 3
-          retry_wait_seconds: 30
-          command: |
-            lftp -c "
-              set ftp:passive-mode true;
-              set net:timeout 30;
-              set net:max-retries 3;
-              set net:reconnect-interval-base 15;
-              set net:reconnect-interval-multiplier 1;
-              set mirror:parallel-transfer-count 4;
-              open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_HOST\";
-              mirror --reverse --delete --verbose --exclude-glob .ftp-deploy-sync-state.json ./out/ \"$FTP_TARGET\";
-            "
+          name: out
+          path: out/
+          retention-days: 7
