@@ -5,6 +5,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Cancel an in-progress deploy if a newer commit is pushed.
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -29,11 +34,31 @@ jobs:
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: pnpm build
 
-      - name: Deploy to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Install lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y lftp
+
+      # lftp is far more resilient than the JS FTP action (which kept failing
+      # with "Timeout (control socket)"): passive mode, generous timeouts,
+      # built-in reconnects, plus an outer retry for flaky Hostinger FTP.
+      - name: Deploy to Hostinger via FTP (lftp)
+        uses: nick-fields/retry@v3
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_TARGET: ${{ secrets.FTP_TARGET }}
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_TARGET }}
-          local-dir: ./out/
+          timeout_minutes: 15
+          max_attempts: 3
+          retry_wait_seconds: 30
+          command: |
+            lftp -c "
+              set ftp:passive-mode true;
+              set net:timeout 30;
+              set net:max-retries 3;
+              set net:reconnect-interval-base 15;
+              set net:reconnect-interval-multiplier 1;
+              set mirror:parallel-transfer-count 4;
+              open -u \"$FTP_USERNAME\",\"$FTP_PASSWORD\" \"$FTP_HOST\";
+              mirror --reverse --delete --verbose --exclude-glob .ftp-deploy-sync-state.json ./out/ \"$FTP_TARGET\";
+            "
