@@ -19,7 +19,10 @@ function renderMarkdown(md: string) {
   function flushPara() {
     if (buf.length === 0) return;
     const text = buf.join(" ");
-    const bold = text.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    // Escape HTML dulu agar konten (mis. <script>) tidak tereksekusi (anti-XSS),
+    // baru terapkan **bold** yang aman.
+    const escaped = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const bold = escaped.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     elements.push(
       <p
         key={elements.length}
