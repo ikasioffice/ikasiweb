@@ -64,11 +64,18 @@ export async function getAlumniContact(
   id: string,
 ): Promise<{ email: string | null; no_hp: string | null } | null> {
   const supabase = createClient();
-  const { data, error } = await supabase
+
+  // Baris sendiri atau admin: RLS mengizinkan baca penuh (email + no_hp).
+  const { data: own } = await supabase
     .from("alumni")
     .select("email, no_hp")
     .eq("id", id)
     .maybeSingle();
-  if (error) return null;
-  return data;
+  if (own) return own;
+
+  // Alumni terverifikasi melihat alumni lain: hanya EMAIL (via fungsi DB),
+  // no_hp tidak diekspos. Non-terverifikasi/anon menerima null.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: email } = await (supabase as any).rpc("get_alumni_email", { p_id: id });
+  return { email: (email as string | null) ?? null, no_hp: null };
 }
