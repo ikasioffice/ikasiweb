@@ -1,26 +1,19 @@
 // Auto-scrolling photo gallery (two opposite marquee rows).
-// Replace the placeholder images in `row1`/`row2` with real IKASI photos
-// (e.g. files under /public/gallery/*.jpg) when available.
+// Photos live under /public/gallery/*.jpg.
 
 type Photo = { src: string; caption: string };
 
-const row1: Photo[] = [
-  { src: "https://picsum.photos/seed/ikasi-reuni1/600/400", caption: "Reuni Akbar 2023" },
-  { src: "https://picsum.photos/seed/ikasi-seminar2/600/400", caption: "Seminar BIM" },
-  { src: "https://picsum.photos/seed/ikasi-gathering3/600/400", caption: "Gathering Jabar" },
-  { src: "https://picsum.photos/seed/ikasi-proyek4/600/400", caption: "Kunjungan Proyek" },
-  { src: "https://picsum.photos/seed/ikasi-wisuda5/600/400", caption: "Wisuda Alumni" },
-  { src: "https://picsum.photos/seed/ikasi-futsal6/600/400", caption: "Fun Futsal" },
+const photos: Photo[] = [
+  { src: "/gallery/liga-expose-2022-juara.jpg", caption: "Liga Expose IKA Polban 2022 (CVL Soccer)" },
+  { src: "/gallery/liga-expose-2022-runnerup.jpg", caption: "Runner Up Liga Expose 2022" },
+  { src: "/gallery/kji-kbgi-2013.jpg", caption: "KJI–KBGI Polban 2013" },
+  { src: "/gallery/kji-kbgi-2012.jpg", caption: "KJI–KBGI 2012" },
+  { src: "/gallery/kji-kbgi-2012-1.jpg", caption: "KJI–KBGI 2012" },
 ];
 
-const row2: Photo[] = [
-  { src: "https://picsum.photos/seed/ikasi-bakti7/600/400", caption: "Bakti Sosial" },
-  { src: "https://picsum.photos/seed/ikasi-rapat8/600/400", caption: "Munas IKASI" },
-  { src: "https://picsum.photos/seed/ikasi-halal9/600/400", caption: "Halal Bihalal" },
-  { src: "https://picsum.photos/seed/ikasi-pelatihan10/600/400", caption: "Pelatihan SKA" },
-  { src: "https://picsum.photos/seed/ikasi-donor11/600/400", caption: "Donor Darah" },
-  { src: "https://picsum.photos/seed/ikasi-ultah12/600/400", caption: "Anniversary IKASI" },
-];
+// Top row in original order; bottom row reversed so the two marquees differ.
+const row1: Photo[] = photos;
+const row2: Photo[] = [...photos].reverse();
 
 function Figure({ photo }: { photo: Photo }) {
   return (
