@@ -100,11 +100,23 @@ async function uploadArchive(archivePath, uploadUrl, authKey, restAuthKey) {
 
 async function triggerDeploy(username, domain, archiveBasename) {
   const url = `${BASE_URL}/api/hosting/v1/accounts/${username}/websites/${domain}/deploy`;
+  console.log(`POST ${url}`);
+  console.log(`Body: ${JSON.stringify({ archive_path: archiveBasename })}`);
   const res = await axios.post(
     url,
     { archive_path: archiveBasename },
-    { headers: { ...authHeaders, "Content-Type": "application/json" }, timeout: 60000 },
+    {
+      headers: { ...authHeaders, "Content-Type": "application/json" },
+      timeout: 60000,
+      validateStatus: () => true,
+    },
   );
+  console.log(`Response status: ${res.status} ${res.statusText}`);
+  console.log(`Response headers: ${JSON.stringify(res.headers)}`);
+  console.log(`Response body: ${JSON.stringify(res.data)}`);
+  if (res.status < 200 || res.status >= 300) {
+    throw new Error(`Deploy request failed with status ${res.status}`);
+  }
   return res.data;
 }
 
