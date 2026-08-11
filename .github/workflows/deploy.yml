@@ -4,12 +4,9 @@ name: Build check
 # shared yang CN-nya tidak cocok dengan hostname, sehingga FTPS dengan
 # verifikasi selalu gagal, dan plain FTP sering "Timeout (control socket)".
 #
-# Deploy ke produksi dilakukan via Hostinger API (hosting_deployStaticWebsite)
-# yang lebih andal & aman. Workflow ini hanya memverifikasi bahwa build sukses
-# pada tiap push, agar tidak ada kode rusak yang masuk ke main.
-#
-# Untuk mengaktifkan kembali auto-deploy yang aman: tambahkan secret
-# HOSTINGER_API_TOKEN lalu panggil endpoint deploy API di step terpisah.
+# Deploy ke produksi dilakukan via Hostinger API (hosting_deployStaticWebsite),
+# lihat .github/hostinger-deploy/. Deploy hanya jalan untuk push ke main;
+# workflow_dispatch dan push ke branch lain cuma menjalankan build check.
 
 on:
   push:
@@ -50,3 +47,19 @@ jobs:
           name: out
           path: out/
           retention-days: 7
+
+      - name: Archive static output
+        if: github.ref == 'refs/heads/main'
+        run: cd out && zip -r ../site.zip . && cd ..
+
+      - name: Install Hostinger deploy script dependencies
+        if: github.ref == 'refs/heads/main'
+        run: npm install --prefix .github/hostinger-deploy
+
+      - name: Deploy to Hostinger
+        if: github.ref == 'refs/heads/main'
+        env:
+          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+          DOMAIN: ikasipolban.com
+          ARCHIVE_PATH: site.zip
+        run: node .github/hostinger-deploy/deploy.mjs
