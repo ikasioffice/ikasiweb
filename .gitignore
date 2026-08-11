@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# mockup HTML statis (eksperimen desain, tidak dipakai build)
+/mockup/
+
 # debug
 npm-debug.log*
 yarn-debug.log*
