@@ -1,0 +1,36 @@
+name: Check Hostinger deploy status
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: Hostinger account username
+        required: true
+        default: u659584212
+      domain:
+        description: Domain to check
+        required: true
+        default: ikasipolban.com
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check whether the domain's public_html is empty
+        env:
+          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
+          USERNAME: ${{ inputs.username }}
+          DOMAIN: ${{ inputs.domain }}
+        run: |
+          if [ -z "$HOSTINGER_API_TOKEN" ]; then
+            echo "HOSTINGER_API_TOKEN secret is not set."
+            exit 1
+          fi
+
+          http_code=$(curl -sS -o response.json -w "%{http_code}" \
+            -H "Authorization: Bearer $HOSTINGER_API_TOKEN" \
+            "https://developers.hostinger.com/api/hosting/v1/accounts/$USERNAME/domains/$DOMAIN/is-empty")
+
+          echo "HTTP status: $http_code"
+          echo "Response body:"
+          cat response.json
