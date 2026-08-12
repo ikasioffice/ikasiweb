@@ -1,0 +1,23 @@
+name: Check live site content
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: URL to check
+        required: true
+        default: https://ikasipolban.com/
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch headers
+        run: |
+          echo "== Headers =="
+          curl -sS -D - -o /dev/null "${{ inputs.url }}"
+
+      - name: Fetch body snippet
+        run: |
+          echo "== First 3000 chars of body =="
+          curl -sS "${{ inputs.url }}" | head -c 3000
