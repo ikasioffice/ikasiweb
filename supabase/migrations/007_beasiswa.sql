@@ -205,6 +205,11 @@ create policy beasiswa_content_admin_delete
 -- ---------- donasi ----------
 -- SENGAJA tidak ada policy SELECT untuk anon: baris memuat nomor WhatsApp,
 -- catatan, dan path bukti transfer. Publik membaca lewat view saja.
+--
+-- Konsekuensinya: INSERT ... RETURNING oleh anon akan DITOLAK, karena RETURNING
+-- butuh policy SELECT. Di klien, artinya .insert() pada beasiswa_donasi tidak
+-- boleh dirangkai dengan .select(). Pesan errornya menyesatkan ("new row
+-- violates row-level security policy") padahal WITH CHECK-nya sendiri lolos.
 
 -- Kiriman form publik, dibatasi ketat seperti 003_alumni_self_register.sql:
 -- tidak bisa membuat baris yang sudah terverifikasi, dan wajib beridentitas.

@@ -14,6 +14,7 @@ const navItems = [
   { href: "/admin/news", label: "Berita" },
   { href: "/admin/events", label: "Acara" },
   { href: "/admin/wa-groups", label: "Grup WhatsApp" },
+  { href: "/admin/beasiswa", label: "Beasiswa Alumni" },
 ];
 
 function AdminNav() {

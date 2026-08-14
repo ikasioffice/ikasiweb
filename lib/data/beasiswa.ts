@@ -49,7 +49,14 @@ export async function getContent(): Promise<BeasiswaContent> {
   return out;
 }
 
-/** Kiriman form /beasiswa/dukung. RLS memaksa is_verified = false. */
+/**
+ * Kiriman form /beasiswa/dukung. RLS memaksa is_verified = false.
+ *
+ * JANGAN menambahkan .select() di sini. anon sengaja tidak punya policy SELECT
+ * pada beasiswa_donasi, dan INSERT ... RETURNING (yang dihasilkan .select())
+ * membutuhkannya -- hasilnya gagal dengan pesan menyesatkan "new row violates
+ * row-level security policy". Insert tanpa RETURNING adalah yang benar.
+ */
 export async function kirimDonasi(
   input: Omit<BeasiswaDonasiInsert, "is_verified">,
 ): Promise<{ error: string | null }> {
