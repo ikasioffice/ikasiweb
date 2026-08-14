@@ -308,10 +308,10 @@ export function IsiBeasiswa() {
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Link href="/beasiswa/dukung" className={ctaPrimary}>
-            Kirim Bukti Dukungan
+            Donasi Sekarang
           </Link>
           <span className="text-sm text-muted-foreground">
-            Sudah transfer? Kirim buktinya agar dukungan Anda tercatat.
+            Isi data, ikuti panduan transfer, lalu kirim bukti — semuanya di satu halaman.
           </span>
         </div>
 
