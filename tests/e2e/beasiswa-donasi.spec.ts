@@ -37,7 +37,9 @@ test("donasi: alur 3 langkah membawa data dan bisa mundur", async ({ page }) => 
 
   // --- Langkah 2: panduan transfer ---
   await expect(page.getByText("Nominal yang perlu ditransfer")).toBeVisible();
-  await expect(page.getByText("Rp 500.000").first()).toBeVisible();
+  // Kode unik 11 ditambahkan otomatis: 500.000 -> 500.011
+  await expect(page.getByText("Rp 500.011").first()).toBeVisible();
+  await expect(page.getByText(/Donasi Rp 500\.000 \+ kode unik 11/)).toBeVisible();
   // Bank adalah metode bawaan
   await expect(page.getByText("1982320247")).toBeVisible();
 
@@ -48,9 +50,10 @@ test("donasi: alur 3 langkah membawa data dan bisa mundur", async ({ page }) => 
   // --- Langkah 3: bukti ---
   await page.getByRole("button", { name: "Saya Sudah Transfer" }).click();
   await expect(page.getByText("Cara kirim bukti transfer")).toBeVisible();
-  // Ringkasan membawa data dari langkah sebelumnya
+  // Ringkasan membawa data dari langkah sebelumnya, termasuk nominal berkode
   await expect(page.getByText("Budi Santoso")).toBeVisible();
   await expect(page.getByText("QRIS").first()).toBeVisible();
+  await expect(page.getByText("Rp 500.011")).toBeVisible();
 
   // --- Mundur ke langkah 1: data harus utuh ---
   await page.getByRole("button", { name: "Kembali" }).click();

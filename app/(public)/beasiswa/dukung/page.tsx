@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { kirimDonasi, unggahBukti, formatRupiah } from "@/lib/data/beasiswa";
-import { REKENING_BANK, REKENING_NOMOR, WA_NUMBER, teks } from "../_content";
+import { REKENING_BANK, REKENING_NOMOR, WA_NUMBER, nominalDenganKode, teks } from "../_content";
 import { useBeasiswa } from "../_use-beasiswa";
 
 const MAX_BUKTI_BYTES = 5 * 1024 * 1024;
@@ -112,7 +112,13 @@ export default function DukungPage() {
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
 
-  const nominalAngka = Number(nominal.replace(/\D/g, "")) || 0;
+  // Nominal yang diketik donatur, lalu nominal final setelah ditambah kode unik.
+  // Yang disimpan dan ditampilkan sejak langkah 2 adalah nominal final, supaya
+  // catatan donasi persis sama dengan angka yang benar-benar ditransfer.
+  const nominalDiketik = Number(nominal.replace(/\D/g, "")) || 0;
+  const kodeUnik = teks(c, "kode_unik");
+  const nominalAngka = nominalDenganKode(nominalDiketik, kodeUnik);
+  const adaKode = nominalAngka !== nominalDiketik;
 
   function lanjutKeTransfer(e: React.FormEvent) {
     e.preventDefault();
@@ -125,7 +131,7 @@ export default function DukungPage() {
       setError("Nomor WhatsApp wajib diisi agar admin bisa mengonfirmasi dukungan Anda.");
       return;
     }
-    if (nominalAngka <= 0) {
+    if (nominalDiketik <= 0) {
       setError("Jumlah donasi wajib diisi dan harus lebih dari nol.");
       return;
     }
@@ -304,7 +310,12 @@ export default function DukungPage() {
                   setNominal(d ? Number(d).toLocaleString("id-ID") : "");
                 }}
               />
-              {nominalAngka > 0 && <p className={hintCls}>{formatRupiah(nominalAngka)}</p>}
+              {nominalDiketik > 0 && (
+                <p className={hintCls}>
+                  {formatRupiah(nominalDiketik)}
+                  {kodeUnik && " · kode unik ditambahkan di langkah berikutnya"}
+                </p>
+              )}
             </div>
           </div>
 
@@ -328,11 +339,18 @@ export default function DukungPage() {
             <div className="font-heading mt-2 text-4xl font-extrabold tabular-nums text-primary">
               {formatRupiah(nominalAngka)}
             </div>
+            {adaKode && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Donasi {formatRupiah(nominalDiketik)} + kode unik {kodeUnik}
+              </p>
+            )}
             <div className="mt-3 flex justify-center">
               <Salin nilai={String(nominalAngka)} label="nominal" />
             </div>
             <p className={hintCls}>
-              Transfer tepat sejumlah ini agar admin mudah mencocokkan dukungan Anda.
+              {adaKode
+                ? `Transfer tepat sampai angka ${kodeUnik} di belakang — kode ini yang dipakai admin untuk mencocokkan dukungan Anda dengan mutasi rekening.`
+                : "Transfer tepat sejumlah ini agar admin mudah mencocokkan dukungan Anda."}
             </p>
           </div>
 

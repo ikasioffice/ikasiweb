@@ -58,6 +58,7 @@ export const DEFAULTS: Record<string, string> = {
   anggaran_judul: "Update Dana Terkumpul",
   anggaran_lede: "Beasiswa diprioritaskan bagi mahasiswa tingkat akhir yang memiliki tunggakan UKT atau uang pangkal berpotensi menghambat kelulusan — jumlah penerima disesuaikan berdasarkan dana yang terkumpul.",
   rekening_judul: "Rekening Resmi IKASI",
+  kode_unik: "11",
   rekening_desc: "Dana disalurkan melalui rekening resmi berikut dan dikelola secara transparan dengan laporan berkala kepada seluruh donatur.",
   anggaran_note: "Di luar 34 mahasiswa tingkat akhir prioritas ini, total tunggakan UKT seluruh mahasiswa aktif Program Studi D3/D4 tercatat Rp 363.237.500 (131 mahasiswa) — gambaran skala kebutuhan yang lebih luas untuk keberlanjutan program ke depan.",
   // Bagian Tambahan (Custom)
@@ -121,6 +122,27 @@ export function timeline(c: Konten): TimelineItem[] {
     desc: p[3] ?? "",
     aktif: (p[4] ?? "").toLowerCase() === "ya",
   }));
+}
+
+/**
+ * Naikkan nominal donasi ke angka terdekat yang berakhiran kode unik, mengikuti
+ * konvensi lama IKASI: "kirim donasi dengan nominal diakhiri angka 11 sebagai
+ * kode pendataan" (contoh Rp50.011). Kode unik membuat admin bisa mencocokkan
+ * mutasi rekening dengan baris donasi yang masuk.
+ *
+ * Selalu MEMBULATKAN KE ATAS, jadi donatur tidak pernah diminta mentransfer
+ * kurang dari yang ia niatkan; tambahannya paling banyak sebesar 10^digit.
+ *
+ * Kode diatur lewat field `kode_unik` di /admin/beasiswa. Dikosongkan =
+ * fitur mati, nominal dipakai apa adanya.
+ */
+export function nominalDenganKode(base: number, kode: string): number {
+  const digit = (kode ?? "").replace(/\D/g, "");
+  if (!digit || base <= 0) return base;
+  const kelipatan = 10 ** digit.length; // "11" -> 100
+  const akhiran = Number(digit);
+  const kandidat = Math.floor(base / kelipatan) * kelipatan + akhiran;
+  return kandidat >= base ? kandidat : kandidat + kelipatan;
 }
 
 /** Persentase progres tahapan, dijepit ke rentang 0-100. */

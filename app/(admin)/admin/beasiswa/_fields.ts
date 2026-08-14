@@ -101,6 +101,7 @@ export const CONTENT_GROUPS: ContentGroup[] = [
       { key: "anggaran_judul", label: "Judul section", type: "text" },
       { key: "anggaran_lede", label: "Kalimat pembuka", type: "textarea", rows: 3 },
       { key: "rekening_judul", label: "Judul kotak rekening", type: "text" },
+      { key: "kode_unik", label: "Kode unik nominal transfer", type: "text", hint: "Angka penutup nominal agar admin mudah mencocokkan mutasi rekening — mis. 11 membuat Rp500.000 jadi Rp500.011. Nominal selalu dibulatkan ke atas. Kosongkan untuk mematikan fitur ini." },
       { key: "rekening_desc", label: "Deskripsi kotak rekening", type: "textarea", rows: 3 },
       { key: "anggaran_note", label: "Catatan tambahan di bawah", type: "textarea", rows: 3 },
     ],
