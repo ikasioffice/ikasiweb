@@ -31,6 +31,10 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
+  // Tanpa metadataBase, Next.js membuat URL absolut og:image dari
+  // http://localhost:3000 -- membuat preview link di WhatsApp/Instagram gagal
+  // memuat gambar. Harus domain produksi.
+  metadataBase: new URL("https://ikasipolban.com"),
   openGraph: {
     images: ["/og-image.svg"],
   },

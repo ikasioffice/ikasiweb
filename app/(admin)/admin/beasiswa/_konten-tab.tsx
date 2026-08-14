@@ -124,32 +124,37 @@ export function KontenTab() {
         </div>
 
         {CONTENT_GROUPS.map((group) => (
-          <section key={group.title} className="glass-card rounded-xl p-6 space-y-5">
-            <h3 className="font-heading text-base font-bold text-[#d4a72c]">{group.title}</h3>
-            {group.fields.map((f) => (
-              <div key={f.key}>
-                <label className={labelCls} htmlFor={f.key}>{f.label}</label>
-                {f.hint && <p className="text-xs text-slate-400 mb-1.5">{f.hint}</p>}
-                {f.type === "textarea" ? (
-                  <textarea
-                    id={f.key}
-                    rows={f.rows ?? 3}
-                    className={inputCls}
-                    value={values[f.key] ?? ""}
-                    onChange={(e) => setValues((p) => ({ ...p, [f.key]: e.target.value }))}
-                  />
-                ) : (
-                  <input
-                    id={f.key}
-                    type={f.type === "number" ? "number" : "text"}
-                    className={inputCls}
-                    value={values[f.key] ?? ""}
-                    onChange={(e) => setValues((p) => ({ ...p, [f.key]: e.target.value }))}
-                  />
-                )}
-              </div>
-            ))}
-          </section>
+          <details key={group.title} className="glass-card rounded-xl p-6" open={group === CONTENT_GROUPS[0]}>
+            <summary className="font-heading cursor-pointer text-base font-bold text-[#d4a72c]">
+              {group.title}
+              <span className="ml-2 text-xs font-normal text-slate-500">{group.fields.length} field</span>
+            </summary>
+            <div className="mt-5 space-y-5">
+              {group.fields.map((f) => (
+                <div key={f.key}>
+                  <label className={labelCls} htmlFor={f.key}>{f.label}</label>
+                  {f.hint && <p className="text-xs text-slate-400 mb-1.5">{f.hint}</p>}
+                  {f.type === "text" ? (
+                    <input
+                      id={f.key}
+                      type="text"
+                      className={inputCls}
+                      value={values[f.key] ?? ""}
+                      onChange={(e) => setValues((p) => ({ ...p, [f.key]: e.target.value }))}
+                    />
+                  ) : (
+                    <textarea
+                      id={f.key}
+                      rows={f.rows ?? 3}
+                      className={`${inputCls} ${f.type === "textarea" ? "" : "font-mono text-xs leading-relaxed"}`}
+                      value={values[f.key] ?? ""}
+                      onChange={(e) => setValues((p) => ({ ...p, [f.key]: e.target.value }))}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </details>
         ))}
 
         <div className="flex items-center gap-3">
