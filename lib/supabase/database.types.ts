@@ -164,6 +164,93 @@ export type Database = {
         }
         Relationships: []
       }
+      beasiswa_content: {
+        Row: {
+          key: string
+          value: string | null
+          updated_at: string
+        }
+        Insert: {
+          key: string
+          value?: string | null
+          updated_at?: string
+        }
+        Update: {
+          key?: string
+          value?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      beasiswa_donasi: {
+        Row: {
+          id: string
+          created_at: string
+          updated_at: string
+          nama: string
+          angkatan: string
+          whatsapp: string | null
+          nominal: number
+          tanggal_transfer: string | null
+          metode: string | null
+          catatan: string | null
+          bukti_path: string | null
+          is_verified: boolean
+        }
+        Insert: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          nama: string
+          angkatan: string
+          whatsapp?: string | null
+          nominal?: number
+          tanggal_transfer?: string | null
+          metode?: string | null
+          catatan?: string | null
+          bukti_path?: string | null
+          is_verified?: boolean
+        }
+        Update: {
+          id?: string
+          created_at?: string
+          updated_at?: string
+          nama?: string
+          angkatan?: string
+          whatsapp?: string | null
+          nominal?: number
+          tanggal_transfer?: string | null
+          metode?: string | null
+          catatan?: string | null
+          bukti_path?: string | null
+          is_verified?: boolean
+        }
+        Relationships: []
+      }
+      beasiswa_settings: {
+        Row: {
+          id: number
+          target_dana: number
+          proposal_url: string | null
+          proposal_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          id?: number
+          target_dana?: number
+          proposal_url?: string | null
+          proposal_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          id?: number
+          target_dana?: number
+          proposal_url?: string | null
+          proposal_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       bisnis: {
         Row: {
           alumni_id: string | null
@@ -474,6 +561,26 @@ export type Database = {
           tanggal_lahir?: string | null
           tempat_kerja?: string | null
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      beasiswa_donasi_public: {
+        Row: {
+          id: string | null
+          nama: string | null
+          angkatan: string | null
+          nominal: number | null
+          created_at: string | null
+        }
+        Relationships: []
+      }
+      beasiswa_rekap: {
+        Row: {
+          target_dana: number | null
+          dana_terkumpul: number | null
+          jumlah_donatur: number | null
+          proposal_url: string | null
+          proposal_name: string | null
         }
         Relationships: []
       }

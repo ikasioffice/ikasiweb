@@ -68,3 +68,38 @@ Re-test by dispatching `deploy.yml` (or waiting for a natural push to
 row. Once confirmed, steps 5–6 above collapse away — push to `main` becomes
 fully automatic (1–4 only) and this file's flow table should be updated to
 drop the manual steps.
+
+## Modul Beasiswa Alumni (`/beasiswa`)
+
+Port dari repo `ikasioffice/Beasiswa-Alumni-IKASI-2026` (dulu microsite HTML
+statis dengan backend Google Apps Script + Google Sheets/Drive). Sekarang
+sepenuhnya Next.js + Supabase, mengikuti design system website utama.
+
+- Rute: `/beasiswa` (proposal + progres dana), `/beasiswa/dukung` (form bukti
+  dukungan), `/admin/beasiswa` (panel admin, 2 tab).
+- Skema: `supabase/migrations/007_beasiswa.sql` — `beasiswa_settings`,
+  `beasiswa_content`, `beasiswa_donasi`, view `beasiswa_donasi_public` +
+  `beasiswa_rekap`, bucket `beasiswa-bukti` (privat) & `beasiswa-publik`.
+- Data layer: `lib/data/beasiswa.ts`. Asersi RLS: `tests/sql/rls-beasiswa.sql`.
+
+Hal yang mudah salah:
+
+1. **`beasiswa_donasi` sengaja tidak punya policy SELECT untuk anon** (memuat
+   nomor WhatsApp, catatan, path bukti). Publik membaca lewat view saja.
+   Konsekuensinya `INSERT ... RETURNING` oleh anon DITOLAK — jadi `.insert()`
+   pada jalur form publik **tidak boleh** dirangkai `.select()`. Pesan errornya
+   menyesatkan: "new row violates row-level security policy".
+2. **View publik sengaja tanpa `security_invoker`** (mengikuti `alumni_public`).
+   Advisor Supabase menandainya `security_definer_view` ERROR — itu diterima,
+   karena justru inilah yang menahan PII. Jangan "diperbaiki" jadi
+   `security_invoker=on` lalu ditambah policy SELECT anon: itu akan membuat anon
+   bisa membaca semua kolom baris terverifikasi.
+3. **`dana_terkumpul` dihitung view** dari donasi terverifikasi, bukan kolom
+   manual — jangan tambahkan field input untuknya di admin.
+4. **Teks halaman**: prosa default ada di `app/(public)/beasiswa/_content.ts`,
+   bisa ditimpa admin lewat `beasiswa_content`. Field yang boleh diedit
+   didaftarkan di `app/(admin)/admin/beasiswa/_fields.ts` — menambah field cukup
+   menambah entri di sana, tabelnya key/value.
+5. Cek admin di RLS memakai bentuk inline `role = 'admin'` (seperti migration
+   002), **bukan** `is_admin()` yang juga meloloskan role `editor`, agar RLS
+   sepakat dengan `AdminGuard`.

@@ -10,6 +10,7 @@ const cols: { title: string; links: { href: string; label: string; external?: bo
       { href: "/event", label: "Acara" },
       { href: "/news", label: "Berita" },
       { href: "/grup-wa", label: "Grup WhatsApp" },
+      { href: "/beasiswa", label: "Beasiswa Alumni" },
     ],
   },
   {
