@@ -3,19 +3,31 @@
 import { useEffect, useRef, useState } from "react";
 import {
   getContent,
+  hapusContent,
   simpanContent,
   getSettings,
   unggahProposal,
   type BeasiswaContent,
 } from "@/lib/data/beasiswa";
+import { DEFAULTS } from "@/app/(public)/beasiswa/_content";
 import { CONTENT_GROUPS } from "./_fields";
 
 const inputCls =
   "w-full rounded-lg border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-[#d4a72c]/60 focus:outline-none";
 const labelCls = "block text-sm font-semibold text-white mb-1";
 
+/** Nilai efektif sebuah field: override admin bila ada, kalau tidak teks bawaan. */
+function efektif(overrides: BeasiswaContent, key: string): string {
+  const v = overrides[key];
+  return v != null && v.trim() !== "" ? v : (DEFAULTS[key] ?? "");
+}
+
 export function KontenTab() {
+  // values = apa yang tampil di form (selalu terisi, seperti admin lama).
+  // tersimpan = override yang benar-benar ada di database, dipakai untuk tahu
+  // baris mana yang perlu dihapus saat field dikembalikan ke bawaannya.
   const [values, setValues] = useState<BeasiswaContent>({});
+  const [tersimpan, setTersimpan] = useState<BeasiswaContent>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -29,7 +41,10 @@ export function KontenTab() {
   useEffect(() => {
     void (async () => {
       const [content, settings] = await Promise.all([getContent(), getSettings()]);
-      setValues(content);
+      const awal: BeasiswaContent = {};
+      for (const key of Object.keys(DEFAULTS)) awal[key] = efektif(content, key);
+      setValues(awal);
+      setTersimpan(content);
       setProposalName(settings?.proposal_name ?? null);
       setProposalUrl(settings?.proposal_url ?? null);
       setLoading(false);
@@ -40,9 +55,35 @@ export function KontenTab() {
     e.preventDefault();
     setSaving(true);
     setStatus(null);
-    const { error } = await simpanContent(values);
+
+    // Hanya simpan yang benar-benar berbeda dari bawaan. Field yang sama dengan
+    // bawaan barisnya dihapus, bukan ditulis ulang -- supaya perubahan teks
+    // bawaan di kode nanti tetap terlihat dan tabelnya tidak menumpuk duplikat.
+    const ubah: BeasiswaContent = {};
+    const kembalikan: string[] = [];
+    for (const key of Object.keys(DEFAULTS)) {
+      const nilai = (values[key] ?? "").trim();
+      const bawaan = (DEFAULTS[key] ?? "").trim();
+      if (nilai !== "" && nilai !== bawaan) ubah[key] = values[key] ?? "";
+      else if (tersimpan[key] != null) kembalikan.push(key);
+    }
+
+    const { error: errSimpan } = await simpanContent(ubah);
+    const { error: errHapus } = errSimpan ? { error: null } : await hapusContent(kembalikan);
     setSaving(false);
-    setStatus(error ? `Gagal menyimpan: ${error}` : "Perubahan tersimpan.");
+
+    const err = errSimpan ?? errHapus;
+    if (err) {
+      setStatus(`Gagal menyimpan: ${err}`);
+      return;
+    }
+    setTersimpan(ubah);
+    const n = Object.keys(ubah).length;
+    setStatus(
+      n === 0
+        ? "Tersimpan. Semua teks kembali memakai bawaan."
+        : `Tersimpan. ${n} field diubah dari bawaan.`,
+    );
   }
 
   async function handleUpload() {
@@ -118,8 +159,10 @@ export function KontenTab() {
         <div className="glass-card rounded-xl p-6">
           <h2 className="font-heading text-lg font-bold text-white mb-1">Teks Halaman</h2>
           <p className="text-xs text-slate-400">
-            Field yang dikosongkan akan memakai teks bawaan yang tertulis di halaman. Isi hanya yang
-            ingin diubah.
+            Semua field sudah terisi teks yang sedang tampil di halaman. Ubah yang perlu saja —
+            field yang isinya sama dengan bawaan tidak ikut disimpan, jadi tetap mengikuti teks
+            bawaan bila nanti diperbarui. Field bertanda <span className="text-[#d4a72c]">diubah</span>{" "}
+            berarti sudah berbeda dari bawaannya.
           </p>
         </div>
 
@@ -130,9 +173,31 @@ export function KontenTab() {
               <span className="ml-2 text-xs font-normal text-slate-500">{group.fields.length} field</span>
             </summary>
             <div className="mt-5 space-y-5">
-              {group.fields.map((f) => (
+              {group.fields.map((f) => {
+                const bawaan = DEFAULTS[f.key] ?? "";
+                const diubah = (values[f.key] ?? "").trim() !== bawaan.trim();
+                return (
                 <div key={f.key}>
-                  <label className={labelCls} htmlFor={f.key}>{f.label}</label>
+                  <div className="mb-1 flex flex-wrap items-center gap-2">
+                    <label className={labelCls + " mb-0"} htmlFor={f.key}>{f.label}</label>
+                    {diubah && (
+                      <>
+                        <span
+                          title="Berbeda dari teks bawaan"
+                          className="rounded-full bg-[#d4a72c]/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#d4a72c]"
+                        >
+                          diubah
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setValues((p) => ({ ...p, [f.key]: bawaan }))}
+                          className="text-[11px] text-slate-400 underline underline-offset-2 hover:text-white"
+                        >
+                          kembalikan ke bawaan
+                        </button>
+                      </>
+                    )}
+                  </div>
                   {f.hint && <p className="text-xs text-slate-400 mb-1.5">{f.hint}</p>}
                   {f.type === "text" ? (
                     <input
@@ -152,7 +217,8 @@ export function KontenTab() {
                     />
                   )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           </details>
         ))}

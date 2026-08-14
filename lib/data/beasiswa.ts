@@ -160,6 +160,21 @@ export async function simpanContent(entries: BeasiswaContent): Promise<{ error: 
   return { error: error?.message ?? null };
 }
 
+/**
+ * Hapus override sehingga key kembali memakai teks bawaan dari TSX.
+ *
+ * Dipakai saat admin mengembalikan sebuah field ke nilai bawaannya: barisnya
+ * dibuang, bukan disimpan sama persis dengan bawaan. Dengan begitu perubahan
+ * teks bawaan di kode nanti tetap terlihat, dan tabelnya hanya berisi yang
+ * benar-benar diubah.
+ */
+export async function hapusContent(keys: string[]): Promise<{ error: string | null }> {
+  if (keys.length === 0) return { error: null };
+  const supabase = createClient();
+  const { error } = await supabase.from("beasiswa_content").delete().in("key", keys);
+  return { error: error?.message ?? null };
+}
+
 export async function unggahProposal(
   file: File,
 ): Promise<{ url: string | null; error: string | null }> {
