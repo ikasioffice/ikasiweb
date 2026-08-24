@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { formatRupiah, hitungPersen } from "@/lib/data/beasiswa";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -23,8 +24,19 @@ const ctaPrimary =
 const ctaSecondary =
   "inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-semibold transition-colors hover:bg-accent";
 
+/** Samarkan nama donatur di daftar publik: 2 huruf awal + xxxx. */
+export function samarkanNama(nama: string | null | undefined): string {
+  const bersih = (nama ?? "").trim();
+  if (bersih.length === 0) return "Alumni";
+  if (bersih.length <= 2) return `${bersih[0]}xxx`;
+  return `${bersih.slice(0, 2)}xxxx`;
+}
+
+const HALAMAN = 10;
+
 export function IsiBeasiswa() {
   const { data, loading } = useBeasiswa();
+  const [halamanDonatur, setHalamanDonatur] = useState(1);
   const c: Konten = data?.content ?? {};
 
   const proposalUrl = data?.rekap?.proposal_url ?? null;
@@ -32,6 +44,13 @@ export function IsiBeasiswa() {
   const terkumpul = data?.rekap?.dana_terkumpul ?? 0;
   const persenDana = hitungPersen(terkumpul, target);
   const donatur = data?.donatur ?? [];
+
+  const totalHalaman = Math.max(1, Math.ceil(donatur.length / HALAMAN));
+  const halamanAman = Math.min(halamanDonatur, totalHalaman);
+  const donaturHalaman = donatur.slice(
+    (halamanAman - 1) * HALAMAN,
+    halamanAman * HALAMAN,
+  );
 
   const misi = baris(c, "tentang_misi");
   const goals = kolom(c, "tujuan_goals");
@@ -316,10 +335,14 @@ export function IsiBeasiswa() {
                     </tr>
                   </thead>
                   <tbody>
-                    {donatur.map((d, i) => (
+                    {donaturHalaman.map((d, i) => (
                       <tr key={d.id ?? i} className="border-t border-border">
-                        <td className="px-4 py-3 tabular-nums text-muted-foreground">{i + 1}</td>
-                        <td className="px-4 py-3 font-semibold text-foreground">{d.nama ?? "Alumni"}</td>
+                        <td className="px-4 py-3 tabular-nums text-muted-foreground">
+                          {(halamanAman - 1) * HALAMAN + i + 1}
+                        </td>
+                        <td className="px-4 py-3 font-semibold text-foreground">
+                          {samarkanNama(d.nama)}
+                        </td>
                         <td className="px-4 py-3 text-muted-foreground">{d.angkatan ?? "-"}</td>
                         <td className="px-4 py-3 text-right font-semibold tabular-nums text-primary">
                           {formatRupiah(d.nominal)}
@@ -329,6 +352,32 @@ export function IsiBeasiswa() {
                   </tbody>
                 </table>
               </div>
+
+              {totalHalaman > 1 && (
+                <div className="flex items-center justify-between border-t border-border px-4 py-3">
+                  <span className="text-xs text-muted-foreground">
+                    Halaman {halamanAman} dari {totalHalaman} · {donatur.length} donatur
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={halamanAman <= 1}
+                      onClick={() => setHalamanDonatur((h) => Math.max(1, h - 1))}
+                      className="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Sebelumnya
+                    </button>
+                    <button
+                      type="button"
+                      disabled={halamanAman >= totalHalaman}
+                      onClick={() => setHalamanDonatur((h) => Math.min(totalHalaman, h + 1))}
+                      className="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Berikutnya
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
