@@ -1,12 +1,15 @@
 name: Build check
 
-# Auto-deploy lewat FTP dimatikan: server FTP Hostinger memakai sertifikat
-# shared yang CN-nya tidak cocok dengan hostname, sehingga FTPS dengan
-# verifikasi selalu gagal, dan plain FTP sering "Timeout (control socket)".
+# Build + artifact saja. Deploy ke produksi TIDAK lewat workflow ini.
 #
-# Deploy ke produksi dilakukan via Hostinger API (hosting_deployStaticWebsite),
-# lihat .github/hostinger-deploy/. Deploy hanya jalan untuk push ke main;
-# workflow_dispatch dan push ke branch lain cuma menjalankan build check.
+# Riwayat: auto-deploy FTP dimatikan (sertifikat FTPS CN mismatch, FTP timeout),
+# lalu diganti Hostinger API (hosting_deployStaticWebsite) — tapi endpoint
+# trigger deploy-nya konsisten gagal `[Hosting:9999] Request failed` dari sisi
+# Hostinger (bukan token: step 1-3 sukses dengan token yang sama).
+#
+# Keputusan (Agt 2026): step deploy API DIMATIKAN. Build check harus selalu
+# hijau; artifact `out` di-download lalu di-deploy via SFTP langsung ke
+# Hostinger dari laptop (port 65002, SSH key) — lihat AGENTS.md profile IKASI.
 
 on:
   push:
@@ -47,19 +50,3 @@ jobs:
           name: out
           path: out/
           retention-days: 7
-
-      - name: Archive static output
-        if: github.ref == 'refs/heads/main'
-        run: cd out && zip -r ../site.zip . && cd ..
-
-      - name: Install Hostinger deploy script dependencies
-        if: github.ref == 'refs/heads/main'
-        run: npm install --prefix .github/hostinger-deploy
-
-      - name: Deploy to Hostinger
-        if: github.ref == 'refs/heads/main'
-        env:
-          HOSTINGER_API_TOKEN: ${{ secrets.HOSTINGER_API_TOKEN }}
-          DOMAIN: ikasipolban.com
-          ARCHIVE_PATH: site.zip
-        run: node .github/hostinger-deploy/deploy.mjs
