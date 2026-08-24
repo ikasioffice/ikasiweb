@@ -41,7 +41,7 @@ const HALAMAN = 10;
 
 export function IsiBeasiswa() {
   const { data, loading } = useBeasiswa();
-  const [halamanDonatur, setHalamanDonatur] = useState(1);
+  const [halamanAngkatan, setHalamanAngkatan] = useState(1);
   const [angkatanTerbuka, setAngkatanTerbuka] = useState<string | null>(null);
   const c: Konten = data?.content ?? {};
 
@@ -51,14 +51,7 @@ export function IsiBeasiswa() {
   const persenDana = hitungPersen(terkumpul, target);
   const donatur = data?.donatur ?? [];
 
-  const totalHalaman = Math.max(1, Math.ceil(donatur.length / HALAMAN));
-  const halamanAman = Math.min(halamanDonatur, totalHalaman);
-  const donaturHalaman = donatur.slice(
-    (halamanAman - 1) * HALAMAN,
-    halamanAman * HALAMAN,
-  );
-
-  // Agregasi donasi per angkatan (dari SEMUA donatur, bukan hanya halaman aktif).
+  // Agregasi donasi per angkatan (dari SEMUA donatur terverifikasi).
   const perAngkatan = new Map<string, { jumlah: number; total: number; donatur: typeof donatur }>();
   for (const d of donatur) {
     const key = d.angkatan?.trim() || "Tanpa Angkatan";
@@ -73,6 +66,14 @@ export function IsiBeasiswa() {
   );
   const totalSemua = daftarAngkatan.reduce((acc, [, g]) => acc + g.total, 0);
   const jumlahSemua = daftarAngkatan.reduce((acc, [, g]) => acc + g.jumlah, 0);
+
+  // Pagination daftar angkatan (10 per halaman).
+  const totalHalamanAngkatan = Math.max(1, Math.ceil(daftarAngkatan.length / HALAMAN));
+  const halamanAngkatanAman = Math.min(halamanAngkatan, totalHalamanAngkatan);
+  const angkatanHalaman = daftarAngkatan.slice(
+    (halamanAngkatanAman - 1) * HALAMAN,
+    halamanAngkatanAman * HALAMAN,
+  );
 
   const misi = baris(c, "tentang_misi");
   const goals = kolom(c, "tujuan_goals");
@@ -337,7 +338,7 @@ export function IsiBeasiswa() {
                 <div key={i} className="h-12 animate-pulse rounded-lg bg-muted" />
               ))}
             </div>
-          ) : donatur.length === 0 ? (
+          ) : daftarAngkatan.length === 0 ? (
             <div className="mt-4">
               <EmptyState
                 title="Belum ada dukungan terverifikasi"
@@ -350,72 +351,6 @@ export function IsiBeasiswa() {
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
-                      <th className="px-4 py-3 font-bold">No</th>
-                      <th className="px-4 py-3 font-bold">Nama</th>
-                      <th className="px-4 py-3 font-bold">Angkatan</th>
-                      <th className="px-4 py-3 text-right font-bold">Nominal</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {donaturHalaman.map((d, i) => (
-                      <tr key={d.id ?? i} className="border-t border-border">
-                        <td className="px-4 py-3 tabular-nums text-muted-foreground">
-                          {(halamanAman - 1) * HALAMAN + i + 1}
-                        </td>
-                        <td className="px-4 py-3 font-semibold text-foreground">
-                          {samarkanNama(d.nama)}
-                        </td>
-                        <td className="px-4 py-3 text-muted-foreground">{d.angkatan ?? "-"}</td>
-                        <td className="px-4 py-3 text-right font-semibold tabular-nums text-primary">
-                          {formatRupiah(d.nominal)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {totalHalaman > 1 && (
-                <div className="flex items-center justify-between border-t border-border px-4 py-3">
-                  <span className="text-xs text-muted-foreground">
-                    Halaman {halamanAman} dari {totalHalaman} · {donatur.length} donatur
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={halamanAman <= 1}
-                      onClick={() => setHalamanDonatur((h) => Math.max(1, h - 1))}
-                      className="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      Sebelumnya
-                    </button>
-                    <button
-                      type="button"
-                      disabled={halamanAman >= totalHalaman}
-                      onClick={() => setHalamanDonatur((h) => Math.min(totalHalaman, h + 1))}
-                      className="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      Berikutnya
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* ---------- Resume donasi per angkatan ---------- */}
-        {daftarAngkatan.length > 0 && (
-          <div className="mt-10">
-            <h3 className="font-heading text-lg font-extrabold tracking-tight">
-              Resume Donasi per Angkatan
-            </h3>
-
-            <div className="mt-4 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
                       <th className="px-4 py-3 font-bold">Angkatan</th>
                       <th className="px-4 py-3 text-right font-bold">Donatur</th>
                       <th className="px-4 py-3 text-right font-bold">Total Donasi</th>
@@ -423,7 +358,7 @@ export function IsiBeasiswa() {
                     </tr>
                   </thead>
                   <tbody>
-                    {daftarAngkatan.map(([angkatan, grup]) => {
+                    {angkatanHalaman.map(([angkatan, grup]) => {
                       const terbuka = angkatanTerbuka === angkatan;
                       return (
                         <Fragment key={angkatan}>
@@ -487,20 +422,49 @@ export function IsiBeasiswa() {
                   </tbody>
                 </table>
               </div>
-            </div>
 
-            {/* Summary total donasi masuk */}
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-primary/5 p-4">
-              <div className="text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">{jumlahSemua} donatur</span>{" "}
-                dari {daftarAngkatan.length} angkatan
-              </div>
-              <div className="text-sm text-muted-foreground">
-                Total donasi masuk:{" "}
-                <span className="font-heading text-lg font-extrabold tabular-nums text-primary">
-                  {formatRupiah(totalSemua)}
-                </span>
-              </div>
+              {totalHalamanAngkatan > 1 && (
+                <div className="flex items-center justify-between border-t border-border px-4 py-3">
+                  <span className="text-xs text-muted-foreground">
+                    Halaman {halamanAngkatanAman} dari {totalHalamanAngkatan} ·{" "}
+                    {daftarAngkatan.length} angkatan
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={halamanAngkatanAman <= 1}
+                      onClick={() => setHalamanAngkatan((h) => Math.max(1, h - 1))}
+                      className="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Sebelumnya
+                    </button>
+                    <button
+                      type="button"
+                      disabled={halamanAngkatanAman >= totalHalamanAngkatan}
+                      onClick={() => setHalamanAngkatan((h) => Math.min(totalHalamanAngkatan, h + 1))}
+                      className="rounded-md border border-border bg-background px-3 py-1.5 text-xs font-semibold transition-colors hover:bg-accent disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      Berikutnya
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Summary total donasi masuk */}
+        {daftarAngkatan.length > 0 && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-primary/5 p-4">
+            <div className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">{jumlahSemua} donatur</span>{" "}
+              dari {daftarAngkatan.length} angkatan
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Total donasi masuk:{" "}
+              <span className="font-heading text-lg font-extrabold tabular-nums text-primary">
+                {formatRupiah(totalSemua)}
+              </span>
             </div>
           </div>
         )}
