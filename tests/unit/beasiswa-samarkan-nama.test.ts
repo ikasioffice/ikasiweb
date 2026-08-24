@@ -2,15 +2,21 @@ import { describe, expect, it } from "vitest";
 import { samarkanNama } from "@/app/(public)/beasiswa/_sections";
 
 describe("samarkanNama", () => {
-  it("menyisakan 2 huruf awal + xxxx untuk nama panjang", () => {
+  it("menyamarkan tiap kata: 2 huruf awal + x sisanya", () => {
+    expect(samarkanNama("Feby Taufik N")).toBe("Fexx Taxxxx N");
     expect(samarkanNama("Alicia")).toBe("Alxxxx");
-    expect(samarkanNama("Budi")).toBe("Buxxxx");
-    expect(samarkanNama("Rahmat Hidayat")).toBe("Raxxxx");
+    expect(samarkanNama("Budi")).toBe("Buxx");
+    expect(samarkanNama("Rahmat Hidayat")).toBe("Raxxxx Hixxxxx");
   });
 
-  it("menyisakan 1 huruf awal + xxx untuk nama sangat pendek", () => {
-    expect(samarkanNama("Al")).toBe("Axxx");
-    expect(samarkanNama("B")).toBe("Bxxx");
+  it("kata 1-2 huruf tidak disamarkan (inisial tetap)", () => {
+    expect(samarkanNama("N")).toBe("N");
+    expect(samarkanNama("AB")).toBe("AB");
+  });
+
+  it("menangani spasi ganda / trim", () => {
+    expect(samarkanNama("  Feby   Taufik  ")).toBe("Fexx Taxxxx");
+    expect(samarkanNama("\tAlicia\n")).toBe("Alxxxx");
   });
 
   it("fallback ke 'Alumni' bila nama kosong/null", () => {

@@ -24,12 +24,17 @@ const ctaPrimary =
 const ctaSecondary =
   "inline-flex h-11 items-center gap-2 rounded-md border border-input bg-background px-6 text-sm font-semibold transition-colors hover:bg-accent";
 
-/** Samarkan nama donatur di daftar publik: 2 huruf awal + xxxx. */
+/** Samarkan nama donatur di daftar publik: tiap kata, 2 huruf awal + x sisanya. */
 export function samarkanNama(nama: string | null | undefined): string {
   const bersih = (nama ?? "").trim();
   if (bersih.length === 0) return "Alumni";
-  if (bersih.length <= 2) return `${bersih[0]}xxx`;
-  return `${bersih.slice(0, 2)}xxxx`;
+  return bersih
+    .split(/\s+/)
+    .map((kata) => {
+      if (kata.length <= 2) return kata;
+      return `${kata.slice(0, 2)}${"x".repeat(kata.length - 2)}`;
+    })
+    .join(" ");
 }
 
 const HALAMAN = 10;
