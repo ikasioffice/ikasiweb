@@ -5,8 +5,6 @@ import { formatRupiah, hitungPersen } from "@/lib/data/beasiswa";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useBeasiswa } from "./_use-beasiswa";
 import {
-  REKENING_BANK,
-  REKENING_NOMOR,
   WA_NUMBER,
   baris,
   kolom,
@@ -42,7 +40,6 @@ export function IsiBeasiswa() {
   const selesai = baris(c, "done_list");
   const tahapan = timeline(c);
   const persenTahap = persenProgres(c);
-  const rekeningDesc = baris(c, "rekening_desc");
   const custom = kolom(c, "custom_sections").filter((p) => (p[0] ?? "") !== "");
 
   return (
@@ -276,32 +273,6 @@ export function IsiBeasiswa() {
                 className="h-full rounded-full bg-primary transition-[width] duration-700"
                 style={{ width: `${persenDana}%` }}
               />
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className={cardCls}>
-            <div className="font-heading font-bold text-foreground">{teks(c, "rekening_judul")}</div>
-            <div className="mt-3 space-y-1">
-              <div className="text-sm font-semibold text-foreground">{REKENING_BANK}</div>
-              <div className="font-mono text-lg font-bold tracking-wide text-primary">{REKENING_NOMOR}</div>
-            </div>
-            <div className="mt-3 space-y-1.5 text-sm leading-relaxed text-muted-foreground">
-              {rekeningDesc.map((b) => (
-                <p key={b}>{b}</p>
-              ))}
-            </div>
-          </div>
-          <div className={`${cardCls} flex flex-col items-center justify-center`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/beasiswa-qris.png"
-              alt="Kode QRIS untuk donasi Beasiswa Alumni IKASI"
-              className="w-full max-w-[240px] rounded-lg"
-            />
-            <div className="mt-3 text-center text-xs text-muted-foreground">
-              Satu QRIS untuk semua — scan untuk donasi
             </div>
           </div>
         </div>
