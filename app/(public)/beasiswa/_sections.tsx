@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Link from "next/link";
 import { formatRupiah, hitungPersen } from "@/lib/data/beasiswa";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -42,6 +42,7 @@ const HALAMAN = 10;
 export function IsiBeasiswa() {
   const { data, loading } = useBeasiswa();
   const [halamanDonatur, setHalamanDonatur] = useState(1);
+  const [angkatanTerbuka, setAngkatanTerbuka] = useState<string | null>(null);
   const c: Konten = data?.content ?? {};
 
   const proposalUrl = data?.rekap?.proposal_url ?? null;
@@ -56,6 +57,22 @@ export function IsiBeasiswa() {
     (halamanAman - 1) * HALAMAN,
     halamanAman * HALAMAN,
   );
+
+  // Agregasi donasi per angkatan (dari SEMUA donatur, bukan hanya halaman aktif).
+  const perAngkatan = new Map<string, { jumlah: number; total: number; donatur: typeof donatur }>();
+  for (const d of donatur) {
+    const key = d.angkatan?.trim() || "Tanpa Angkatan";
+    const grup = perAngkatan.get(key) ?? { jumlah: 0, total: 0, donatur: [] };
+    grup.jumlah += 1;
+    grup.total += Number(d.nominal) || 0;
+    grup.donatur.push(d);
+    perAngkatan.set(key, grup);
+  }
+  const daftarAngkatan = [...perAngkatan.entries()].sort((a, b) =>
+    a[0].localeCompare(b[0], undefined, { numeric: true }),
+  );
+  const totalSemua = daftarAngkatan.reduce((acc, [, g]) => acc + g.total, 0);
+  const jumlahSemua = daftarAngkatan.reduce((acc, [, g]) => acc + g.jumlah, 0);
 
   const misi = baris(c, "tentang_misi");
   const goals = kolom(c, "tujuan_goals");
@@ -386,6 +403,107 @@ export function IsiBeasiswa() {
             </div>
           )}
         </div>
+
+        {/* ---------- Resume donasi per angkatan ---------- */}
+        {daftarAngkatan.length > 0 && (
+          <div className="mt-10">
+            <h3 className="font-heading text-lg font-extrabold tracking-tight">
+              Resume Donasi per Angkatan
+            </h3>
+
+            <div className="mt-4 overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
+                      <th className="px-4 py-3 font-bold">Angkatan</th>
+                      <th className="px-4 py-3 text-right font-bold">Donatur</th>
+                      <th className="px-4 py-3 text-right font-bold">Total Donasi</th>
+                      <th className="px-4 py-3" />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {daftarAngkatan.map(([angkatan, grup]) => {
+                      const terbuka = angkatanTerbuka === angkatan;
+                      return (
+                        <Fragment key={angkatan}>
+                          <tr
+                            className={`border-t border-border transition-colors hover:bg-accent/50 ${
+                              terbuka ? "bg-accent/40" : ""
+                            }`}
+                          >
+                            <td className="px-4 py-3">
+                              <button
+                                type="button"
+                                onClick={() => setAngkatanTerbuka(terbuka ? null : angkatan)}
+                                className="flex items-center gap-2 text-left font-semibold text-foreground"
+                              >
+                                <span
+                                  className={`inline-block text-primary transition-transform ${
+                                    terbuka ? "rotate-90" : ""
+                                  }`}
+                                >
+                                  ▶
+                                </span>
+                                {angkatan}
+                              </button>
+                            </td>
+                            <td className="px-4 py-3 text-right tabular-nums text-muted-foreground">
+                              {grup.jumlah} orang
+                            </td>
+                            <td className="px-4 py-3 text-right font-semibold tabular-nums text-primary">
+                              {formatRupiah(grup.total)}
+                            </td>
+                            <td className="px-4 py-3 text-right text-xs text-muted-foreground">
+                              {terbuka ? "tutup" : "lihat"}
+                            </td>
+                          </tr>
+                          {terbuka && (
+                            <tr className="border-t border-border bg-muted/30">
+                              <td colSpan={4} className="px-4 py-3">
+                                <table className="w-full text-sm">
+                                  <tbody>
+                                    {grup.donatur.map((d, i) => (
+                                      <tr key={`${angkatan}-${d.id ?? i}`} className="border-t border-border/60 first:border-t-0">
+                                        <td className="px-4 py-2 tabular-nums text-muted-foreground">
+                                          {i + 1}
+                                        </td>
+                                        <td className="px-4 py-2 font-medium text-foreground">
+                                          {samarkanNama(d.nama)}
+                                        </td>
+                                        <td className="px-4 py-2 text-right tabular-nums text-foreground">
+                                          {formatRupiah(d.nominal)}
+                                        </td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </td>
+                            </tr>
+                          )}
+                        </Fragment>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Summary total donasi masuk */}
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-primary/5 p-4">
+              <div className="text-sm text-muted-foreground">
+                <span className="font-semibold text-foreground">{jumlahSemua} donatur</span>{" "}
+                dari {daftarAngkatan.length} angkatan
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Total donasi masuk:{" "}
+                <span className="font-heading text-lg font-extrabold tabular-nums text-primary">
+                  {formatRupiah(totalSemua)}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{teks(c, "anggaran_note")}</p>
       </section>
