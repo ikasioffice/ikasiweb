@@ -157,7 +157,7 @@ export function IsiSalurun() {
         <h2 className={h2Cls}>Kategori &amp; Biaya</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
           Periode pendaftaran: 10 – 30 September 2026. Biaya sudah termasuk jersey resmi SALURUN
-          + refreshment.
+          + refreshment. Pembayaran bisa lewat transfer bank atau QRIS resmi IKASI POLBAN.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {(Object.keys(BIAYA) as Array<keyof typeof BIAYA>).map((k) => (

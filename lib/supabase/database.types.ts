@@ -420,6 +420,7 @@ export type Database = {
       }
       salurun_pendaftaran: {
         Row: {
+          angkatan: string
           bukti_path: string | null
           catatan: string | null
           created_at: string
@@ -427,6 +428,7 @@ export type Database = {
           id: string
           is_verified: boolean
           kategori: string
+          metode: string
           nama: string
           nominal: number
           ukuran_jersey: string
@@ -434,6 +436,7 @@ export type Database = {
           whatsapp: string
         }
         Insert: {
+          angkatan: string
           bukti_path?: string | null
           catatan?: string | null
           created_at?: string
@@ -441,6 +444,7 @@ export type Database = {
           id?: string
           is_verified?: boolean
           kategori: string
+          metode?: string
           nama: string
           nominal?: number
           ukuran_jersey: string
@@ -448,6 +452,7 @@ export type Database = {
           whatsapp: string
         }
         Update: {
+          angkatan?: string
           bukti_path?: string | null
           catatan?: string | null
           created_at?: string
@@ -455,6 +460,7 @@ export type Database = {
           id?: string
           is_verified?: boolean
           kategori?: string
+          metode?: string
           nama?: string
           nominal?: number
           ukuran_jersey?: string

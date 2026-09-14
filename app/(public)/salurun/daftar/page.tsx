@@ -9,12 +9,13 @@ import {
   kirimPendaftaran,
   unggahBukti,
   type Kategori,
+  type Metode,
   type UkuranJersey,
 } from "@/lib/data/salurun";
 
 const MAX_BUKTI_BYTES = 5 * 1024 * 1024;
 
-// Rekening resmi IKASI — sama dengan yang dipakai Program Beasiswa Alumni.
+// Rekening & QRIS resmi IKASI — sama dengan yang dipakai Program Beasiswa Alumni.
 const REKENING_BANK = "BSI a.n. IKASI POLBAN";
 const REKENING_NOMOR = "1982320247";
 const WA_NUMBER = "6281234681730";
@@ -103,11 +104,15 @@ export default function DaftarSalurunPage() {
 
   // Langkah 1
   const [nama, setNama] = useState("");
+  const [angkatan, setAngkatan] = useState("");
   const [kategori, setKategori] = useState<Kategori>("mahasiswa");
   const [whatsapp, setWhatsapp] = useState("");
   const [email, setEmail] = useState("");
   const [ukuranJersey, setUkuranJersey] = useState<UkuranJersey>("M");
   const [honeypot, setHoneypot] = useState(""); // anti-spam: harus tetap kosong
+
+  // Langkah 2
+  const [metode, setMetode] = useState<Metode>("Transfer Bank");
 
   // Langkah 3
   const [cara, setCara] = useState<CaraBukti>("upload");
@@ -125,6 +130,10 @@ export default function DaftarSalurunPage() {
     setError(null);
     if (!nama.trim()) {
       setError("Nama lengkap wajib diisi.");
+      return;
+    }
+    if (!angkatan.trim()) {
+      setError("Angkatan wajib diisi.");
       return;
     }
     if (!whatsapp.trim()) {
@@ -180,10 +189,12 @@ export default function DaftarSalurunPage() {
 
     const { error: insErr } = await kirimPendaftaran({
       nama: nama.trim(),
+      angkatan: angkatan.trim(),
       kategori,
       whatsapp: whatsapp.trim(),
       email: email.trim() || null,
       ukuran_jersey: ukuranJersey,
+      metode,
       nominal,
       catatan: catatan.trim() || null,
       bukti_path: buktiPath,
@@ -202,8 +213,8 @@ export default function DaftarSalurunPage() {
   if (done) {
     const pesan =
       cara === "whatsapp"
-        ? `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}) sudah mendaftar dan transfer ${formatRupiah(nominal)}. Bukti transfernya saya kirimkan di chat ini.`
-        : `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}) sudah mendaftar dan transfer ${formatRupiah(nominal)} beserta bukti transfernya lewat form di website. Mohon dicek, terima kasih.`;
+        ? `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}, angkatan ${angkatan.trim()}) sudah mendaftar dan transfer ${formatRupiah(nominal)} via ${metode}. Bukti transfernya saya kirimkan di chat ini.`
+        : `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}, angkatan ${angkatan.trim()}) sudah mendaftar dan transfer ${formatRupiah(nominal)} via ${metode} beserta bukti transfernya lewat form di website. Mohon dicek, terima kasih.`;
 
     return (
       <main className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
@@ -223,11 +234,14 @@ export default function DaftarSalurunPage() {
           </p>
 
           <div className="mx-auto mt-6 max-w-xs rounded-xl bg-primary/10 p-4">
-            <div className="text-xs text-muted-foreground">Kategori · Nominal</div>
-            <div className="font-heading text-lg font-extrabold text-foreground">{KATEGORI_LABEL[kategori]}</div>
+            <div className="text-xs text-muted-foreground">Kategori · Angkatan · Nominal</div>
+            <div className="font-heading text-lg font-extrabold text-foreground">
+              {KATEGORI_LABEL[kategori]} · {angkatan.trim()}
+            </div>
             <div className="font-heading mt-1 text-2xl font-extrabold tabular-nums text-primary">
               {formatRupiah(nominal)}
             </div>
+            <div className="mt-1 text-xs text-muted-foreground">via {metode}</div>
           </div>
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -266,8 +280,8 @@ export default function DaftarSalurunPage() {
         Daftar <span className="text-primary">SALURUN 2026</span>
       </h1>
       <p className="mb-8 mt-2 text-muted-foreground">
-        {langkah === 1 && "Isi data Anda dulu, lalu kami tampilkan panduan transfernya."}
-        {langkah === 2 && "Silakan transfer sesuai nominal di bawah, lalu lanjut ke pengiriman bukti."}
+        {langkah === 1 && "Isi data Anda dulu, lalu kami tampilkan panduan pembayarannya."}
+        {langkah === 2 && "Pilih metode pembayaran dan transfer sesuai nominal di bawah, lalu lanjut ke pengiriman bukti."}
         {langkah === 3 && "Terakhir, kirimkan bukti transfer Anda agar bisa diverifikasi panitia."}
       </p>
 
@@ -298,6 +312,11 @@ export default function DaftarSalurunPage() {
                 <option value="alumni">Alumni — {formatRupiah(BIAYA.alumni)}</option>
               </select>
               <p className={hintCls}>Biaya sudah termasuk jersey + refreshment.</p>
+            </div>
+
+            <div>
+              <label className={labelCls} htmlFor="angkatan">Angkatan <span className="text-primary">*</span></label>
+              <input id="angkatan" className={inputCls} inputMode="numeric" placeholder="Contoh: 2015" value={angkatan} onChange={(e) => setAngkatan(e.target.value)} />
             </div>
 
             <div>
@@ -334,53 +353,94 @@ export default function DaftarSalurunPage() {
         </form>
       )}
 
-      {/* ============ Langkah 2: panduan transfer ============ */}
+      {/* ============ Langkah 2: pilih metode & panduan pembayaran ============ */}
       {langkah === 2 && (
         <div className="space-y-5">
           <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
             <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Nominal yang perlu ditransfer
+              Nominal yang perlu dibayar
             </div>
             <div className="font-heading mt-2 text-4xl font-extrabold tabular-nums text-primary">
               {formatRupiah(nominal)}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
-              Kategori {KATEGORI_LABEL[kategori]} · Jersey {ukuranJersey}
+              Kategori {KATEGORI_LABEL[kategori]} · Angkatan {angkatan.trim()} · Jersey {ukuranJersey}
             </p>
             <div className="mt-3 flex justify-center">
               <Salin nilai={String(nominal)} label="nominal" />
             </div>
             <p className={hintCls}>
-              Transfer tepat sejumlah ini agar panitia mudah mencocokkan pendaftaran Anda.
+              Bayar tepat sejumlah ini agar panitia mudah mencocokkan pendaftaran Anda.
             </p>
           </div>
 
+          {/* Pilih metode */}
+          <div className="grid gap-3 sm:grid-cols-2">
+            {(["Transfer Bank", "QRIS"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setMetode(m)}
+                className={`rounded-xl border p-4 text-left text-sm transition-colors ${
+                  metode === m
+                    ? "border-primary bg-primary/10 font-semibold text-primary"
+                    : "border-border bg-card hover:bg-accent"
+                }`}
+                aria-pressed={metode === m}
+              >
+                {m === "Transfer Bank" ? "Transfer Bank" : "Scan QRIS"}
+                <span className="mt-0.5 block text-xs font-normal text-muted-foreground">
+                  {m === "Transfer Bank" ? "Lewat m-banking atau ATM" : "Semua e-wallet & m-banking"}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Detail metode terpilih */}
           <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-            <div className="font-heading font-bold text-foreground">Rekening Resmi IKASI</div>
-            <dl className="mt-4 space-y-3 text-sm">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <dt className="text-xs text-muted-foreground">Bank &amp; atas nama</dt>
-                  <dd className="font-semibold text-foreground">{REKENING_BANK}</dd>
-                </div>
+            {metode === "Transfer Bank" ? (
+              <>
+                <div className="font-heading font-bold text-foreground">Rekening Resmi IKASI</div>
+                <dl className="mt-4 space-y-3 text-sm">
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Bank &amp; atas nama</dt>
+                      <dd className="font-semibold text-foreground">{REKENING_BANK}</dd>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <dt className="text-xs text-muted-foreground">Nomor rekening</dt>
+                      <dd className="font-mono text-lg font-bold tracking-wide text-primary">{REKENING_NOMOR}</dd>
+                    </div>
+                    <Salin nilai={REKENING_NOMOR} label="nomor rekening" />
+                  </div>
+                </dl>
+              </>
+            ) : (
+              <div className="flex flex-col items-center">
+                <div className="font-heading mb-4 font-bold text-foreground">Scan QRIS</div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/beasiswa-qris.png"
+                  alt="Kode QRIS resmi IKASI POLBAN untuk pendaftaran SALURUN"
+                  className="w-full max-w-[260px] rounded-lg"
+                />
+                <p className="mt-3 text-center text-xs text-muted-foreground">
+                  Satu QRIS untuk semua e-wallet dan m-banking
+                </p>
               </div>
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <dt className="text-xs text-muted-foreground">Nomor rekening</dt>
-                  <dd className="font-mono text-lg font-bold tracking-wide text-primary">{REKENING_NOMOR}</dd>
-                </div>
-                <Salin nilai={REKENING_NOMOR} label="nomor rekening" />
-              </div>
-            </dl>
+            )}
+
             <p className="mt-5 border-t border-border pt-4 text-sm leading-relaxed text-muted-foreground">
-              Rekening resmi IKASI POLBAN — dana pendaftaran SALURUN dikelola bersama dana program
-              beasiswa alumni secara transparan.
+              Rekening &amp; QRIS resmi IKASI POLBAN — dana pendaftaran SALURUN dikelola bersama dana
+              program beasiswa alumni secara transparan.
             </p>
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row-reverse">
             <button type="button" onClick={lanjutKeBukti} className={`${ctaPrimary} sm:flex-1`}>
-              Saya Sudah Transfer
+              Saya Sudah Bayar
             </button>
             <button type="button" onClick={() => kembali(1)} className={ctaSecondary}>
               Kembali
@@ -398,11 +458,11 @@ export default function DaftarSalurunPage() {
               <div>
                 <div className="text-xs text-muted-foreground">Pendaftaran atas nama</div>
                 <div className="font-semibold text-foreground">
-                  {nama.trim()} <span className="font-normal text-muted-foreground">· {KATEGORI_LABEL[kategori]}</span>
+                  {nama.trim()} <span className="font-normal text-muted-foreground">· {KATEGORI_LABEL[kategori]} · Angkatan {angkatan.trim()}</span>
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-xs text-muted-foreground">Jersey {ukuranJersey}</div>
+                <div className="text-xs text-muted-foreground">{metode} · Jersey {ukuranJersey}</div>
                 <div className="font-heading text-xl font-extrabold tabular-nums text-primary">
                   {formatRupiah(nominal)}
                 </div>

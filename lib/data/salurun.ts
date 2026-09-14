@@ -8,6 +8,7 @@ export type SalurunRekap = Database["public"]["Views"]["salurun_rekap"]["Row"];
 
 export type Kategori = "mahasiswa" | "alumni";
 export type UkuranJersey = "S" | "M" | "L" | "XL" | "XXL";
+export type Metode = "Transfer Bank" | "QRIS";
 
 const BUCKET_BUKTI = "salurun-bukti";
 

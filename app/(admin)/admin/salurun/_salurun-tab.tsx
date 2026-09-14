@@ -13,6 +13,7 @@ import {
   formatRupiah,
   BIAYA,
   type Kategori,
+  type Metode,
   type SalurunPendaftaran,
   type SalurunRekap,
   type UkuranJersey,
@@ -31,20 +32,24 @@ const UKURAN: UkuranJersey[] = ["S", "M", "L", "XL", "XXL"];
 
 const KOSONG_MANUAL = {
   nama: "",
+  angkatan: "",
   kategori: "mahasiswa" as Kategori,
   whatsapp: "",
   email: "",
   ukuran_jersey: "M" as UkuranJersey,
+  metode: "Transfer Bank" as Metode,
   catatan: "",
 };
 
 function exportCsv(rows: SalurunPendaftaran[]) {
   const cols: { key: keyof SalurunPendaftaran; label: string }[] = [
     { key: "nama", label: "Nama" },
+    { key: "angkatan", label: "Angkatan" },
     { key: "kategori", label: "Kategori" },
     { key: "whatsapp", label: "WhatsApp" },
     { key: "email", label: "Email" },
     { key: "ukuran_jersey", label: "Ukuran Jersey" },
+    { key: "metode", label: "Metode Pembayaran" },
     { key: "nominal", label: "Nominal" },
     { key: "is_verified", label: "Terverifikasi" },
     { key: "catatan", label: "Catatan" },
@@ -113,10 +118,12 @@ export function SalurunTab() {
     setEditingId(row.id);
     setEdit({
       nama: row.nama,
+      angkatan: row.angkatan,
       kategori: row.kategori,
       whatsapp: row.whatsapp,
       email: row.email ?? "",
       ukuran_jersey: row.ukuran_jersey,
+      metode: row.metode,
       nominal: String(row.nominal),
       catatan: row.catatan ?? "",
     });
@@ -125,10 +132,12 @@ export function SalurunTab() {
   async function simpanEdit(id: string) {
     const { error } = await updatePendaftaran(id, {
       nama: edit.nama ?? "",
+      angkatan: edit.angkatan ?? "",
       kategori: edit.kategori ?? "mahasiswa",
       whatsapp: edit.whatsapp ?? "",
       email: edit.email || null,
       ukuran_jersey: (edit.ukuran_jersey as UkuranJersey) ?? "M",
+      metode: edit.metode ?? "Transfer Bank",
       nominal: Number((edit.nominal ?? "").replace(/\D/g, "")) || 0,
       catatan: edit.catatan || null,
     });
@@ -163,17 +172,19 @@ export function SalurunTab() {
   async function simpanManual(e: React.FormEvent) {
     e.preventDefault();
     setManualErr(null);
-    if (!manual.nama.trim() || !manual.whatsapp.trim()) {
-      setManualErr("Nama dan WhatsApp wajib diisi.");
+    if (!manual.nama.trim() || !manual.whatsapp.trim() || !manual.angkatan.trim()) {
+      setManualErr("Nama, angkatan, dan WhatsApp wajib diisi.");
       return;
     }
     setSavingManual(true);
     const { error } = await tambahPendaftaranManual({
       nama: manual.nama.trim(),
+      angkatan: manual.angkatan.trim(),
       kategori: manual.kategori,
       whatsapp: manual.whatsapp.trim(),
       email: manual.email.trim() || null,
       ukuran_jersey: manual.ukuran_jersey,
+      metode: manual.metode,
       nominal: BIAYA[manual.kategori],
       catatan: manual.catatan.trim() || null,
       is_verified: false,
@@ -269,6 +280,10 @@ export function SalurunTab() {
                 <input id="mNama" className={inputCls} value={manual.nama} onChange={(e) => setManual({ ...manual, nama: e.target.value })} />
               </div>
               <div>
+                <label className={labelCls} htmlFor="mAngkatan">Angkatan</label>
+                <input id="mAngkatan" className={inputCls} value={manual.angkatan} onChange={(e) => setManual({ ...manual, angkatan: e.target.value })} />
+              </div>
+              <div>
                 <label className={labelCls} htmlFor="mKategori">Kategori</label>
                 <select
                   id="mKategori"
@@ -297,6 +312,18 @@ export function SalurunTab() {
                   onChange={(e) => setManual({ ...manual, ukuran_jersey: e.target.value as UkuranJersey })}
                 >
                   {UKURAN.map((u) => <option key={u} value={u}>{u}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className={labelCls} htmlFor="mMetode">Metode Pembayaran</label>
+                <select
+                  id="mMetode"
+                  className={inputCls}
+                  value={manual.metode}
+                  onChange={(e) => setManual({ ...manual, metode: e.target.value as Metode })}
+                >
+                  <option value="Transfer Bank">Transfer Bank</option>
+                  <option value="QRIS">QRIS</option>
                 </select>
               </div>
             </div>
@@ -341,6 +368,15 @@ export function SalurunTab() {
                           />
                         </div>
                         <div>
+                          <label className={labelCls} htmlFor={`${row.id}-angkatan`}>Angkatan</label>
+                          <input
+                            id={`${row.id}-angkatan`}
+                            className={inputCls}
+                            value={edit.angkatan ?? ""}
+                            onChange={(e) => setEdit((p) => ({ ...p, angkatan: e.target.value }))}
+                          />
+                        </div>
+                        <div>
                           <label className={labelCls} htmlFor={`${row.id}-kategori`}>Kategori</label>
                           <select
                             id={`${row.id}-kategori`}
@@ -361,6 +397,18 @@ export function SalurunTab() {
                             onChange={(e) => setEdit((p) => ({ ...p, ukuran_jersey: e.target.value }))}
                           >
                             {UKURAN.map((u) => <option key={u} value={u}>{u}</option>)}
+                          </select>
+                        </div>
+                        <div>
+                          <label className={labelCls} htmlFor={`${row.id}-metode`}>Metode Pembayaran</label>
+                          <select
+                            id={`${row.id}-metode`}
+                            className={inputCls}
+                            value={edit.metode ?? "Transfer Bank"}
+                            onChange={(e) => setEdit((p) => ({ ...p, metode: e.target.value }))}
+                          >
+                            <option value="Transfer Bank">Transfer Bank</option>
+                            <option value="QRIS">QRIS</option>
                           </select>
                         </div>
                         <div>
@@ -411,7 +459,9 @@ export function SalurunTab() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-semibold text-white">{row.nama}</span>
                           <span className="text-xs text-slate-400">{KATEGORI_LABEL[row.kategori as Kategori] ?? row.kategori}</span>
+                          <span className="text-xs text-slate-400">· Angkatan {row.angkatan}</span>
                           <span className="text-xs text-slate-400">· Jersey {row.ukuran_jersey}</span>
+                          <span className="text-xs text-slate-400">· {row.metode}</span>
                           {row.is_verified ? (
                             <span className="text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">Terverifikasi</span>
                           ) : (
