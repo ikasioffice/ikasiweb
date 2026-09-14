@@ -167,86 +167,86 @@ export type Database = {
       beasiswa_content: {
         Row: {
           key: string
-          value: string | null
           updated_at: string
+          value: string | null
         }
         Insert: {
           key: string
-          value?: string | null
           updated_at?: string
+          value?: string | null
         }
         Update: {
           key?: string
-          value?: string | null
           updated_at?: string
+          value?: string | null
         }
         Relationships: []
       }
       beasiswa_donasi: {
         Row: {
-          id: string
-          created_at: string
-          updated_at: string
-          nama: string
           angkatan: string
-          whatsapp: string | null
+          bukti_path: string | null
+          catatan: string | null
+          created_at: string
+          id: string
+          is_verified: boolean
+          metode: string | null
+          nama: string
           nominal: number
           tanggal_transfer: string | null
-          metode: string | null
-          catatan: string | null
-          bukti_path: string | null
-          is_verified: boolean
+          updated_at: string
+          whatsapp: string | null
         }
         Insert: {
-          id?: string
-          created_at?: string
-          updated_at?: string
-          nama: string
           angkatan: string
-          whatsapp?: string | null
+          bukti_path?: string | null
+          catatan?: string | null
+          created_at?: string
+          id?: string
+          is_verified?: boolean
+          metode?: string | null
+          nama: string
           nominal?: number
           tanggal_transfer?: string | null
-          metode?: string | null
-          catatan?: string | null
-          bukti_path?: string | null
-          is_verified?: boolean
+          updated_at?: string
+          whatsapp?: string | null
         }
         Update: {
-          id?: string
-          created_at?: string
-          updated_at?: string
-          nama?: string
           angkatan?: string
-          whatsapp?: string | null
+          bukti_path?: string | null
+          catatan?: string | null
+          created_at?: string
+          id?: string
+          is_verified?: boolean
+          metode?: string | null
+          nama?: string
           nominal?: number
           tanggal_transfer?: string | null
-          metode?: string | null
-          catatan?: string | null
-          bukti_path?: string | null
-          is_verified?: boolean
+          updated_at?: string
+          whatsapp?: string | null
         }
         Relationships: []
       }
       beasiswa_settings: {
         Row: {
           id: number
-          target_dana: number
-          proposal_url: string | null
           proposal_name: string | null
+          proposal_url: string | null
+          target_dana: number
           updated_at: string
         }
         Insert: {
           id?: number
-          target_dana?: number
-          proposal_url?: string | null
           proposal_name?: string | null
+          proposal_url?: string | null
+          target_dana?: number
           updated_at?: string
         }
         Update: {
           id?: number
-          target_dana?: number
-          proposal_url?: string | null
           proposal_name?: string | null
+          proposal_url?: string | null
+          target_dana?: number
           updated_at?: string
         }
         Relationships: []
@@ -418,6 +418,51 @@ export type Database = {
           },
         ]
       }
+      salurun_pendaftaran: {
+        Row: {
+          bukti_path: string | null
+          catatan: string | null
+          created_at: string
+          email: string | null
+          id: string
+          is_verified: boolean
+          kategori: string
+          nama: string
+          nominal: number
+          ukuran_jersey: string
+          updated_at: string
+          whatsapp: string
+        }
+        Insert: {
+          bukti_path?: string | null
+          catatan?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean
+          kategori: string
+          nama: string
+          nominal?: number
+          ukuran_jersey: string
+          updated_at?: string
+          whatsapp: string
+        }
+        Update: {
+          bukti_path?: string | null
+          catatan?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          is_verified?: boolean
+          kategori?: string
+          nama?: string
+          nominal?: number
+          ukuran_jersey?: string
+          updated_at?: string
+          whatsapp?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -438,34 +483,34 @@ export type Database = {
       }
       wa_groups: {
         Row: {
-          id: string
-          name: string
-          description: string | null
           category: string
-          wa_link: string
-          member_count: number | null
-          is_active: boolean | null
           created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          member_count: number | null
+          name: string
+          wa_link: string
         }
         Insert: {
-          id?: string
-          name: string
-          description?: string | null
           category: string
-          wa_link: string
-          member_count?: number | null
-          is_active?: boolean | null
           created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          member_count?: number | null
+          name: string
+          wa_link: string
         }
         Update: {
-          id?: string
-          name?: string
-          description?: string | null
           category?: string
-          wa_link?: string
-          member_count?: number | null
-          is_active?: boolean | null
           created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          member_count?: number | null
+          name?: string
+          wa_link?: string
         }
         Relationships: []
       }
@@ -498,7 +543,6 @@ export type Database = {
           prodi: string | null
           punya_ska: boolean | null
           tahun_lulus: number | null
-          tanggal_lahir: string | null
           tempat_kerja: string | null
           updated_at: string | null
         }
@@ -528,7 +572,6 @@ export type Database = {
           prodi?: string | null
           punya_ska?: boolean | null
           tahun_lulus?: number | null
-          tanggal_lahir?: string | null
           tempat_kerja?: string | null
           updated_at?: string | null
         }
@@ -558,7 +601,6 @@ export type Database = {
           prodi?: string | null
           punya_ska?: boolean | null
           tahun_lulus?: number | null
-          tanggal_lahir?: string | null
           tempat_kerja?: string | null
           updated_at?: string | null
         }
@@ -566,21 +608,35 @@ export type Database = {
       }
       beasiswa_donasi_public: {
         Row: {
+          angkatan: string | null
+          created_at: string | null
           id: string | null
           nama: string | null
-          angkatan: string | null
           nominal: number | null
-          created_at: string | null
+        }
+        Insert: {
+          angkatan?: string | null
+          created_at?: string | null
+          id?: string | null
+          nama?: string | null
+          nominal?: number | null
+        }
+        Update: {
+          angkatan?: string | null
+          created_at?: string | null
+          id?: string | null
+          nama?: string | null
+          nominal?: number | null
         }
         Relationships: []
       }
       beasiswa_rekap: {
         Row: {
-          target_dana: number | null
           dana_terkumpul: number | null
           jumlah_donatur: number | null
-          proposal_url: string | null
           proposal_name: string | null
+          proposal_url: string | null
+          target_dana: number | null
         }
         Relationships: []
       }
@@ -614,6 +670,14 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      salurun_rekap: {
+        Row: {
+          jumlah_alumni: number | null
+          jumlah_mahasiswa: number | null
+          jumlah_peserta: number | null
+        }
+        Relationships: []
       }
     }
     Functions: {
@@ -674,6 +738,7 @@ export type Database = {
         Returns: Json
       }
       admin_restore_alumni: { Args: { p_deletion_id: string }; Returns: Json }
+      get_alumni_email: { Args: { p_id: string }; Returns: string }
       is_admin: { Args: never; Returns: boolean }
       is_verified_alumni: { Args: never; Returns: boolean }
     }
@@ -694,12 +759,12 @@ export type Tables<
   DefaultSchemaTableNameOrOptions extends
     | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
         DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -723,11 +788,11 @@ export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -748,11 +813,11 @@ export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
     | keyof DefaultSchema["Tables"]
     | { schema: keyof DatabaseWithoutInternals },
-  TableName extends DefaultSchemaTableNameOrOptions extends {
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -773,11 +838,11 @@ export type Enums<
   DefaultSchemaEnumNameOrOptions extends
     | keyof DefaultSchema["Enums"]
     | { schema: keyof DatabaseWithoutInternals },
-  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+    : never) = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
@@ -790,11 +855,11 @@ export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof DefaultSchema["CompositeTypes"]
     | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
     ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+    : never) = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }

@@ -13,6 +13,7 @@ const links = [
   { href: "/grup-wa", label: "Grup WA" },
   { href: "/news", label: "Berita" },
   { href: "/beasiswa", label: "Beasiswa" },
+  { href: "/salurun", label: "Salurun" },
   { href: "/sejarah", label: "Tentang" },
 ];
 
