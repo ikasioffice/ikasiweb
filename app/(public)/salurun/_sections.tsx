@@ -4,11 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LineIcon } from "@/components/ui/icons";
 import { StatBlock } from "@/components/ui/stat-block";
+import { Pagination } from "@/components/ui/pagination";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   BIAYA,
   KATEGORI_LABEL,
   formatRupiah,
   getRekap,
+  listPesertaPublik,
+  type Kategori,
+  type SalurunPesertaPublik,
   type SalurunRekap,
 } from "@/lib/data/salurun";
 
@@ -47,10 +52,17 @@ const TUJUAN = [
 
 export function IsiSalurun() {
   const [rekap, setRekap] = useState<SalurunRekap | null>(null);
+  const [peserta, setPeserta] = useState<SalurunPesertaPublik[] | null>(null);
+  const [halaman, setHalaman] = useState(1);
+  const PER_HALAMAN = 20;
 
   useEffect(() => {
     getRekap().then(setRekap);
+    listPesertaPublik().then(setPeserta);
   }, []);
+
+  const totalHalaman = Math.max(1, Math.ceil((peserta?.length ?? 0) / PER_HALAMAN));
+  const pesertaHalaman = (peserta ?? []).slice((halaman - 1) * PER_HALAMAN, halaman * PER_HALAMAN);
 
   return (
     <>
@@ -71,6 +83,10 @@ export function IsiSalurun() {
         <a href="https://wa.me/6281234681730" target="_blank" rel="noopener noreferrer" className={ctaSecondary}>
           Tanya Panitia
         </a>
+      </div>
+      <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2 text-xs font-medium text-primary">
+        <LineIcon name="calendar" size={14} />
+        Pendaftaran ditutup 1 Oktober 2026 — jangan sampai terlewat!
       </div>
 
       {/* ---------- Stat peserta ---------- */}
@@ -151,13 +167,63 @@ export function IsiSalurun() {
         </div>
       </section>
 
+      {/* ---------- Daftar Peserta ---------- */}
+      <section className="mt-16">
+        <span className={eyebrowCls}>Peserta Terdaftar</span>
+        <h2 className={h2Cls}>Sudah Bergabung</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          Daftar peserta yang pendaftarannya sudah terverifikasi panitia.
+        </p>
+        <div className="mt-6">
+          {peserta === null ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-12 animate-pulse rounded-lg border border-border bg-muted" />
+              ))}
+            </div>
+          ) : peserta.length === 0 ? (
+            <EmptyState
+              title="Belum ada peserta terverifikasi"
+              description="Jadilah yang pertama mendaftar SALURUN 2026!"
+              icon={<LineIcon name="users" size={24} />}
+            />
+          ) : (
+            <>
+              <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border bg-accent/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
+                      <th className="px-4 py-3 font-semibold">Nama</th>
+                      <th className="px-4 py-3 font-semibold">Angkatan</th>
+                      <th className="px-4 py-3 font-semibold">Kategori</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pesertaHalaman.map((p) => (
+                      <tr key={p.id} className="border-b border-border last:border-0">
+                        <td className="px-4 py-3 font-medium text-foreground">{p.nama}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{p.angkatan}</td>
+                        <td className="px-4 py-3 text-muted-foreground">
+                          {p.kategori ? KATEGORI_LABEL[p.kategori as Kategori] ?? p.kategori : "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <Pagination page={halaman} totalPages={totalHalaman} onPage={setHalaman} className="mt-5" />
+            </>
+          )}
+        </div>
+      </section>
+
       {/* ---------- Biaya Pendaftaran ---------- */}
       <section className="mt-16">
         <span className={eyebrowCls}>Pendaftaran</span>
         <h2 className={h2Cls}>Kategori &amp; Biaya</h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-          Periode pendaftaran: 10 – 30 September 2026. Biaya sudah termasuk jersey resmi SALURUN
-          + refreshment. Pembayaran bisa lewat transfer bank atau QRIS resmi IKASI POLBAN.
+          Periode pendaftaran: 10 September – 1 Oktober 2026. Biaya sudah termasuk jersey resmi
+          SALURUN + refreshment. Pembayaran bisa lewat transfer bank atau QRIS resmi IKASI POLBAN.
         </p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {(Object.keys(BIAYA) as Array<keyof typeof BIAYA>).map((k) => (

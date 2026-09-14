@@ -677,6 +677,30 @@ export type Database = {
           },
         ]
       }
+      salurun_pendaftaran_public: {
+        Row: {
+          angkatan: string | null
+          created_at: string | null
+          id: string | null
+          kategori: string | null
+          nama: string | null
+        }
+        Insert: {
+          angkatan?: string | null
+          created_at?: string | null
+          id?: string | null
+          kategori?: string | null
+          nama?: string | null
+        }
+        Update: {
+          angkatan?: string | null
+          created_at?: string | null
+          id?: string | null
+          kategori?: string | null
+          nama?: string | null
+        }
+        Relationships: []
+      }
       salurun_rekap: {
         Row: {
           jumlah_alumni: number | null

@@ -5,6 +5,7 @@ export type SalurunPendaftaran = Database["public"]["Tables"]["salurun_pendaftar
 export type SalurunPendaftaranInsert = Database["public"]["Tables"]["salurun_pendaftaran"]["Insert"];
 export type SalurunPendaftaranUpdate = Database["public"]["Tables"]["salurun_pendaftaran"]["Update"];
 export type SalurunRekap = Database["public"]["Views"]["salurun_rekap"]["Row"];
+export type SalurunPesertaPublik = Database["public"]["Views"]["salurun_pendaftaran_public"]["Row"];
 
 export type Kategori = "mahasiswa" | "alumni";
 export type UkuranJersey = "S" | "M" | "L" | "XL" | "XXL";
@@ -32,6 +33,21 @@ export async function getRekap(): Promise<SalurunRekap | null> {
   const supabase = createClient();
   const { data } = await supabase.from("salurun_rekap").select("*").maybeSingle();
   return data;
+}
+
+/**
+ * Daftar peserta untuk halaman publik. Sengaja lewat view: tabel aslinya
+ * tidak punya policy SELECT untuk anon karena memuat PII (lihat migration
+ * 008). Hanya nama + angkatan + kategori dari peserta terverifikasi.
+ */
+export async function listPesertaPublik(): Promise<SalurunPesertaPublik[]> {
+  const supabase = createClient();
+  const { data } = await supabase
+    .from("salurun_pendaftaran_public")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(1000);
+  return data ?? [];
 }
 
 /**
