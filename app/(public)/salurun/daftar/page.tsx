@@ -101,6 +101,7 @@ function Salin({ nilai, label }: { nilai: string; label: string }) {
 
 export default function DaftarSalurunPage() {
   const [langkah, setLangkah] = useState<Langkah>(1);
+  const [showSizeChart, setShowSizeChart] = useState(false);
 
   // Langkah 1
   const [nama, setNama] = useState("");
@@ -320,7 +321,16 @@ export default function DaftarSalurunPage() {
             </div>
 
             <div>
-              <label className={labelCls} htmlFor="ukuran">Ukuran jersey <span className="text-primary">*</span></label>
+              <div className="flex items-center justify-between gap-2">
+                <label className={labelCls} htmlFor="ukuran">Ukuran jersey <span className="text-primary">*</span></label>
+                <button
+                  type="button"
+                  onClick={() => setShowSizeChart((v) => !v)}
+                  className="mb-1.5 text-xs font-medium text-primary hover:underline"
+                >
+                  {showSizeChart ? "Sembunyikan" : "Lihat"} panduan ukuran
+                </button>
+              </div>
               <select
                 id="ukuran"
                 className={inputCls}
@@ -329,6 +339,16 @@ export default function DaftarSalurunPage() {
               >
                 {UKURAN.map((u) => <option key={u} value={u}>{u}</option>)}
               </select>
+              {showSizeChart && (
+                <div className="mt-3 rounded-lg border border-border bg-accent/30 p-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/salurun-size-chart.jpg"
+                    alt="Panduan ukuran jersey SALURUN 2026 (S, M, L, XL, XXL)"
+                    className="w-full rounded-md"
+                  />
+                </div>
+              )}
             </div>
 
             <div>

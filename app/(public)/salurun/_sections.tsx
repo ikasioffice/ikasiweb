@@ -246,6 +246,21 @@ export function IsiSalurun() {
             </div>
           ))}
         </div>
+
+        {/* Panduan ukuran jersey */}
+        <div className="mt-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+          <div className="font-heading font-bold text-foreground">Panduan Ukuran Jersey</div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Unisex cutting, ukuran dalam sentimeter. Bandingkan dengan jersey milik Anda untuk hasil terbaik.
+          </p>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/salurun-size-chart.jpg"
+            alt="Panduan ukuran jersey SALURUN 2026 (S, M, L, XL, XXL)"
+            className="mx-auto mt-4 w-full max-w-sm rounded-lg"
+          />
+        </div>
+
         <div className="mt-6">
           <Link href="/salurun/daftar" className={ctaPrimary}>
             Daftar Sekarang
