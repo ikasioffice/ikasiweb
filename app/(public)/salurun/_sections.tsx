@@ -66,6 +66,16 @@ export function IsiSalurun() {
 
   return (
     <>
+      {/* ---------- Banner Poster ---------- */}
+      <div className="relative mb-8 overflow-hidden rounded-2xl border border-border shadow-sm">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/salurun-poster.jpg"
+          alt="Poster SALURUN 2026 — Charity Fun Run IKASI POLBAN"
+          className="max-h-[520px] w-full object-cover object-top"
+        />
+      </div>
+
       {/* ---------- Hero ---------- */}
       <span className={eyebrowCls}>Charity Fun Run · 44 Tahun HIMAS POLBAN</span>
       <h1 className="font-heading mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl">
