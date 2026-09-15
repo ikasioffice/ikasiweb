@@ -83,8 +83,7 @@ export function IsiSalurun() {
       </h1>
       <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
         Melangkah bersama, menyalurkan kebaikan. Charity fun run oleh IKASI POLBAN dalam rangka
-        memperingati 44 Tahun Himpunan Mahasiswa Sipil (HIMAS POLBAN), dengan dana pendaftaran
-        disalurkan sepenuhnya untuk program beasiswa mahasiswa Teknik Sipil POLBAN.
+        memperingati 44 Tahun Himpunan Mahasiswa Sipil (HIMAS POLBAN).
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <Link href="/salurun/daftar" className={ctaPrimary}>

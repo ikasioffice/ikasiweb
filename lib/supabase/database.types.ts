@@ -424,6 +424,7 @@ export type Database = {
           bukti_path: string | null
           catatan: string | null
           created_at: string
+          donasi: number
           email: string | null
           id: string
           is_verified: boolean
@@ -440,6 +441,7 @@ export type Database = {
           bukti_path?: string | null
           catatan?: string | null
           created_at?: string
+          donasi?: number
           email?: string | null
           id?: string
           is_verified?: boolean
@@ -456,6 +458,7 @@ export type Database = {
           bukti_path?: string | null
           catatan?: string | null
           created_at?: string
+          donasi?: number
           email?: string | null
           id?: string
           is_verified?: boolean

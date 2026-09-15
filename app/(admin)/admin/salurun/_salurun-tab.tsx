@@ -28,7 +28,7 @@ const btnCls =
 
 type EditState = Partial<Record<keyof SalurunPendaftaran, string>>;
 
-const UKURAN: UkuranJersey[] = ["S", "M", "L", "XL", "XXL"];
+const UKURAN: UkuranJersey[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"];
 
 const KOSONG_MANUAL = {
   nama: "",
@@ -50,7 +50,8 @@ function exportCsv(rows: SalurunPendaftaran[]) {
     { key: "email", label: "Email" },
     { key: "ukuran_jersey", label: "Ukuran Jersey" },
     { key: "metode", label: "Metode Pembayaran" },
-    { key: "nominal", label: "Nominal" },
+    { key: "donasi", label: "Donasi Tambahan" },
+    { key: "nominal", label: "Total Dibayar" },
     { key: "is_verified", label: "Terverifikasi" },
     { key: "catatan", label: "Catatan" },
     { key: "created_at", label: "Tanggal Daftar" },
@@ -205,6 +206,10 @@ export function SalurunTab() {
     return true;
   });
 
+  const totalDonasi = pendaftar
+    .filter((p) => p.is_verified)
+    .reduce((acc, p) => acc + (Number(p.donasi) || 0), 0);
+
   return (
     <div className="space-y-8">
       {/* ---------- Ringkasan ---------- */}
@@ -225,6 +230,10 @@ export function SalurunTab() {
               <div className="font-heading text-xl font-extrabold text-[#d4a72c] mt-1">{s.val}</div>
             </div>
           ))}
+        </div>
+        <div className="mt-4 rounded-lg bg-white/5 p-4">
+          <div className="text-xs text-slate-400">Total Donasi Tambahan (peserta terverifikasi)</div>
+          <div className="font-heading text-xl font-extrabold text-[#d4a72c] mt-1">{formatRupiah(totalDonasi)}</div>
         </div>
       </section>
 
@@ -471,6 +480,11 @@ export function SalurunTab() {
                         <div className="font-heading text-lg font-extrabold text-[#d4a72c] mt-1">
                           {formatRupiah(row.nominal)}
                         </div>
+                        {Number(row.donasi) > 0 && (
+                          <div className="text-[11px] text-slate-500 -mt-0.5">
+                            termasuk donasi {formatRupiah(row.donasi)}
+                          </div>
+                        )}
                         <div className="text-xs text-slate-400 mt-1">
                           {row.whatsapp}
                           {row.email ? ` · ${row.email}` : ""}

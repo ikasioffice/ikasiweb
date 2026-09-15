@@ -29,7 +29,7 @@ const LANGKAH: { no: Langkah; label: string }[] = [
   { no: 3, label: "Bukti" },
 ];
 
-const UKURAN: UkuranJersey[] = ["S", "M", "L", "XL", "XXL"];
+const UKURAN: UkuranJersey[] = ["S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"];
 
 const inputCls =
   "h-10 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-ring";
@@ -110,6 +110,7 @@ export default function DaftarSalurunPage() {
   const [whatsapp, setWhatsapp] = useState("");
   const [email, setEmail] = useState("");
   const [ukuranJersey, setUkuranJersey] = useState<UkuranJersey>("M");
+  const [donasi, setDonasi] = useState(""); // string berformat ribuan, seperti input nominal beasiswa
   const [honeypot, setHoneypot] = useState(""); // anti-spam: harus tetap kosong
 
   // Langkah 2
@@ -124,7 +125,9 @@ export default function DaftarSalurunPage() {
   const [sending, setSending] = useState(false);
   const [done, setDone] = useState(false);
 
-  const nominal = BIAYA[kategori];
+  const biayaPendaftaran = BIAYA[kategori];
+  const donasiAngka = Number(donasi.replace(/\D/g, "")) || 0;
+  const totalBayar = biayaPendaftaran + donasiAngka;
 
   function lanjutKeTransfer(e: React.FormEvent) {
     e.preventDefault();
@@ -196,7 +199,8 @@ export default function DaftarSalurunPage() {
       email: email.trim() || null,
       ukuran_jersey: ukuranJersey,
       metode,
-      nominal,
+      donasi: donasiAngka,
+      nominal: totalBayar,
       catatan: catatan.trim() || null,
       bukti_path: buktiPath,
     });
@@ -214,8 +218,8 @@ export default function DaftarSalurunPage() {
   if (done) {
     const pesan =
       cara === "whatsapp"
-        ? `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}, angkatan ${angkatan.trim()}) sudah mendaftar dan transfer ${formatRupiah(nominal)} via ${metode}. Bukti transfernya saya kirimkan di chat ini.`
-        : `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}, angkatan ${angkatan.trim()}) sudah mendaftar dan transfer ${formatRupiah(nominal)} via ${metode} beserta bukti transfernya lewat form di website. Mohon dicek, terima kasih.`;
+        ? `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}, angkatan ${angkatan.trim()}) sudah mendaftar dan transfer ${formatRupiah(totalBayar)} via ${metode}. Bukti transfernya saya kirimkan di chat ini.`
+        : `Halo Panitia SALURUN, saya ${nama.trim()} (${KATEGORI_LABEL[kategori]}, angkatan ${angkatan.trim()}) sudah mendaftar dan transfer ${formatRupiah(totalBayar)} via ${metode} beserta bukti transfernya lewat form di website. Mohon dicek, terima kasih.`;
 
     return (
       <main className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
@@ -235,12 +239,18 @@ export default function DaftarSalurunPage() {
           </p>
 
           <div className="mx-auto mt-6 max-w-xs rounded-xl bg-primary/10 p-4">
-            <div className="text-xs text-muted-foreground">Kategori · Angkatan · Nominal</div>
+            <div className="text-xs text-muted-foreground">Kategori · Angkatan</div>
             <div className="font-heading text-lg font-extrabold text-foreground">
               {KATEGORI_LABEL[kategori]} · {angkatan.trim()}
             </div>
+            {donasiAngka > 0 && (
+              <div className="mt-2 space-y-0.5 text-xs text-muted-foreground">
+                <div className="flex justify-between"><span>Biaya pendaftaran</span><span>{formatRupiah(biayaPendaftaran)}</span></div>
+                <div className="flex justify-between"><span>Donasi tambahan</span><span>{formatRupiah(donasiAngka)}</span></div>
+              </div>
+            )}
             <div className="font-heading mt-1 text-2xl font-extrabold tabular-nums text-primary">
-              {formatRupiah(nominal)}
+              {formatRupiah(totalBayar)}
             </div>
             <div className="mt-1 text-xs text-muted-foreground">via {metode}</div>
           </div>
@@ -344,7 +354,7 @@ export default function DaftarSalurunPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src="/salurun-size-chart.jpg"
-                    alt="Panduan ukuran jersey SALURUN 2026 (S, M, L, XL, XXL)"
+                    alt="Panduan ukuran jersey SALURUN 2026 (S, M, L, XL, XXL, 3XL, 4XL, 5XL)"
                     className="w-full rounded-md"
                   />
                 </div>
@@ -360,6 +370,42 @@ export default function DaftarSalurunPage() {
             <div>
               <label className={labelCls} htmlFor="email">Email <span className="text-muted-foreground">(opsional)</span></label>
               <input id="email" type="email" className={inputCls} placeholder="email@aktif.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+
+            <div className="sm:col-span-2">
+              <label className={labelCls} htmlFor="donasi">Donasi tambahan <span className="text-muted-foreground">(opsional)</span></label>
+              <input
+                id="donasi"
+                className={inputCls}
+                inputMode="numeric"
+                placeholder="0"
+                value={donasi}
+                onChange={(e) => {
+                  const d = e.target.value.replace(/\D/g, "");
+                  setDonasi(d ? Number(d).toLocaleString("id-ID") : "");
+                }}
+              />
+              <p className={hintCls}>
+                Di luar biaya pendaftaran, seluruhnya disalurkan untuk program beasiswa mahasiswa Teknik Sipil POLBAN.
+              </p>
+            </div>
+          </div>
+
+          {/* Total biaya real-time */}
+          <div className="mt-5 rounded-xl bg-primary/10 p-4">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>Biaya pendaftaran ({KATEGORI_LABEL[kategori]})</span>
+              <span className="tabular-nums">{formatRupiah(biayaPendaftaran)}</span>
+            </div>
+            {donasiAngka > 0 && (
+              <div className="mt-1 flex items-center justify-between text-sm text-muted-foreground">
+                <span>Donasi tambahan</span>
+                <span className="tabular-nums">{formatRupiah(donasiAngka)}</span>
+              </div>
+            )}
+            <div className="mt-2 flex items-center justify-between border-t border-primary/20 pt-2">
+              <span className="text-sm font-semibold text-foreground">Total yang perlu dibayar</span>
+              <span className="font-heading text-xl font-extrabold tabular-nums text-primary">{formatRupiah(totalBayar)}</span>
             </div>
           </div>
 
@@ -378,16 +424,21 @@ export default function DaftarSalurunPage() {
         <div className="space-y-5">
           <div className="rounded-2xl border border-border bg-card p-6 text-center shadow-sm sm:p-8">
             <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Nominal yang perlu dibayar
+              Total yang perlu dibayar
             </div>
             <div className="font-heading mt-2 text-4xl font-extrabold tabular-nums text-primary">
-              {formatRupiah(nominal)}
+              {formatRupiah(totalBayar)}
             </div>
+            {donasiAngka > 0 && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Biaya pendaftaran {formatRupiah(biayaPendaftaran)} + donasi {formatRupiah(donasiAngka)}
+              </p>
+            )}
             <p className="mt-1 text-xs text-muted-foreground">
               Kategori {KATEGORI_LABEL[kategori]} · Angkatan {angkatan.trim()} · Jersey {ukuranJersey}
             </p>
             <div className="mt-3 flex justify-center">
-              <Salin nilai={String(nominal)} label="nominal" />
+              <Salin nilai={String(totalBayar)} label="nominal" />
             </div>
             <p className={hintCls}>
               Bayar tepat sejumlah ini agar panitia mudah mencocokkan pendaftaran Anda.
@@ -484,8 +535,11 @@ export default function DaftarSalurunPage() {
               <div className="text-right">
                 <div className="text-xs text-muted-foreground">{metode} · Jersey {ukuranJersey}</div>
                 <div className="font-heading text-xl font-extrabold tabular-nums text-primary">
-                  {formatRupiah(nominal)}
+                  {formatRupiah(totalBayar)}
                 </div>
+                {donasiAngka > 0 && (
+                  <div className="text-[11px] text-muted-foreground">termasuk donasi {formatRupiah(donasiAngka)}</div>
+                )}
               </div>
             </div>
           </div>
