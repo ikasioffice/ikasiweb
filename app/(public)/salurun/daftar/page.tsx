@@ -246,7 +246,7 @@ export default function DaftarSalurunPage() {
             {donasiAngka > 0 && (
               <div className="mt-2 space-y-0.5 text-xs text-muted-foreground">
                 <div className="flex justify-between"><span>Biaya pendaftaran</span><span>{formatRupiah(biayaPendaftaran)}</span></div>
-                <div className="flex justify-between"><span>Donasi tambahan</span><span>{formatRupiah(donasiAngka)}</span></div>
+                <div className="flex justify-between"><span>Donasi Beasiswa</span><span>{formatRupiah(donasiAngka)}</span></div>
               </div>
             )}
             <div className="font-heading mt-1 text-2xl font-extrabold tabular-nums text-primary">
@@ -373,7 +373,7 @@ export default function DaftarSalurunPage() {
             </div>
 
             <div className="sm:col-span-2">
-              <label className={labelCls} htmlFor="donasi">Donasi tambahan <span className="text-muted-foreground">(opsional)</span></label>
+              <label className={labelCls} htmlFor="donasi">Donasi Beasiswa <span className="text-muted-foreground">(opsional)</span></label>
               <input
                 id="donasi"
                 className={inputCls}
@@ -399,7 +399,7 @@ export default function DaftarSalurunPage() {
             </div>
             {donasiAngka > 0 && (
               <div className="mt-1 flex items-center justify-between text-sm text-muted-foreground">
-                <span>Donasi tambahan</span>
+                <span>Donasi Beasiswa</span>
                 <span className="tabular-nums">{formatRupiah(donasiAngka)}</span>
               </div>
             )}
@@ -431,7 +431,7 @@ export default function DaftarSalurunPage() {
             </div>
             {donasiAngka > 0 && (
               <p className="mt-1 text-xs text-muted-foreground">
-                Biaya pendaftaran {formatRupiah(biayaPendaftaran)} + donasi {formatRupiah(donasiAngka)}
+                Biaya pendaftaran {formatRupiah(biayaPendaftaran)} + donasi beasiswa {formatRupiah(donasiAngka)}
               </p>
             )}
             <p className="mt-1 text-xs text-muted-foreground">
@@ -538,7 +538,7 @@ export default function DaftarSalurunPage() {
                   {formatRupiah(totalBayar)}
                 </div>
                 {donasiAngka > 0 && (
-                  <div className="text-[11px] text-muted-foreground">termasuk donasi {formatRupiah(donasiAngka)}</div>
+                  <div className="text-[11px] text-muted-foreground">termasuk donasi beasiswa {formatRupiah(donasiAngka)}</div>
                 )}
               </div>
             </div>

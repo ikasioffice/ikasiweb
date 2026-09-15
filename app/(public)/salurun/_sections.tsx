@@ -38,7 +38,7 @@ const RUNDOWN = [
   { waktu: "07.00 – 07.15", judul: "Pemanasan" },
   { waktu: "07.15 – 07.20", judul: "Foto Bersama" },
   { waktu: "07.20 – 08.20", judul: "Fun Run 4,4 K" },
-  { waktu: "08.20 – 08.30", judul: "Pelemasan" },
+  { waktu: "08.20 – 08.30", judul: "Pendinginan" },
   { waktu: "08.30 – 11.00", judul: "Talk Show, Games, Penyerahan Beasiswa" },
 ];
 

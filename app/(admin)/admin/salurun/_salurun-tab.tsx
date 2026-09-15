@@ -50,7 +50,7 @@ function exportCsv(rows: SalurunPendaftaran[]) {
     { key: "email", label: "Email" },
     { key: "ukuran_jersey", label: "Ukuran Jersey" },
     { key: "metode", label: "Metode Pembayaran" },
-    { key: "donasi", label: "Donasi Tambahan" },
+    { key: "donasi", label: "Donasi Beasiswa" },
     { key: "nominal", label: "Total Dibayar" },
     { key: "is_verified", label: "Terverifikasi" },
     { key: "catatan", label: "Catatan" },
@@ -232,7 +232,7 @@ export function SalurunTab() {
           ))}
         </div>
         <div className="mt-4 rounded-lg bg-white/5 p-4">
-          <div className="text-xs text-slate-400">Total Donasi Tambahan (peserta terverifikasi)</div>
+          <div className="text-xs text-slate-400">Total Donasi Beasiswa (peserta terverifikasi)</div>
           <div className="font-heading text-xl font-extrabold text-[#d4a72c] mt-1">{formatRupiah(totalDonasi)}</div>
         </div>
       </section>
@@ -482,7 +482,7 @@ export function SalurunTab() {
                         </div>
                         {Number(row.donasi) > 0 && (
                           <div className="text-[11px] text-slate-500 -mt-0.5">
-                            termasuk donasi {formatRupiah(row.donasi)}
+                            termasuk donasi beasiswa {formatRupiah(row.donasi)}
                           </div>
                         )}
                         <div className="text-xs text-slate-400 mt-1">
