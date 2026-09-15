@@ -112,7 +112,7 @@ export function IsiSalurun() {
         <div className="mt-6 grid gap-4 sm:grid-cols-3">
           <div className={cardCls}>
             <LineIcon name="calendar" size={20} className="text-primary" />
-            <div className="mt-2 font-heading font-bold text-foreground">Sabtu, 10 Oktober 2026</div>
+            <div className="mt-2 font-heading font-bold text-foreground">Minggu, 11 Oktober 2026</div>
             <div className="mt-1 text-sm text-muted-foreground">06.00 – Selesai</div>
           </div>
           <div className={cardCls}>
