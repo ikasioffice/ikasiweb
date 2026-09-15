@@ -67,12 +67,12 @@ export function IsiSalurun() {
   return (
     <>
       {/* ---------- Banner Poster ---------- */}
-      <div className="relative mb-8 overflow-hidden rounded-2xl border border-border shadow-sm">
+      <div className="relative mb-8 flex justify-center overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/salurun-poster.jpg"
-          alt="Poster SALURUN 2026 — Charity Fun Run IKASI POLBAN"
-          className="max-h-[520px] w-full object-cover object-top"
+          src="/salurun-poster-v2.jpg"
+          alt="Poster SALURUN 2026 — Charity Fun Run IKASI POLBAN, Minggu 11 Oktober 2026"
+          className="max-h-[720px] w-auto max-w-full object-contain"
         />
       </div>
 
